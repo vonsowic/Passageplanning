@@ -1,4 +1,6 @@
-package com.bearcave.passageplanning.list_of_waypoints
+package com.bearcave.passageplanning.waypoints
+
+import org.jsoup.nodes.Element
 
 /**
  * @author Michał Wąsowicz
@@ -9,6 +11,9 @@ class WaypointsList {
 
     constructor() {
         list = ArrayList<Waypoint>()
+
+        val w = Waypoint(Element("waypoint"))
+
     }
 
     constructor(size: Int) {

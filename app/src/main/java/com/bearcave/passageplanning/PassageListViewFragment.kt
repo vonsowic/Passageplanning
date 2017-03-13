@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.list_of_waypoints
+package com.bearcave.passageplanning
 
 
 import android.app.ProgressDialog
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.ListView
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.waypoints.ListViewAdapter
 
 
 /**

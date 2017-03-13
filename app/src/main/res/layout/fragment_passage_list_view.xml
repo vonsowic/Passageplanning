@@ -6,7 +6,7 @@
     android:paddingBottom="1dp"
     android:paddingLeft="1dp"
     android:paddingRight="1dp"
-    tools:context="com.bearcave.passageplanning.list_of_waypoints.PassageListViewFragment">
+    tools:context="com.bearcave.passageplanning.PassageListViewFragment">
 
 
     <LinearLayout
