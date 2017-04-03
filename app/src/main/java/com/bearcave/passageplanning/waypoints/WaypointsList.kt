@@ -11,13 +11,14 @@ class WaypointsList {
 
     constructor() {
         list = ArrayList<Waypoint>()
-
-        val w = Waypoint(Element("waypoint"))
-
     }
 
     constructor(size: Int) {
         list = ArrayList<Waypoint>(size)
+    }
+
+    fun get(i: Int): Waypoint {
+        return list.get(i)
     }
 
     fun size(): Int = list.size

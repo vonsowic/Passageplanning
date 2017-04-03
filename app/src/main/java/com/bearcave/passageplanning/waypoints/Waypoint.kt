@@ -73,11 +73,15 @@ class Waypoint: Serializable {
      * @return the approximate initial bearing in degrees East of true North when traveling along the shortest path between this location and the given location.
      */
     fun bearingTo(waypoint: Waypoint): Double? {
-        val longDiff = waypoint.longitude - this.longitude
-        val y = Math.sin(longDiff) * Math.cos(waypoint.latitude)
-        val x = Math.cos(this.latitude) * Math.sin(waypoint.latitude) - Math.sin(this.latitude) * Math.cos(waypoint.latitude) * Math.cos(longDiff)
+        val milion = 1000000.0
+        val lat1Rad = Math.toRadians(this.latitude/milion)
+        val lat2Rad = Math.toRadians(waypoint.latitude/milion)
+        val deltaLonRad = Math.toRadians(waypoint.longitude/milion - this.longitude/milion)
 
-        return (Math.toDegrees(Math.atan2(y, x)) + 360 ) % 360
+        val y = Math.sin(deltaLonRad) * Math.cos(lat2Rad)
+        val x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(deltaLonRad)
+        return Math.toDegrees(Math.atan2(y, x) + 360.0) % 360.0
+
     }
 
     /**

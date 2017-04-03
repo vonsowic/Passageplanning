@@ -25,8 +25,9 @@ class PassageListViewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_passage_list_view, container, false)
-        listView = view?.findViewById(R.id.listView) as ListView?
+        listView = view?.findViewById(R.id.waypints_list_view) as ListView?
         adapter = ListViewAdapter(context)
+        listView?.adapter = adapter
 
         return view
     }

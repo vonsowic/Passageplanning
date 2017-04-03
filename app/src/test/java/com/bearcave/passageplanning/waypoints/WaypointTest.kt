@@ -52,8 +52,8 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                52.5085300,
-                -0.1257400
+                wpt.latitude+1,
+                wpt.longitude
         )
 
         Assert.assertEquals(0.0, wpt.bearingTo(wptNorth))
@@ -66,8 +66,8 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                50.5085300,
-                -0.1257400
+                wpt.latitude-1,
+                wpt.longitude
         )
 
         Assert.assertEquals(180.0, wpt.bearingTo(wptSouth))
@@ -80,8 +80,8 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                51.5085300,
-                -0.2257400
+                wpt.latitude,
+                wpt.longitude+1.0
         )
 
         Assert.assertEquals(90.0, wpt.bearingTo(wptEast))
@@ -94,13 +94,67 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                51.5085300,
-                0.1257400
+                wpt.latitude,
+                wpt.longitude-1.0
         )
 
         Assert.assertEquals(270.0, wpt.bearingTo(wptWest))
     }
 
+    @Test
+    fun bearingToNorthWest() {
+        val wpt2 = Waypoint(
+                1,
+                "Oaze Deep",
+                "Fl(2) G 5s",
+                16.5F,
+                wpt.latitude+1.0,
+                wpt.longitude-1.0
+        )
+
+        Assert.assertEquals(315.0, wpt.bearingTo(wpt2))
+    }
+
+    @Test
+    fun bearingToSouthWest() {
+        val wpt2 = Waypoint(
+                1,
+                "Oaze Deep",
+                "Fl(2) G 5s",
+                16.5F,
+                wpt.latitude-1.0,
+                wpt.longitude-1.0
+        )
+
+        Assert.assertEquals(225.0, wpt.bearingTo(wpt2))
+    }
 
 
+    @Test
+    fun bearingToSouthEast() {
+        val wpt2 = Waypoint(
+                1,
+                "Oaze Deep",
+                "Fl(2) G 5s",
+                16.5F,
+                wpt.latitude-1,
+                wpt.longitude+1
+        )
+
+        Assert.assertEquals(135.0, wpt.bearingTo(wpt2))
+    }
+
+    @Test
+    fun bearingToNorthEast() {
+        val wpt2 = Waypoint(
+                1,
+                "Oaze Deep",
+                "Fl(2) G 5s",
+                16.5F,
+                wpt.latitude+1,
+                wpt.longitude+1
+        )
+
+        Assert.assertEquals(45.0, wpt.bearingTo(wpt2))
+    }
 }
