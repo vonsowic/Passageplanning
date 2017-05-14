@@ -14,17 +14,11 @@ import java.io.Serializable
 class Waypoint: Serializable {
 
     var id: Int = 1
-        private set
     var name: String = ""
-        private set
     var characteristic: String = ""
-        private set
     var ukc: Float = 0F
-        private set
     var longitude: Double = 0.0
-        private set
     var latitude: Double = 0.0
-        private set
 
 
     constructor(id: Int,
@@ -53,6 +47,7 @@ class Waypoint: Serializable {
 
     constructor(xmlString: String): this(Jsoup.parse(xmlString).body().getElementsByTag("waypoint").first())
 
+    constructor()
 
     fun toXmlElement(): Element {
         val element = Element("waypoint")

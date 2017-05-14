@@ -1,37 +1,43 @@
-package com.bearcave.passageplanning.waypoints_view;
+package com.bearcave.passageplanning.waypoints_view.base;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.LayoutInflater;
 import android.widget.BaseExpandableListAdapter;
 
+import com.bearcave.passageplanning.waypoints.Waypoint;
 import com.bearcave.passageplanning.waypoints.WaypointsList;
 
-/**
- * Created by miwas on 12.05.17.
- */
 
 public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter {
 
-    private Context context;
     private WaypointsListener listener;
     private WaypointsList list;
+    private LayoutInflater inflater;
 
 
     public BaseWaypointListAdapter(Context context) {
         super();
-        this.context = context;
         this.listener = (WaypointsListener) context;
         this.list = listener.onLoadListListener();
+        this.inflater = LayoutInflater.from(context);
     }
 
-    public BaseWaypointListAdapter() {
-        super();
+    protected LayoutInflater getInflater(){
+        return inflater;
+    }
+
+    protected Waypoint getWaypoint(int position){
+        return list.get(position);
     }
 
     @Override
     public int getGroupCount() {
         return list.getSize();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 1;
     }
 
     @Override
@@ -62,5 +68,10 @@ public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+    }
+
+    public void addWaypoint(Waypoint waypoint){
+        list.add(waypoint);
+        notifyDataSetChanged();
     }
 }

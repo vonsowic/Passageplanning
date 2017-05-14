@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.waypoints_view;
+package com.bearcave.passageplanning.waypoints_view.base;
 
 import com.bearcave.passageplanning.waypoints.WaypointsList;
 
