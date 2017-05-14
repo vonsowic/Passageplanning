@@ -1,7 +1,9 @@
 package com.bearcave.passageplanning.waypoints_view;
 
 import android.content.Context;
-import android.widget.BaseAdapter;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 
 import com.bearcave.passageplanning.waypoints.WaypointsList;
 
@@ -9,7 +11,7 @@ import com.bearcave.passageplanning.waypoints.WaypointsList;
  * Created by miwas on 12.05.17.
  */
 
-public abstract class BaseWaypointListAdapter extends BaseAdapter {
+public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private WaypointsListener listener;
@@ -28,17 +30,37 @@ public abstract class BaseWaypointListAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return list.size();
+    public int getGroupCount() {
+        return list.getSize();
     }
 
     @Override
-    public Object getItem(int position) {
-        return list.get(position);
+    public Object getGroup(int groupPosition) {
+        return list.get(groupPosition);
     }
 
     @Override
-    public long getItemId(int position) {
+    public Object getChild(int groupPosition, int childPosition) {
+        return null;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return list.get(groupPosition).getId();
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
         return 0;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
     }
 }
