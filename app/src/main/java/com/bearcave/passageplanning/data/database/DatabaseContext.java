@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.main_activity.data;
+package com.bearcave.passageplanning.data.database;
 
 import android.Manifest;
 import android.content.Context;
