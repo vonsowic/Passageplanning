@@ -1,15 +1,16 @@
-package thames_tide_provider;
+package com.bearcave.passageplanning.thames_tide_provider;
+
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 
 public class TideItem implements Serializable{
     private float predictedTideHeight;
-    private LocalDateTime time;
+    private DateTime time;
     private int gaugeId = -1;
 
-    public TideItem(float predictedTideHeight, LocalDateTime time) {
+    public TideItem(float predictedTideHeight, DateTime time) {
         this.predictedTideHeight = predictedTideHeight;
         this.time = time;
     }
@@ -18,7 +19,7 @@ public class TideItem implements Serializable{
         this.predictedTideHeight = predictedTideHeight;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(DateTime time) {
         this.time = time;
     }
 
@@ -30,7 +31,7 @@ public class TideItem implements Serializable{
         return predictedTideHeight;
     }
 
-    public LocalDateTime getTime() {
+    public DateTime getTime() {
         return time;
     }
 

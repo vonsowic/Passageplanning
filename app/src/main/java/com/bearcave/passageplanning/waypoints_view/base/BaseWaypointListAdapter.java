@@ -4,35 +4,49 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.BaseExpandableListAdapter;
 
+import com.bearcave.passageplanning.main_activity.CRUD;
 import com.bearcave.passageplanning.waypoints.Waypoint;
-import com.bearcave.passageplanning.waypoints.WaypointsList;
+import com.bearcave.passageplanning.waypoints.Waypoints;
+
+import java.util.List;
 
 
 public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter {
 
-    private WaypointsListener listener;
-    private WaypointsList list;
-    private LayoutInflater inflater;
+    private CRUD<Waypoint> database;
+    private Waypoints waypoints;
+    private Context context;
 
 
     public BaseWaypointListAdapter(Context context) {
         super();
-        this.listener = (WaypointsListener) context;
-        this.list = listener.onLoadListListener();
-        this.inflater = LayoutInflater.from(context);
+        this.database = (CRUD) context;
+        this.context = context;
+
+        //this.waypoints = new Waypoints();
+        this.waypoints = (Waypoints) database.readAll();
     }
 
     protected LayoutInflater getInflater(){
-        return inflater;
+        return LayoutInflater.from(context);
+    }
+
+    protected Context getContext(){
+        return context;
     }
 
     protected Waypoint getWaypoint(int position){
-        return list.get(position);
+        return waypoints.get(position);
+    }
+
+    public void setWaypoints(List waypoints){
+        this.waypoints = (Waypoints) waypoints;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getGroupCount() {
-        return list.getSize();
+        return waypoints.getSize();
     }
 
     @Override
@@ -42,7 +56,7 @@ public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter 
 
     @Override
     public Object getGroup(int groupPosition) {
-        return list.get(groupPosition);
+        return waypoints.get(groupPosition);
     }
 
     @Override
@@ -52,7 +66,7 @@ public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter 
 
     @Override
     public long getGroupId(int groupPosition) {
-        return list.get(groupPosition).getId();
+        return waypoints.get(groupPosition).getId();
     }
 
     @Override
@@ -71,7 +85,7 @@ public abstract class BaseWaypointListAdapter extends BaseExpandableListAdapter 
     }
 
     public void addWaypoint(Waypoint waypoint){
-        list.add(waypoint);
+        waypoints.add(waypoint);
         notifyDataSetChanged();
     }
 }

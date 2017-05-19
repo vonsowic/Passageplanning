@@ -101,4 +101,11 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="editor_title">Waypoint editor</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="start_passage">Start passage</string>
+    <string name="waypoints_menu">Waypoints menu</string>
+    <string name="passages_menu">Passages menu</string>
+    <string name="reports_menu">Reports menu</string>
 </resources>

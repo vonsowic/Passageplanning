@@ -1,11 +1,11 @@
-package thames_tide_provider.web;
+package com.bearcave.passageplanning.thames_tide_provider.web;
 
-import com.bearcave.thames_tide_provider.web.configurationitems.FileType;
-import com.bearcave.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.thames_tide_provider.web.configurationitems.MinuteStep;
-import com.bearcave.thames_tide_provider.web.configurationitems.NumberOfDays;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.FileType;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 
 public class UrlBuilder {
@@ -15,7 +15,7 @@ public class UrlBuilder {
 
     private String fileType;
     private String gaugeCode;
-    private LocalDateTime time;
+    private DateTime time;
     private int numberOfDays;
     private int step;
 
@@ -46,7 +46,7 @@ public class UrlBuilder {
         this.gaugeCode = gaugeCode.getCode();
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(DateTime time) {
         this.time = time;
     }
 

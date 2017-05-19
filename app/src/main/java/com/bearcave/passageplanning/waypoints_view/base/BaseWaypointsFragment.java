@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -17,7 +14,8 @@ import butterknife.Unbinder;
 
 public abstract class BaseWaypointsFragment extends Fragment {
 
-    protected BaseWaypointListAdapter adapter;
+    private BaseWaypointListAdapter adapter;
+    private ExpandableListView listView;
     private Unbinder unbinder;
 
 
@@ -27,7 +25,7 @@ public abstract class BaseWaypointsFragment extends Fragment {
 
         View view = inflater.inflate(layoutId(), container, false);
 
-        ExpandableListView listView = ButterKnife.findById(view, listViewPlaceholderId());
+        listView = ButterKnife.findById(view, listViewPlaceholderId());
 
         adapter = createAdapter();
         listView.setAdapter(adapter);
@@ -45,6 +43,10 @@ public abstract class BaseWaypointsFragment extends Fragment {
 
     protected BaseWaypointListAdapter getAdapter(){
         return adapter;
+    }
+
+    protected ExpandableListView getListView() {
+        return listView;
     }
 
     @Override
