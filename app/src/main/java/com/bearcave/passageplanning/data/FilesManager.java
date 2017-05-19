@@ -1,8 +1,10 @@
-package com.bearcave.passageplanning.main_activity.data;
+package com.bearcave.passageplanning.data;
 
 
 import android.content.Context;
 import android.os.Environment;
+
+import com.bearcave.passageplanning.data.database.DatabaseManager;
 
 import java.io.File;
 
