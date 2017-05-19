@@ -8,9 +8,8 @@ import java.io.Serializable
 /**
  * Data structure representing single waypoint.
  */
-class Waypoint: Serializable {
+open class Waypoint: Serializable {
 
-    var id: Int = -1
     var name: String = ""
     var characteristic: String = ""
     var note: String = ""
@@ -20,15 +19,13 @@ class Waypoint: Serializable {
     var gauge: Gauge = Gauge.MARGATE
 
 
-    constructor(id: Int,
-                name: String,
+    constructor(name: String,
                 characteristic: String,
                 ukc: Float,
                 latitude: Double,
                 longitude: Double,
                 gauge: Gauge){
 
-        this.id = id
         this.name = name
         this.characteristic = characteristic
         this.ukc = ukc
@@ -68,11 +65,30 @@ class Waypoint: Serializable {
     }
 
     override fun equals(other: Any?): Boolean {
-        val wpt: Waypoint = other as Waypoint
-        return id.equals(wpt.id)
-                && (name == wpt.name)
-                && characteristic.equals(wpt.characteristic)
-                && longitude.equals(wpt.longitude)
-                && latitude.equals(wpt.latitude)
+        if (this === other) return true
+        if (other !is Waypoint) return false
+
+        if (name != other.name) return false
+        if (characteristic != other.characteristic) return false
+        if (note != other.note) return false
+        if (ukc != other.ukc) return false
+        if (latitude != other.latitude) return false
+        if (longitude != other.longitude) return false
+        if (gauge != other.gauge) return false
+
+        return true
     }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + characteristic.hashCode()
+        result = 31 * result + note.hashCode()
+        result = 31 * result + ukc.hashCode()
+        result = 31 * result + latitude.hashCode()
+        result = 31 * result + longitude.hashCode()
+        result = 31 * result + gauge.hashCode()
+        return result
+    }
+
+
 }
