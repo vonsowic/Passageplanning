@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.waypoints
 
 import android.location.Location
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.junit.Assert
@@ -12,38 +13,16 @@ import java.util.*
  */
 class WaypointTest {
 
-    val el =  """<waypoint id="1" name="Oaze Deep" longitude="51.5085300" latitude="-0.1257400" ukc="16.5" characteristic="Fl(2) G 5s" />"""
-
     val wpt = Waypoint(
             1,
             "Oaze Deep",
             "Fl(2) G 5s",
             16.5F,
             51.5085300,
-            -0.1257400
+            -0.1257400,
+            Gauge.CORYTON
     )
 
-    @Test
-    fun constructorWithJsoupStringParameterTest() {
-        val w = Waypoint(el)
-        Assert.assertEquals(1, w.id)
-        Assert.assertEquals(16.5F, w.ukc)
-        Assert.assertEquals("Oaze Deep", w.name)
-        Assert.assertEquals(51.5085300, w.longitude, 0.000001)
-        Assert.assertEquals(-0.1257400, w.latitude, 0.000001)
-        Assert.assertEquals("Fl(2) G 5s", w.characteristic)
-    }
-
-    @Test
-    fun toXmlElementTest() {
-        print(wpt.toXml())
-        //Assert.assertEquals(Jsoup.parse(el).body().children().first(), wpt.toXmlElement())
-    }
-
-    @Test
-    fun toXmlStringTest() {
-        print(wpt.toXml())
-    }
 
     @Test
     fun bearingToNorth() {
@@ -52,11 +31,12 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                wpt.latitude+1,
-                wpt.longitude
+                wpt.latitude+1.0,
+                wpt.longitude,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(0.0, wpt.bearingTo(wptNorth))
+        Assert.assertEquals(0.0f, wpt.bearingTo(wptNorth))
     }
 
     @Test
@@ -67,10 +47,11 @@ class WaypointTest {
                 "Fl(2) G 5s",
                 16.5F,
                 wpt.latitude-1,
-                wpt.longitude
+                wpt.longitude,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(180.0, wpt.bearingTo(wptSouth))
+        Assert.assertEquals(180.0f, wpt.bearingTo(wptSouth))
     }
 
     @Test
@@ -81,10 +62,11 @@ class WaypointTest {
                 "Fl(2) G 5s",
                 16.5F,
                 wpt.latitude,
-                wpt.longitude+1.0
+                wpt.longitude+1.0,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(90.0, wpt.bearingTo(wptEast))
+        Assert.assertEquals(90.0f, wpt.bearingTo(wptEast))
     }
 
     @Test
@@ -95,10 +77,11 @@ class WaypointTest {
                 "Fl(2) G 5s",
                 16.5F,
                 wpt.latitude,
-                wpt.longitude-1.0
+                wpt.longitude-1.0,
+                Gauge.MARGATE
         )
 
-        Assert.assertEquals(270.0, wpt.bearingTo(wptWest))
+        Assert.assertEquals(270.0f, wpt.bearingTo(wptWest))
     }
 
     @Test
@@ -109,10 +92,11 @@ class WaypointTest {
                 "Fl(2) G 5s",
                 16.5F,
                 wpt.latitude+1.0,
-                wpt.longitude-1.0
+                wpt.longitude-1.0,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(315.0, wpt.bearingTo(wpt2))
+        Assert.assertEquals(315.0f, wpt.bearingTo(wpt2))
     }
 
     @Test
@@ -123,10 +107,11 @@ class WaypointTest {
                 "Fl(2) G 5s",
                 16.5F,
                 wpt.latitude-1.0,
-                wpt.longitude-1.0
+                wpt.longitude-1.0,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(225.0, wpt.bearingTo(wpt2))
+        Assert.assertEquals(225.0f, wpt.bearingTo(wpt2))
     }
 
 
@@ -137,11 +122,12 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                wpt.latitude-1,
-                wpt.longitude+1
+                wpt.latitude-1.0,
+                wpt.longitude+1.0,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(135.0, wpt.bearingTo(wpt2))
+        Assert.assertEquals(135.0f, wpt.bearingTo(wpt2))
     }
 
     @Test
@@ -151,10 +137,11 @@ class WaypointTest {
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
-                wpt.latitude+1,
-                wpt.longitude+1
+                wpt.latitude+1.0,
+                wpt.longitude+1.0,
+                Gauge.CORYTON
         )
 
-        Assert.assertEquals(45.0, wpt.bearingTo(wpt2))
+        Assert.assertEquals(45.0f, wpt.bearingTo(wpt2))
     }
 }
