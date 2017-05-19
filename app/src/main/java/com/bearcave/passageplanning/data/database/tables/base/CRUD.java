@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.main_activity;
+package com.bearcave.passageplanning.data.database.tables.base;
 
 import java.util.List;
 
