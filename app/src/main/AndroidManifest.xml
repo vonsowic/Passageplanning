@@ -12,11 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".waypoints_view.manager.editor.EditorActivity"
+            android:name=".waypoints_manager.editor.EditorActivity"
             android:label="@string/title_activity_editor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".main_activity.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -47,8 +47,8 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
         values.put(KEY_NOTE, waypoint.getNote());
         values.put(KEY_CHARACTERISTIC, waypoint.getCharacteristic());
         values.put(KEY_UKC, waypoint.getUkc());
-        values.put(KEY_LONGITUDE, waypoint.getLongitude());
         values.put(KEY_LATITUDE, waypoint.getLatitude());
+        values.put(KEY_LONGITUDE, waypoint.getLongitude());
         values.put(KEY_GAUGE, waypoint.getGauge().getId());
         return values;
     }
@@ -56,14 +56,14 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
     @Override
     protected WaypointDAO loadFrom(Cursor cursor) {
         return new WaypointDAO(
-                Integer.parseInt(cursor.getString(0)),              // id
-                cursor.getString(1),                                // name
-                cursor.getString(2),                                // note
-                cursor.getString(2),                                // characteristic
-                Float.valueOf(cursor.getString(3)),                 // ukc
-                Double.valueOf(cursor.getString(4)),                // longitude
-                Double.valueOf(cursor.getString(5)),                // latitude
-                Gauge.getById(Integer.valueOf(cursor.getString(6))) // gauge
+                cursor.getInt(0),               // id
+                cursor.getString(1),            // name
+                cursor.getString(2),            // note
+                cursor.getString(3),            // characteristic
+                cursor.getFloat(4),             // ukc
+                cursor.getDouble(5),            // latitude
+                cursor.getDouble(6),            // longitude
+                Gauge.getById(cursor.getInt(7)) // gauge
         );
     }
 

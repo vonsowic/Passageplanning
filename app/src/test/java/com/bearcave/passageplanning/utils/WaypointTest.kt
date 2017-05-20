@@ -1,20 +1,13 @@
-package com.bearcave.passageplanning.waypoints
+package com.bearcave.passageplanning.utils
 
-import android.location.Location
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
 
-/**
- * Created by miwas on 12.03.17.
- */
+
 class WaypointTest {
 
     val wpt = Waypoint(
-            1,
             "Oaze Deep",
             "Fl(2) G 5s",
             16.5F,
@@ -27,7 +20,6 @@ class WaypointTest {
     @Test
     fun bearingToNorth() {
         val wptNorth = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -42,7 +34,6 @@ class WaypointTest {
     @Test
     fun bearingToSouth() {
         val wptSouth = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -57,7 +48,6 @@ class WaypointTest {
     @Test
     fun bearingToEast() {
         val wptEast = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -72,7 +62,6 @@ class WaypointTest {
     @Test
     fun bearingToWest() {
         val wptWest = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -87,7 +76,6 @@ class WaypointTest {
     @Test
     fun bearingToNorthWest() {
         val wpt2 = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -102,7 +90,6 @@ class WaypointTest {
     @Test
     fun bearingToSouthWest() {
         val wpt2 = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -118,7 +105,6 @@ class WaypointTest {
     @Test
     fun bearingToSouthEast() {
         val wpt2 = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,
@@ -133,7 +119,6 @@ class WaypointTest {
     @Test
     fun bearingToNorthEast() {
         val wpt2 = Waypoint(
-                1,
                 "Oaze Deep",
                 "Fl(2) G 5s",
                 16.5F,

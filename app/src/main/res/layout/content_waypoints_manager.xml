@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.bearcave.passageplanning.waypoints_view.manager.WaypointsManagerFragment"
+    tools:context=".waypoints_manager.WaypointsManagerFragment"
     tools:showIn="@layout/fragment_waypoints_manager">
 
 

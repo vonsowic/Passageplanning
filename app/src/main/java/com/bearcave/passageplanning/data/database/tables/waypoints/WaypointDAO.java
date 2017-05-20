@@ -14,16 +14,22 @@ public class WaypointDAO extends com.bearcave.passageplanning.utils.Waypoint imp
         return id;
     }
 
-    public WaypointDAO() {
+
+    public WaypointDAO(@NotNull String name, @NotNull String note, @NotNull String characteristic, float ukc, double latitude, double longitude, @NotNull Gauge gauge) {
+        super(name, note, characteristic, ukc, latitude, longitude, gauge);
     }
 
-    public WaypointDAO(long id, @NotNull String name, @NotNull String note, @NotNull String characteristic, float ukc, double latitude, double longitude, @NotNull Gauge gauge) {
+    public WaypointDAO(@NotNull String name, @NotNull String note, @NotNull String characteristic, float ukc, String latitude, String longitude, @NotNull Gauge gauge) {
+        super(name, note, characteristic, ukc, latitude, longitude, gauge);
+    }
+
+    public WaypointDAO(long id, @NotNull String name, String note, @NotNull String characteristic, float ukc, double latitude, double longitude, @NotNull Gauge gauge) {
         super(name, note, characteristic, ukc, latitude, longitude, gauge);
         this.id = id;
     }
 
-    public WaypointDAO(long id, @NotNull String name, @NotNull String characteristic, float ukc, double latitude, double longitude, @NotNull Gauge gauge) {
-        super(name, characteristic, ukc, latitude, longitude, gauge);
+    public WaypointDAO(long id, @NotNull String name, String note, @NotNull String characteristic, float ukc, String latitude, String longitude, @NotNull Gauge gauge) {
+        super(name, note, characteristic, ukc, latitude, longitude, gauge);
         this.id = id;
     }
 }

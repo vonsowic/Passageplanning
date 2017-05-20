@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.main_activity;
+package com.bearcave.passageplanning;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -13,28 +13,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.bearcave.passageplanning.R;
-import com.bearcave.passageplanning.main_activity.data.DatabaseManager;
-import com.bearcave.passageplanning.main_activity.data.FilesManager;
+import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
+import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
+import com.bearcave.passageplanning.data.database.DatabaseManager;
+import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.passages.PassagesManagerFragment;
 import com.bearcave.passageplanning.reports.ReportsManagerFragment;
-import com.bearcave.passageplanning.waypoints.Waypoint;
-import com.bearcave.passageplanning.waypoints_view.manager.WaypointsManagerFragment;
+import com.bearcave.passageplanning.waypoints_manager.WaypointsManagerFragment;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CRUD<Waypoint> {
+        implements NavigationView.OnNavigationItemSelectedListener, OnDatabaseRequestedListener {
 
     private DatabaseManager database;
     private FilesManager files;
     private static final int MY_PERMISSIONS_REQUEST_FILE = 54;
 
-    private final HashMap<Integer, Fragment> fragmentHolder = new HashMap<>();
+    private final SparseArray<Fragment> fragmentHolder = new SparseArray<>();
 
 
     @Override
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        //drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentHolder.put(R.id.nav_passages_menu, new PassagesManagerFragment());
         fragmentHolder.put(R.id.nav_waypoints_menu, new WaypointsManagerFragment());
-        fragmentHolder.put(R.id.nav_reports_menu_menu, new ReportsManagerFragment());
+        fragmentHolder.put(R.id.nav_reports_menu, new ReportsManagerFragment());
 
         askForPermission();
     }
@@ -93,32 +93,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public long create(Waypoint waypoint) {
-        long id = database.addWaypoint(waypoint);
-        Toast.makeText(this, "New wayponit added " + id, Toast.LENGTH_LONG).show();
-        return id;
-    }
-
-    @Override
-    public Waypoint read(long id) {
-        return database.getWaypoint(id);
-    }
-
-    @Override
-    public List<Waypoint> readAll() {
-        return database.getAllWaypoints();
-    }
-
-    @Override
-    public int update(Waypoint waypoint) {
-        return database.updateWaypoint(waypoint);
-    }
-
-    @Override
-    public int delete(Waypoint waypoint) {
-        return database.deleteWaypoint(waypoint);
-    }
 
     private void askForPermission(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=  PackageManager.PERMISSION_GRANTED){
@@ -145,5 +119,10 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
         }
+    }
+
+    @Override
+    public BaseTable onGetTableListener(int tableId) {
+        return database.getTable(tableId);
     }
 }

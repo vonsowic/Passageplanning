@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 public abstract class BaseTable<T extends DatabaseElement> implements ManagerListener, CRUD<T>{
 
@@ -39,9 +40,10 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
         table.append("(");
 
         for (Map.Entry<String, String> entry : getKeyToValueTypeHolder().entrySet()) {
-            table.append(entry.getKey() + " " +  entry.getValue() + ", " );
+            table.append(entry.getKey() + " " +  entry.getValue() + "," );
         }
 
+        table.delete(table.length()-1, table.length());
         table.append(");");
 
         return table.toString();
@@ -71,18 +73,18 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
     }
 
     @Override
-    public long create(T element) {
+    public Integer insert(T element) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = getContentValue(element);
 
-        long id = db.insert(getTableName(), null, values);
+        Integer id = (int) db.insert(getTableName(), null, values);
 
         db.close();
         return id;
     }
 
     @Override
-    public T read(long id) {
+    public T read(Integer id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(
@@ -142,15 +144,14 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
 
     protected static final String KEY_ID = "id";
 
+    protected static final String INTEGER = "INTEGER";
+    protected static final String TEXT = "TEXT";
+    protected static final String FLOAT = "FLOAT";
+    protected static final String DOUBLE = "DOUBLE";
+    protected static final String DATETIME = "DATETIME";
 
-    protected static final String INTEGER = " INTEGER";
-    protected static final String TEXT = " TEXT";
-    protected static final String FLOAT = " FLOAT";
-    protected static final String DOUBLE = " DOUBLE";
-    protected static final String DATETIME = " DATETIME";
 
-
-    protected static final String NOT_NULL = " NOT NULL";
-    protected static final String AUTOINCREMENT = " AUTOINCREMENT";
-    protected static final String PRIMARY_KEY = " PRIMARY KEY";
+    protected static final String NOT_NULL = "NOT NULL";
+    protected static final String AUTOINCREMENT = "AUTOINCREMENT";
+    protected static final String PRIMARY_KEY = "PRIMARY KEY";
 }

@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.waypoints
+package com.bearcave.passageplanning.utils
 
 import android.location.Location
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
@@ -11,12 +11,32 @@ import java.io.Serializable
 open class Waypoint: Serializable {
 
     var name: String = ""
+        private set
     var characteristic: String = ""
+        private set
     var note: String = ""
+        private set
+
+    /**
+     * UKC in metres.
+     */
     var ukc: Float = 0F
+        private set
+
+    /**
+     * Latitude in decimal degrees.
+     */
     var latitude = 0.0
+        private set
+
+    /**
+     * Longitude in decimal degrees.
+     */
     var longitude = 0.0
+        private set
+
     var gauge: Gauge = Gauge.MARGATE
+        private set
 
 
     constructor(name: String,
@@ -35,8 +55,29 @@ open class Waypoint: Serializable {
 
     }
 
-    constructor()
+    constructor(name: String, characteristic: String, ukc: Float, latitude: String, longitude: String, gauge: Gauge):
+            this(name, characteristic, ukc, Location.convert(latitude), Location.convert(longitude), gauge)
 
+    constructor(name: String, note: String, characteristic: String, ukc: Float, latitude: String, longitude: String, gauge: Gauge):
+            this(name, note, characteristic, ukc, Location.convert(latitude), Location.convert(longitude), gauge)
+
+    constructor(name: String,
+                note: String,
+                characteristic: String,
+                ukc: Float,
+                latitude: Double,
+                longitude: Double,
+                gauge: Gauge):
+            this(
+                name,
+                characteristic,
+                ukc,
+                latitude,
+                longitude,
+                gauge
+            ){
+                this.note = note
+    }
 
     /**
      * @return the approximate initial bearing in degrees East of true North when traveling along the shortest path between this location and the given location.
@@ -62,6 +103,14 @@ open class Waypoint: Serializable {
         Location.distanceBetween(this.latitude, this.longitude, waypoint.latitude, waypoint.longitude, result)
         return result[0]
 
+    }
+
+    fun getLatitudeInSecondFormat(): String {
+        return Location.convert(this.latitude, Location.FORMAT_SECONDS)
+    }
+
+    fun getLongitudeInSecondFormat(): String {
+        return Location.convert(this.longitude, Location.FORMAT_SECONDS)
     }
 
     override fun equals(other: Any?): Boolean {
