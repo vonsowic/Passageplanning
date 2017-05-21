@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.waypoints_manager.editor;
+package com.bearcave.passageplanning.waypoints_manager;
 
 import android.os.Bundle;
 import android.view.ContextMenu;

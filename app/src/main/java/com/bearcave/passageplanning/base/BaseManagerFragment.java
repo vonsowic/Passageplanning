@@ -1,53 +1,75 @@
 package com.bearcave.passageplanning.base;
 
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-
 import com.bearcave.passageplanning.R;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import butterknife.OnClick;
 
 /**
- * A simple {@link Fragment} subclass.
+ * BasePoorManager with FloatingActionButton
  */
-public abstract class BaseManagerFragment extends BaseFragment {
+public abstract class BaseManagerFragment<DAO extends Parcelable & OnNameRequestedListener>
+        extends BasePoorManagerFragment<DAO> {
 
-    private Unbinder unbinder;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_base_manager, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        ExpandableListView listView = ButterKnife.findById(view, R.id.list_view);
-        listView.setAdapter(getAdapter());
-
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+
+    @OnClick(R.id.open_editor)
+    public void openEditor() {
+        openEditor(null);
     }
 
-    protected abstract BaseManagerAdapter getAdapter();
+    public void openEditor(DAO element){
+        Intent intent = new Intent(getContext(), getEditorClass());
 
-    protected final int getFabId(){
-        return R.id.open_editor;
+        if(element != null){
+            intent.putExtra(BaseEditorActivity.EDITOR_RESULT, element);
+        }
+
+        putExtra(intent);
+
+        startActivityForResult(intent, BaseEditorActivity.EDITOR_REQUEST);
+    }
+
+    protected abstract Class<?> getEditorClass();
+
+    protected void putExtra(Intent mail){
+        // for possible override
+    }
+
+    @Override
+    protected int layoutId() {
+        return R.layout.fragment_base_manager;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BaseEditorActivity.EDITOR_REQUEST) {
+            if (resultCode == BaseEditorActivity.EDITOR_CREATED) {
+                DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
+
+                getAdapter().add(
+                        read(insert(result))
+                );
+
+            } else if (resultCode == BaseEditorActivity.EDITOR_UPDATED) {
+                DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
+
+                update(result);
+                getAdapter().add(result);
+            }
+        }
     }
 }

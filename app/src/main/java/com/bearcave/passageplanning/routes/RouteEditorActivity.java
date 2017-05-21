@@ -1,29 +1,34 @@
-package com.bearcave.passageplanning.passages;
+package com.bearcave.passageplanning.routes;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseEditorActivity;
-import com.bearcave.passageplanning.data.database.tables.passage.PassageDAO;
+import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
+import com.bearcave.passageplanning.utils.Waypoint;
 
 import java.util.ArrayList;
 
 
-public class PassageEditorActivity extends BaseEditorActivity<PassageDAO> {
+public class RouteEditorActivity extends BaseEditorActivity<RouteDAO> {
 
     private EditText name;
     private TextView waypointChooser;
-    private ArrayList<Integer> waypointsIds = new ArrayList<>();
+    private ArrayList<Integer> chosenWaypoints = new ArrayList<>();
     private ArrayList<WaypointDAO> waypoints = new ArrayList<>();
 
-    // TODO: get all waypoints
+    private long routeId = -2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,26 +42,33 @@ public class PassageEditorActivity extends BaseEditorActivity<PassageDAO> {
     }
 
     @Override
-    protected void setViewsContent(PassageDAO passage) {
+    protected void getParcelableExtra(Intent intent) {
+        waypoints = intent.getParcelableArrayListExtra(WAYPOINTS_KEY);
+    }
+
+    @Override
+    protected void setViewsContent(RouteDAO passage) {
+        routeId = passage.getId();
         name.setText(passage.getName());
-        waypointsIds = passage.getWaypointsIds();
+        chosenWaypoints = passage.getWaypointsIds();
     }
 
     @Override
     protected int getContentLayoutId() {
-        return R.layout.content_passage_editor;
+        return R.layout.content_route_editor;
     }
 
     @Override
     public boolean isAllFilled() {
-        return name.getText().length() != 0 && waypointsIds.size() != 0;
+        return name.getText().length() != 0 && chosenWaypoints.size() != 0;
     }
 
     @Override
-    protected PassageDAO getFilledDAO() {
-        return new PassageDAO(
+    protected RouteDAO getFilledDAO() {
+        return new RouteDAO(
+                routeId,
                 name.getText().toString(),
-                waypointsIds
+                chosenWaypoints
         );
     }
 
@@ -64,6 +76,7 @@ public class PassageEditorActivity extends BaseEditorActivity<PassageDAO> {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle(R.string.choose_waypoints);
+        menu.setGroupCheckable(Menu.NONE, true, false);
 
         for(WaypointDAO waypoint: waypoints) {
             menu.add(Menu.NONE, (int) waypoint.getId(), Menu.NONE, waypoint.getName());
@@ -74,10 +87,12 @@ public class PassageEditorActivity extends BaseEditorActivity<PassageDAO> {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (waypointsIds.contains(id)){
-            waypointsIds.remove(id);
-        } else waypointsIds.add(id);
+        if (chosenWaypoints.contains(id)){
+            chosenWaypoints.remove(id);
+        } else chosenWaypoints.add(id);
 
         return super.onOptionsItemSelected(item);
     }
+
+    public static final String WAYPOINTS_KEY = "waypoints_from_database";
 }

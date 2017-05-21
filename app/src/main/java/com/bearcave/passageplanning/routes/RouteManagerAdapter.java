@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passages;
+package com.bearcave.passageplanning.routes;
 
 import android.content.Context;
 import android.util.SparseArray;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.data.database.tables.passage.PassageDAO;
+import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 
@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 
 
-public class PassageManagerAdapter extends BaseManagerAdapter {
+public class RouteManagerAdapter extends BaseManagerAdapter {
 
 
     private ReadWaypoints waypointsDatabase;
     private SparseArray<WaypointDAO> waypoints;
 
-    public PassageManagerAdapter(BaseManagerFragment parent, Context context) {
+    public RouteManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
         this.waypoints = new SparseArray<>();
     }
@@ -49,7 +49,7 @@ public class PassageManagerAdapter extends BaseManagerAdapter {
         return getWaypointById(getPassages().get(group).getWaypointsIds().get(child), group);
     }
 
-    private ArrayList<PassageDAO> getPassages(){
+    private ArrayList<RouteDAO> getPassages(){
         return getContainer();
     }
 
@@ -71,7 +71,7 @@ public class PassageManagerAdapter extends BaseManagerAdapter {
         WaypointDAO waypoint = getWaypointFromList(groupPosition, childPosition);
 
         TextView title = ButterKnife.findById(view, R.id.name);
-        title.setText(getPassages().get(groupPosition).getName());
+        title.setText(waypoint.getName());
 
         ImageView up = ButterKnife.findById(view, R.id.up);
         ImageView down = ButterKnife.findById(view, R.id.down);

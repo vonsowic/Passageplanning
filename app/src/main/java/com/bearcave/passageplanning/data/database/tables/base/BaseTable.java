@@ -2,6 +2,7 @@ package com.bearcave.passageplanning.data.database.tables.base;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -12,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseTable<T extends DatabaseElement> implements ManagerListener, CRUD<T>{
+public abstract class BaseTable<T extends DatabaseElement> implements ManagerListener, CRUD<T>, ReadManyDaos<T>{
 
     private ManagerListener manager;
 
@@ -114,6 +115,22 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
 
         // return contact list
         return requestedList;
+    }
+
+    @Override
+    public List<T> read(List<Integer> ids) {
+        ArrayList<T> daos = new ArrayList<>();
+
+        for (Integer id: ids){
+            daos.add(read(id));
+        }
+
+        return daos;
+    }
+
+    @Override
+    public List<T> readAllDaos() {
+        return readAll();
     }
 
     @Override

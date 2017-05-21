@@ -14,11 +14,15 @@
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="start_passage">Start passage</string>
-    <string name="waypoints_menu">Waypoints menu</string>
-    <string name="passages_menu">Passages menu</string>
-    <string name="reports_menu">Reports menu</string>
+
+    <string name="waypoints_menu">Waypoints</string>
+    <string name="passages_menu">Passages</string>
+    <string name="reports_menu">Reports</string>
+    <string name="routes_menu">Routes</string>
+
+
+    <string name="title_activity_passage_editor">It is to be removed</string>
+
     <string name="editor_gauge_chooser_title">Choose gauge</string>
-    <string name="title_activity_passage_editor">PassageEditorActivity</string>
     <string name="choose_waypoints">Choose waypoints</string>
 </resources>

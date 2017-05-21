@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.bearcave.passageplanning.R;
+import com.bearcave.passageplanning.data.database.tables.base.CRUD;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,34 +21,30 @@ import butterknife.Unbinder;
 /**
  * BaseManager fragment without FloatingActionButton.
  */
-public abstract class BasePoorManagerFragment extends BaseFragment {
+public abstract class BasePoorManagerFragment<DAO extends OnNameRequestedListener> extends BaseFragment implements CRUD<DAO> {
 
-    private Unbinder unbinder;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
+    BaseManagerAdapter<DAO> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_base_poor_manager, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         ExpandableListView listView = ButterKnife.findById(view, R.id.list_view);
-        listView.setAdapter(getAdapter());
+        adapter = createAdapter();
+        listView.setAdapter(adapter);
 
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    protected BaseManagerAdapter<DAO> getAdapter(){
+        return adapter;
     }
 
+    @Override
+    protected int layoutId() {
+        return R.layout.fragment_base_poor_manager;
+    }
 
-    protected abstract BaseManagerAdapter getAdapter();
+    protected abstract BaseManagerAdapter createAdapter();
 }

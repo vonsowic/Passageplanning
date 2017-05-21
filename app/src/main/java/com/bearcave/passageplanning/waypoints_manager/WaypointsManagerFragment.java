@@ -14,14 +14,13 @@ import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
 import com.bearcave.passageplanning.utils.Waypoint;
-import com.bearcave.passageplanning.waypoints_manager.editor.WaypointEditorActivity;
 
 import java.util.List;
 
 import butterknife.OnClick;
 
 
-public class WaypointsManagerFragment extends BaseManagerFragment implements WaypointCRUD, ReadWaypoints{
+public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO> implements WaypointCRUD{
 
     private WaypointsTable database;
     private WaypointsManagerAdapter adapter;
@@ -35,64 +34,19 @@ public class WaypointsManagerFragment extends BaseManagerFragment implements Way
     }
 
     @Override
-    protected BaseManagerAdapter getAdapter() {
-        adapter = new WaypointsManagerAdapter(this, getContext());
-        return adapter;
+    protected Class<?> getEditorClass() {
+        return WaypointEditorActivity.class;
     }
 
-    @OnClick(R.id.open_editor)
-    public void openWaypointEditor() {
-        openWaypointEditor(null);
-    }
-
-    public void openWaypointEditor(Waypoint waypoint){
-        Intent intent = new Intent(getContext(), WaypointEditorActivity.class);
-
-        if(waypoint != null){
-            intent.putExtra(WaypointEditorActivity.EDITOR_RESULT, waypoint);
-        }
-
-        startActivityForResult(intent, WaypointEditorActivity.EDITOR_REQUEST);
-    }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == WaypointEditorActivity.EDITOR_REQUEST) {
-            if (resultCode == WaypointEditorActivity.EDITOR_CREATED) {
-                WaypointDAO result = (WaypointDAO) data.getSerializableExtra(WaypointEditorActivity.EDITOR_RESULT);
-
-                if( result == null) {
-                    Toast.makeText(getContext(), "Ups! Waypoint wasn't created", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // send waypoint that was saved in database instead of sending waypoint from WaypointEditorActivity
-                adapter.add(
-                        read(insert(result))
-                );
-
-            } else if (resultCode == WaypointEditorActivity.EDITOR_UPDATED) {
-                WaypointDAO result = (WaypointDAO) data.getSerializableExtra(WaypointEditorActivity.EDITOR_RESULT);
-
-                if( result == null) {
-                    Toast.makeText(getContext(), "Ups! Waypoint wasn't updated", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                database.update(result);
-                adapter.add(result);
-            }
-        }
+    protected BaseManagerAdapter createAdapter() {
+        return new WaypointsManagerAdapter(this, getContext());
     }
 
     @Override
     public Integer insert(WaypointDAO waypointDAO) {
         return database.insert(waypointDAO);
-    }
-
-    @Override
-    public List<WaypointDAO> read(List<Integer> ids) {
-        return database.read(ids);
     }
 
     @Override
@@ -107,7 +61,7 @@ public class WaypointsManagerFragment extends BaseManagerFragment implements Way
 
     @Override
     public int update(WaypointDAO waypointDAO) {
-        openWaypointEditor(waypointDAO);
+        openEditor(waypointDAO);
         return 1;
     }
 

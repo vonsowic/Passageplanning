@@ -43,7 +43,6 @@ public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoi
     @Override
     protected ContentValues getContentValue(WaypointDAO waypoint) {
         ContentValues values = new ContentValues();
-        //values.put(KEY_ID, waypoint.getId());
         values.put(KEY_NAME, waypoint.getName());
         values.put(KEY_NOTE, waypoint.getNote());
         values.put(KEY_CHARACTERISTIC, waypoint.getCharacteristic());
@@ -82,5 +81,10 @@ public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoi
     public List<WaypointDAO> read(List<Integer> ids) {
 
         return null;
+    }
+
+    @Override
+    public List<WaypointDAO> readAllDaos() {
+        return readAll();
     }
 }
