@@ -16,7 +16,7 @@
             android:title="@string/passages_menu" />
 
         <item
-            android:id="@+id/nav_reports_menu_menu"
+            android:id="@+id/nav_reports_menu"
             android:title="@string/reports_menu" />
 
     </group>

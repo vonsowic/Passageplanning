@@ -25,6 +25,8 @@ public enum Gauge {
         this.codeId = code;
     }
 
+
+
     public int getId(){
         return this.id;
     }
@@ -50,6 +52,16 @@ public enum Gauge {
     public static Gauge getByCode(String code){
         for(Gauge item: Gauge.values()){
             if(item.getCode() == code){
+                return item;
+            }
+        }
+
+        throw new GaugeNotFoundException();
+    }
+
+    public static Gauge getByName(String name) {
+        for(Gauge item: Gauge.values()){
+            if(item.getName() == name){
                 return item;
             }
         }
