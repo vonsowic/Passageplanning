@@ -1,34 +1,22 @@
-package com.bearcave.passageplanning.data.database.tables.route;
+package com.bearcave.passageplanning.data.database.tables.passage;
 
 import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
-import com.bearcave.passageplanning.utils.Route;
+import com.bearcave.passageplanning.utils.Passage;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
 
-/**
- * Created by miwas on 19.05.17.
- */
 
-public class RouteDAO extends Route implements DatabaseElement {
 
-    private long id = -1;
+public class PassageDAO extends Passage implements DatabaseElement {
 
     @Override
     public long getId() {
-        return id;
+        return -1;
     }
 
-    public RouteDAO(long id, String name, ArrayList<Integer> waypointsId) {
+    public PassageDAO(String name, ArrayList<Integer> waypointsId) {
         super(name, waypointsId);
-        this.id = id;
-    }
-
-    public RouteDAO(long id) {
-        this.id = id;
     }
 
     public static ArrayList<Integer> parse(String waypoints) {
@@ -42,7 +30,7 @@ public class RouteDAO extends Route implements DatabaseElement {
     @Override
     public String toString() {
         StringBuilder joiner = new StringBuilder();
-        for(Integer id: getWaypointsId()){
+        for(Integer id: getWaypointsIds()){
             joiner.append(id);
             joiner.append(",");
         }

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".waypoints_manager.editor.EditorActivity"
-    tools:showIn="@layout/activity_editor">
+    tools:context=".waypoints_manager.editor.WaypointEditorActivity">
 
 
     <android.support.design.widget.TextInputLayout
@@ -91,7 +90,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="77dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 public abstract class BaseTable<T extends DatabaseElement> implements ManagerListener, CRUD<T>{
 
@@ -23,7 +22,7 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
 
     public abstract String getTableName();
 
-    protected abstract LinkedHashMap<String, String> getKeyToValueTypeHolder();
+    protected abstract LinkedHashMap<String, String> createKeyToValueTypeHolder();
 
     protected abstract ContentValues getContentValue(T element);
 
@@ -39,7 +38,7 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
         table.append(getTableName());
         table.append("(");
 
-        for (Map.Entry<String, String> entry : getKeyToValueTypeHolder().entrySet()) {
+        for (Map.Entry<String, String> entry : createKeyToValueTypeHolder().entrySet()) {
             table.append(entry.getKey() + " " +  entry.getValue() + "," );
         }
 
@@ -50,7 +49,7 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
     }
 
     private String[] getTableColumns(){
-        LinkedHashMap<String, String> typeHolder = getKeyToValueTypeHolder();
+        LinkedHashMap<String, String> typeHolder = createKeyToValueTypeHolder();
 
         String[] result = new String[typeHolder.size()];
 
@@ -101,7 +100,7 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
 
     @Override
     public List<T> readAll() {
-        ArrayList<T> requestedList = new ArrayList<T>();
+        ArrayList<T> requestedList = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + getTableName();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -124,7 +123,10 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
         ContentValues values = getContentValue(element);
 
         // updating row
-        return db.update(getTableName(), values, getKeyAsString() + " = ?",
+        return db.update(
+                getTableName(),
+                values,
+                getKeyAsString() + " = ?",
                 new String[] { String.valueOf(element.getId()) });
     }
 
@@ -142,16 +144,17 @@ public abstract class BaseTable<T extends DatabaseElement> implements ManagerLis
         return result;
     }
 
-    protected static final String KEY_ID = "id";
+    protected static final String KEY_ID = " id ";
 
-    protected static final String INTEGER = "INTEGER";
-    protected static final String TEXT = "TEXT";
-    protected static final String FLOAT = "FLOAT";
-    protected static final String DOUBLE = "DOUBLE";
-    protected static final String DATETIME = "DATETIME";
+    protected static final String INTEGER = " INTEGER ";
+    protected static final String TEXT = " TEXT ";
+    protected static final String FLOAT = " FLOAT";
+    protected static final String DOUBLE = " DOUBLE ";
+    protected static final String DATETIME = " DATETIME ";
 
 
-    protected static final String NOT_NULL = "NOT NULL";
-    protected static final String AUTOINCREMENT = "AUTOINCREMENT";
-    protected static final String PRIMARY_KEY = "PRIMARY KEY";
+    protected static final String NOT_NULL = " NOT NULL ";
+    protected static final String AUTOINCREMENT = " AUTOINCREMENT ";
+    protected static final String PRIMARY_KEY = " PRIMARY KEY ";
+    protected static final String UNIQUE = " UNIQUE ";
 }

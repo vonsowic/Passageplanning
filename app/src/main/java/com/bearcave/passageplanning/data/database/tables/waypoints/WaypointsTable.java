@@ -9,9 +9,10 @@ import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 
-public class WaypointsTable extends BaseTable<WaypointDAO> {
+public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoints{
 
     public WaypointsTable(ManagerListener manager) {
         super(manager);
@@ -23,17 +24,17 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
     }
 
     @Override
-    protected LinkedHashMap<String, String> getKeyToValueTypeHolder() {
+    protected LinkedHashMap<String, String> createKeyToValueTypeHolder() {
         LinkedHashMap<String, String> typeHolder = new LinkedHashMap<>();
 
-        typeHolder.put(KEY_ID, INTEGER+PRIMARY_KEY+AUTOINCREMENT);
-        typeHolder.put(KEY_NAME, TEXT+NOT_NULL);
-        typeHolder.put(KEY_NOTE, TEXT);
-        typeHolder.put(KEY_CHARACTERISTIC, TEXT+NOT_NULL);
-        typeHolder.put(KEY_UKC, FLOAT+NOT_NULL);
-        typeHolder.put(KEY_LATITUDE, DOUBLE+NOT_NULL);
-        typeHolder.put(KEY_LONGITUDE, DOUBLE+NOT_NULL);
-        typeHolder.put(KEY_GAUGE, INTEGER+NOT_NULL);
+        typeHolder.put(KEY_ID,              INTEGER+PRIMARY_KEY+AUTOINCREMENT);
+        typeHolder.put(KEY_NAME,            TEXT+NOT_NULL+UNIQUE);
+        typeHolder.put(KEY_NOTE,            TEXT);
+        typeHolder.put(KEY_CHARACTERISTIC,  TEXT);
+        typeHolder.put(KEY_UKC,             FLOAT+NOT_NULL);
+        typeHolder.put(KEY_LATITUDE,        DOUBLE+NOT_NULL);
+        typeHolder.put(KEY_LONGITUDE,       DOUBLE+NOT_NULL);
+        typeHolder.put(KEY_GAUGE,           INTEGER+NOT_NULL);
 
         return typeHolder;
     }
@@ -42,7 +43,7 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
     @Override
     protected ContentValues getContentValue(WaypointDAO waypoint) {
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, waypoint.getId());
+        //values.put(KEY_ID, waypoint.getId());
         values.put(KEY_NAME, waypoint.getName());
         values.put(KEY_NOTE, waypoint.getNote());
         values.put(KEY_CHARACTERISTIC, waypoint.getCharacteristic());
@@ -55,15 +56,16 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
 
     @Override
     protected WaypointDAO loadFrom(Cursor cursor) {
+        int i = 0;
         return new WaypointDAO(
-                cursor.getInt(0),               // id
-                cursor.getString(1),            // name
-                cursor.getString(2),            // note
-                cursor.getString(3),            // characteristic
-                cursor.getFloat(4),             // ukc
-                cursor.getDouble(5),            // latitude
-                cursor.getDouble(6),            // longitude
-                Gauge.getById(cursor.getInt(7)) // gauge
+                cursor.getInt(i++),               // id
+                cursor.getString(i++),            // name
+                cursor.getString(i++),            // note
+                cursor.getString(i++),            // characteristic
+                cursor.getFloat(i++),             // ukc
+                cursor.getDouble(i++),            // latitude
+                cursor.getDouble(i++),            // longitude
+                Gauge.getById(cursor.getInt(i))   // gauge
         );
     }
 
@@ -75,4 +77,10 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
     private static final String KEY_LONGITUDE = "longitude";
     private static final String KEY_LATITUDE = "latitude";
     private static final String KEY_GAUGE = "gauge_id";
+
+    @Override
+    public List<WaypointDAO> read(List<Integer> ids) {
+
+        return null;
+    }
 }

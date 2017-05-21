@@ -129,4 +129,6 @@ class WaypointTest {
 
         Assert.assertEquals(45.0f, wpt.bearingTo(wpt2))
     }
+
+
 }

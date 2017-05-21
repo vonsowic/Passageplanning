@@ -1,14 +1,13 @@
 package com.bearcave.passageplanning.data.database;
 
 import android.content.Context;
-import android.content.pm.ProviderInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.SparseArray;
 
 import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
-import com.bearcave.passageplanning.data.database.tables.route.RouteCRUD;
-import com.bearcave.passageplanning.data.database.tables.route.RouteTable;
+import com.bearcave.passageplanning.data.database.tables.passage.PassageCRUD;
+import com.bearcave.passageplanning.data.database.tables.passage.PassageTable;
 import com.bearcave.passageplanning.data.database.tables.tide.TidesTable;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
@@ -22,7 +21,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     public DatabaseManager(final Context context, String databaseName) {
         super(new DatabaseContext(context), databaseName, null, VERSION);
         tables.put(WaypointCRUD.ID, new WaypointsTable(this));
-        tables.put(RouteCRUD.ID, new RouteTable(this));
+        tables.put(PassageCRUD.ID, new PassageTable(this));
 
         for(Gauge gauge: Gauge.values()){
             tables.put(gauge.getId(), new TidesTable(this, gauge));
@@ -49,7 +48,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     }
 
 
-    private static final int VERSION = 10;
+    private static final int VERSION = 17;
 
     public BaseTable getTable(int tableId){
         return tables.get(tableId);

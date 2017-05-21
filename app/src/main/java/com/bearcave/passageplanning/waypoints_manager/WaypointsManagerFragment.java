@@ -1,31 +1,27 @@
 package com.bearcave.passageplanning.waypoints_manager;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
+import com.bearcave.passageplanning.base.BaseManagerAdapter;
+import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
+import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
 import com.bearcave.passageplanning.utils.Waypoint;
-import com.bearcave.passageplanning.waypoints_manager.editor.EditorActivity;
+import com.bearcave.passageplanning.waypoints_manager.editor.WaypointEditorActivity;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class WaypointsManagerFragment extends Fragment implements WaypointCRUD{
+public class WaypointsManagerFragment extends BaseManagerFragment implements WaypointCRUD, ReadWaypoints{
 
     private WaypointsTable database;
     private WaypointsManagerAdapter adapter;
@@ -39,51 +35,64 @@ public class WaypointsManagerFragment extends Fragment implements WaypointCRUD{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_waypoints_manager, container, false);
-
-        ExpandableListView listView = ButterKnife.findById(view, R.id.list_view);
+    protected BaseManagerAdapter getAdapter() {
         adapter = new WaypointsManagerAdapter(this, getContext());
-        listView.setAdapter(adapter);
-
-        view.findViewById(R.id.add_new_waypoint).setOnClickListener( v-> openWaypointEditor(null));
-
-        return view;
+        return adapter;
     }
 
-
-
+    @OnClick(R.id.open_editor)
     public void openWaypointEditor() {
         openWaypointEditor(null);
     }
 
-
     public void openWaypointEditor(Waypoint waypoint){
-        Intent intent = new Intent(getContext(), EditorActivity.class);
+        Intent intent = new Intent(getContext(), WaypointEditorActivity.class);
 
         if(waypoint != null){
-            intent.putExtra(EditorActivity.WAYPOINT_RESULT, waypoint);
+            intent.putExtra(WaypointEditorActivity.EDITOR_RESULT, waypoint);
         }
 
-        startActivityForResult(intent, EditorActivity.WAYPOINT_REQUEST);
+        startActivityForResult(intent, WaypointEditorActivity.EDITOR_REQUEST);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == EditorActivity.WAYPOINT_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                WaypointDAO result = (WaypointDAO) data.getSerializableExtra(EditorActivity.WAYPOINT_RESULT);
-                adapter.addWaypoint(database.read(database.insert(result)));
+        if (requestCode == WaypointEditorActivity.EDITOR_REQUEST) {
+            if (resultCode == WaypointEditorActivity.EDITOR_CREATED) {
+                WaypointDAO result = (WaypointDAO) data.getSerializableExtra(WaypointEditorActivity.EDITOR_RESULT);
+
+                if( result == null) {
+                    Toast.makeText(getContext(), "Ups! Waypoint wasn't created", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // send waypoint that was saved in database instead of sending waypoint from WaypointEditorActivity
+                adapter.add(
+                        read(insert(result))
+                );
+
+            } else if (resultCode == WaypointEditorActivity.EDITOR_UPDATED) {
+                WaypointDAO result = (WaypointDAO) data.getSerializableExtra(WaypointEditorActivity.EDITOR_RESULT);
+
+                if( result == null) {
+                    Toast.makeText(getContext(), "Ups! Waypoint wasn't updated", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                database.update(result);
+                adapter.add(result);
             }
         }
     }
 
-    public WaypointsManagerFragment() {}
-
-
     @Override
     public Integer insert(WaypointDAO waypointDAO) {
         return database.insert(waypointDAO);
+    }
+
+    @Override
+    public List<WaypointDAO> read(List<Integer> ids) {
+        return database.read(ids);
     }
 
     @Override
@@ -98,11 +107,19 @@ public class WaypointsManagerFragment extends Fragment implements WaypointCRUD{
 
     @Override
     public int update(WaypointDAO waypointDAO) {
-        return database.update(waypointDAO);
+        openWaypointEditor(waypointDAO);
+        return 1;
     }
 
     @Override
     public int delete(WaypointDAO waypointDAO) {
         return database.delete(waypointDAO);
     }
+
+    @Override
+    protected int getTitle() {
+        return R.string.waypoints_menu;
+    }
+
+    public WaypointsManagerFragment() {}
 }
