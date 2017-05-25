@@ -1,7 +1,7 @@
 package com.bearcave.passageplanning.data.database;
 
-import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
+import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
 
 public interface OnDatabaseRequestedListener{
-        BaseTable onGetTableListener(int tableId);
+        BaseTableWithCustomKey onGetTableListener(int tableId);
     }

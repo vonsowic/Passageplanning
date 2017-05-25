@@ -2,28 +2,19 @@ package com.bearcave.passageplanning.base;
 
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 import com.bearcave.passageplanning.R;
+import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
+import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey;
+
 import butterknife.OnClick;
 
 /**
  * BasePoorManager with FloatingActionButton
  */
-public abstract class BaseManagerFragment<DAO extends Parcelable & OnNameRequestedListener>
-        extends BasePoorManagerFragment<DAO> {
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        return view;
-    }
+public abstract class BaseManagerFragment<DAO extends Parcelable & DatabaseElementWithCustomKey<T>, T>
+        extends BasePoorManagerFragment<DAO, T> {
 
 
     @OnClick(R.id.open_editor)
@@ -60,15 +51,16 @@ public abstract class BaseManagerFragment<DAO extends Parcelable & OnNameRequest
             if (resultCode == BaseEditorActivity.EDITOR_CREATED) {
                 DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
 
+                insert(result);
                 getAdapter().add(
-                        read(insert(result))
+                        result
                 );
 
             } else if (resultCode == BaseEditorActivity.EDITOR_UPDATED) {
                 DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
 
                 update(result);
-                getAdapter().add(result);
+                getAdapter().update(result);
             }
         }
     }

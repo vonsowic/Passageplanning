@@ -23,12 +23,11 @@ public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
     private EditText characteristic;
     private TextView gauge;
 
-    private long id = -2;
+    private Integer id = -2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void findViews() {
+        super.findViews();
         name =          (EditText) findViewById(R.id.name_text);
         note =          (EditText) findViewById(R.id.note_text);
         characteristic =(EditText) findViewById(R.id.characteristic_text);
@@ -36,7 +35,6 @@ public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
         latitude =      (EditText) findViewById(R.id.latitude_text);
         longitude =     (EditText) findViewById(R.id.longitude_text);
         gauge =         (TextView) findViewById(R.id.gauge_name);
-        gauge.setText(Gauge.MARGATE.getName());
 
         registerForContextMenu(gauge);
         gauge.setOnClickListener(this::openContextMenu);

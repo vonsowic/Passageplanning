@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppCompatActivity {
 
     public static final short EDITOR_REQUEST = 1;
+
+
     public static final String EDITOR_RESULT = "editor_result";
     public static final String EDITOR_MAIL = "editor_mail";
     public static final short EDITOR_CREATED = 10000;
@@ -26,7 +28,7 @@ public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppComp
     private boolean updateMode = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_editor);
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
@@ -38,16 +40,19 @@ public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppComp
         Parcelable tmp = mail.getParcelableExtra(EDITOR_RESULT);
         updateMode = tmp != null;
 
+        getParcelableExtra(mail);
+
+        FrameLayout content_placeholder = (FrameLayout) findViewById(R.id.content_placeholder);
+        content_placeholder.addView(getLayoutInflater().inflate(getContentLayoutId(), null));
+
+        findViewById(R.id.save_button).setOnClickListener(v -> onSaveButtonClicked());
+
+        findViews();
+
         if(updateMode) {
             setViewsContent((DAO) tmp);
         }
 
-        getParcelableExtra(mail);
-
-        findViewById(R.id.save_button).setOnClickListener(v -> onSaveButtonClicked());
-
-        FrameLayout content_placeholder = (FrameLayout) findViewById(R.id.content_placeholder);
-        content_placeholder.addView(getLayoutInflater().inflate(getContentLayoutId(), null));
     }
 
     protected void getParcelableExtra(Intent intent){
@@ -57,6 +62,8 @@ public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppComp
     protected abstract void setViewsContent(DAO object);
 
     protected abstract int getContentLayoutId();
+
+    protected void findViews(){}
 
     public void onSaveButtonClicked(){
         if (!isAllFilled()){

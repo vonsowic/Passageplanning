@@ -32,8 +32,12 @@ public abstract class BaseFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         getActivity().setTitle(getString(getTitle()));
         View view = inflater.inflate(layoutId(), container, false);
+        findViews(view);
         unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    protected void findViews(View parent) {
     }
 
 

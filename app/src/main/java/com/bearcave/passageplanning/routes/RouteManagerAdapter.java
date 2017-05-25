@@ -11,10 +11,10 @@ import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -28,25 +28,20 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
     public RouteManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
         this.waypoints = new SparseArray<>();
+        this.waypointsDatabase = (ReadWaypoints) context;
+
+        for(WaypointDAO waypoint : waypointsDatabase.readAllWaypoints()){
+            waypoints.put(waypoint.getId(), waypoint);
+        }
     }
 
 
-    private WaypointDAO getWaypointById(Integer id, int group){
-        WaypointDAO requestedWaypoint = waypoints.get(id);
-
-        if (requestedWaypoint == null){
-            ArrayList<WaypointDAO> loaded = (ArrayList<WaypointDAO>) waypointsDatabase.read(getPassages().get(group).getWaypointsIds());
-            for (WaypointDAO waypoint: loaded) {
-                waypoints.put(id, waypoint);
-            }
-            return waypoints.get(id);
-        }
-
-        return requestedWaypoint;
+    private WaypointDAO getWaypointById(Integer id){
+        return waypoints.get(id);
     }
 
     private WaypointDAO getWaypointFromList(int group, int child){
-        return getWaypointById(getPassages().get(group).getWaypointsIds().get(child), group);
+        return getWaypointById(getPassages().get(group).getWaypointsIds().get(child));
     }
 
     private ArrayList<RouteDAO> getPassages(){
@@ -78,7 +73,4 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
 
         return view;
     }
-
-
-
 }

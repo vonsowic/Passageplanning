@@ -12,7 +12,6 @@ import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
 import com.bearcave.passageplanning.data.database.tables.route.RouteCRUD;
 import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
 import com.bearcave.passageplanning.data.database.tables.route.RouteTable;
-import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 
 import java.util.ArrayList;
@@ -21,9 +20,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RouteManagerFragment extends BaseManagerFragment<RouteDAO>
+public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
         implements RouteCRUD,
-        ReadWaypoints {
+        ReadWaypoints{
 
     private RouteTable database;
     private ReadWaypoints waypointsHolder;
@@ -42,7 +41,7 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO>
     }
 
     @Override
-    public Integer insert(RouteDAO route) {
+    public long insert(RouteDAO route) {
         return database.insert(route);
     }
 
@@ -69,7 +68,7 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO>
 
     @Override
     protected void putExtra(Intent mail) {
-        ArrayList<WaypointDAO> waypoints = (ArrayList<WaypointDAO>) readAllDaos();
+        ArrayList<WaypointDAO> waypoints = (ArrayList<WaypointDAO>) readAllWaypoints();
 
         mail.putParcelableArrayListExtra(
                 RouteEditorActivity.WAYPOINTS_KEY,
@@ -91,13 +90,9 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO>
         // Required empty public constructor
     }
 
-    @Override
-    public List<WaypointDAO> read(List<Integer> ids) {
-        return waypointsHolder.read(ids);
-    }
 
     @Override
-    public List<WaypointDAO> readAllDaos() {
-        return waypointsHolder.readAllDaos();
+    public List<WaypointDAO> readAllWaypoints() {
+        return waypointsHolder.readAllWaypoints();
     }
 }

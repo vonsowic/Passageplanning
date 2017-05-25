@@ -5,6 +5,8 @@ import android.database.Cursor;
 
 import com.bearcave.passageplanning.data.database.ManagerListener;
 import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
+import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
+import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
 import org.joda.time.DateTime;
@@ -12,7 +14,7 @@ import org.joda.time.DateTime;
 import java.util.LinkedHashMap;
 
 
-public class TidesTable extends BaseTable<TideItemDAO> implements TideCRUD {
+public class TidesTable extends BaseTableWithCustomKey<TideItemDAO, DateTime> implements TideCRUD {
 
     private String gauge;
 
@@ -30,7 +32,6 @@ public class TidesTable extends BaseTable<TideItemDAO> implements TideCRUD {
     @Override
     protected LinkedHashMap<String, String> createKeyToValueTypeHolder() {
         LinkedHashMap<String, String> requestedTypeHolder = new LinkedHashMap<>();
-        // requestedTypeHolder.put(KEY_ID, INTEGER+PRIMARY_KEY+NOT_NULL+AUTOINCREMENT);
         requestedTypeHolder.put(KEY_TIME, DATETIME + PRIMARY_KEY + NOT_NULL);
         requestedTypeHolder.put(KEY_PREDICTED, FLOAT + NOT_NULL);
         return requestedTypeHolder;
@@ -39,7 +40,6 @@ public class TidesTable extends BaseTable<TideItemDAO> implements TideCRUD {
     @Override
     protected ContentValues getContentValue(TideItemDAO element) {
         ContentValues values = new ContentValues();
-        // values.put(KEY_ID, element.getId());
         values.put(KEY_TIME, element.getTime().toString());
         values.put(KEY_PREDICTED, element.getPredictedTideHeight());
         return values;
@@ -48,9 +48,8 @@ public class TidesTable extends BaseTable<TideItemDAO> implements TideCRUD {
     @Override
     protected TideItemDAO loadFrom(Cursor cursor) {
         return new TideItemDAO(
-                cursor.getLong(0),
-                cursor.getFloat(1),
-                DateTime.parse(cursor.getString(2))
+                cursor.getFloat(0),
+                DateTime.parse(cursor.getString(1))
         );
     }
 

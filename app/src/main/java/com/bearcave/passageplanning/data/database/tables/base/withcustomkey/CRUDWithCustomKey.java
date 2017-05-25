@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.data.database.tables.base;
+package com.bearcave.passageplanning.data.database.tables.base.withcustomkey;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ public interface CRUDWithCustomKey<T, Key> {
      * @param element
      * @return the row ID of the newly inserted row
      */
-    Key insert(T element);
+    long insert(T element);
     
     T read(Key id);
     List<T> readAll();

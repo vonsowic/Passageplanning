@@ -25,4 +25,5 @@
 
     <string name="editor_gauge_chooser_title">Choose gauge</string>
     <string name="choose_waypoints">Choose waypoints</string>
+    <string name="close">Close</string>
 </resources>

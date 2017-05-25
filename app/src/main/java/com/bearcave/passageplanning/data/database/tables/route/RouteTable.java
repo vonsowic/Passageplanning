@@ -32,7 +32,7 @@ public class RouteTable extends BaseTable<RouteDAO> implements RouteCRUD {
     protected ContentValues getContentValue(RouteDAO element) {
         ContentValues value = new ContentValues();
         value.put(KEY_NAME, element.getName());
-        value.put(KEY_WAYPOINTS, element.toString());
+        value.put(KEY_WAYPOINTS, RouteDAO.fromList(element.getWaypointsIds()));
         return value;
     }
 
@@ -41,7 +41,7 @@ public class RouteTable extends BaseTable<RouteDAO> implements RouteCRUD {
         return new RouteDAO(
                 cursor.getInt(0),
                 cursor.getString(1),
-                RouteDAO.parse(cursor.getString(2))
+                RouteDAO.fromString(cursor.getString(2))
         );
     }
 

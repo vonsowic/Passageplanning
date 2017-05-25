@@ -2,25 +2,19 @@ package com.bearcave.passageplanning.waypoints_manager;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
-import com.bearcave.passageplanning.utils.Waypoint;
 
 import java.util.List;
 
-import butterknife.OnClick;
 
-
-public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO> implements WaypointCRUD{
+public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, Integer> implements WaypointCRUD{
 
     private WaypointsTable database;
     private WaypointsManagerAdapter adapter;
@@ -45,7 +39,7 @@ public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO> i
     }
 
     @Override
-    public Integer insert(WaypointDAO waypointDAO) {
+    public long insert(WaypointDAO waypointDAO) {
         return database.insert(waypointDAO);
     }
 
