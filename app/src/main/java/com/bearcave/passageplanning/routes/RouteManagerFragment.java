@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.bearcave.passageplanning.R;
+import com.bearcave.passageplanning.base.BaseEditorActivity;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
@@ -36,7 +37,7 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
     }
 
     @Override
-    protected Class<?> getEditorClass() {
+    protected Class<? extends BaseEditorActivity<RouteDAO>> getEditorClass() {
         return RouteEditorActivity.class;
     }
 
@@ -74,6 +75,18 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
                 RouteEditorActivity.WAYPOINTS_KEY,
                 waypoints
         );
+    }
+
+    @Override
+    protected void onDataCreated(RouteDAO result) {
+        insert(result);
+        getAdapter().add(result);
+    }
+
+    @Override
+    protected void onDataUpdated(RouteDAO result) {
+        database.update(result);
+        getAdapter().update(result);
     }
 
     @Override

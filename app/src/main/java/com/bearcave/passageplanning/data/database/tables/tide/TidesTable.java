@@ -54,7 +54,7 @@ public class TidesTable extends BaseTableWithCustomKey<TideItemDAO, DateTime> im
     }
 
     @Override
-    protected String getKeyAsString() {
+    protected String getIdKey() {
         return KEY_TIME;
     }
 

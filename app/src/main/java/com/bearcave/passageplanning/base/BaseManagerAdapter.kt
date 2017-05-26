@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseExpandableListAdapter
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
 
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.tables.base.CRUD
@@ -54,18 +51,21 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     }
 
     /**
-     * @param toBeUpdated - send from external class to be updated in list view.
+     * @param toBeUpdated - sent from external class to be updated in list view.
      */
     fun update(toBeUpdated: Dao) {
         for (element in container) {
             var i = 0
-            if (element.id === toBeUpdated.id) {
-                container.removeAt(i)
-                container.add(i, element)
+            if (element.id == toBeUpdated.id) {
+                container[ i ] = element
                 notifyDataSetChanged()
+                Toast.makeText(context, "Updated!", Toast.LENGTH_SHORT).show()
+                return
             }
             i++
         }
+        Toast.makeText(context, "Not updated!", Toast.LENGTH_SHORT).show()
+
     }
 
     override fun getGroupCount(): Int {

@@ -12,6 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @param <Dao> - Data Access Object
+ * @param <Id> - Column id in database.
+ */
 public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCustomKey<Id>, Id>
         implements ManagerListener,
         CRUDWithCustomKey<Dao, Id> {
@@ -28,9 +32,7 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
 
     protected abstract ContentValues getContentValue(Dao element);
 
-    protected String getKeyAsString(){
-        return KEY_ID;
-    }
+    protected abstract String getIdKey();
 
     protected abstract Dao loadFrom(Cursor cursor);
 
@@ -75,24 +77,23 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
 
     @Override
     public long insert(Dao element) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = getContentValue(element);
-
-        long id = db.insert(getTableName(), null, values);
-
-        db.close();
-        return id;
+        return getWritableDatabase()
+                .insert(
+                        getTableName(),
+                        null,
+                        getContentValue(element)
+                );
     }
 
     @Override
     public Dao read(Id id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(
+        Cursor cursor = getReadableDatabase().query(
                 getTableName(),
                 getTableColumns(),
-                getKeyAsString() + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
+                getIdKey() + ANY,
+                new String[] { id.toString() },
+                null, null, null, null
+        );
 
         if (cursor != null)
             cursor.moveToFirst();
@@ -114,46 +115,37 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
             } while (cursor.moveToNext());
         }
 
-        // return contact list
         return requestedList;
     }
 
     @Override
     public int update(Dao element) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = getContentValue(element);
-
-        // updating row
-        return db.update(
+        return getWritableDatabase().update(
                 getTableName(),
-                values,
-                getKeyAsString() + " = ?",
-                new String[] { String.valueOf(element.getId()) });
+                getContentValue(element),
+                getIdKey() + ANY,
+                new String[] { element.getId().toString() }
+        );
     }
 
     @Override
     public int delete(Dao element) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        int result = db.delete(
+        return getWritableDatabase().delete(
                 getTableName(),
-                getKeyAsString() + " = ?",
+                getIdKey() + ANY,
                 new String[] { element.getId().toString() }
         );
-
-        db.close();
-        return result;
     }
 
     protected static final String KEY_ID = " id ";
+
+    protected static final String ANY = " = ?";
 
     protected static final String INTEGER = " INTEGER ";
     protected static final String TEXT = " TEXT ";
     protected static final String FLOAT = " FLOAT";
     protected static final String DOUBLE = " DOUBLE ";
     protected static final String DATETIME = " DATETIME ";
-
 
     protected static final String NOT_NULL = " NOT NULL ";
     protected static final String AUTOINCREMENT = " AUTOINCREMENT ";

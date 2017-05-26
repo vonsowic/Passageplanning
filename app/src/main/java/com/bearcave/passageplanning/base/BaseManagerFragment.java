@@ -8,6 +8,8 @@ import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
 import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey;
 
+import java.security.InvalidParameterException;
+
 import butterknife.OnClick;
 
 /**
@@ -66,16 +68,16 @@ public abstract class BaseManagerFragment<DAO extends Parcelable & DatabaseEleme
         if (requestCode == BaseEditorActivity.EDITOR_REQUEST) {
             if (resultCode == BaseEditorActivity.EDITOR_CREATED) {
                 DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
-
-                insert(result);
-                getAdapter().add(result);
+                onDataCreated(result);
 
             } else if (resultCode == BaseEditorActivity.EDITOR_UPDATED) {
                 DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
-
-                update(result);
-                getAdapter().update(result);
+                onDataUpdated(result);
             }
         }
     }
+
+    protected abstract void onDataCreated(DAO result);
+
+    protected abstract void onDataUpdated(DAO result);
 }

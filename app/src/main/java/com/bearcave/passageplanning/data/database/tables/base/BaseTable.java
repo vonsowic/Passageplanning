@@ -11,4 +11,9 @@ public abstract class BaseTable<Dao extends DatabaseElement> extends BaseTableWi
     public BaseTable(ManagerListener manager) {
         super(manager);
     }
+
+    @Override
+    protected String getIdKey(){
+        return KEY_ID;
+    }
 }

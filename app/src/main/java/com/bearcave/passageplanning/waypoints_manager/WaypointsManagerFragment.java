@@ -17,7 +17,6 @@ import java.util.List;
 public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, Integer> implements WaypointCRUD{
 
     private WaypointsTable database;
-    private WaypointsManagerAdapter adapter;
 
 
     @Override
@@ -28,8 +27,20 @@ public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, I
     }
 
     @Override
-    protected Class<?> getEditorClass() {
+    protected Class<? extends WaypointEditorActivity> getEditorClass() {
         return WaypointEditorActivity.class;
+    }
+
+    @Override
+    protected void onDataCreated(WaypointDAO result) {
+        insert(result);
+        getAdapter().add(result);
+    }
+
+    @Override
+    protected void onDataUpdated(WaypointDAO result) {
+        database.update(result);
+        getAdapter().update(result);
     }
 
 

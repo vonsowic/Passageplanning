@@ -15,10 +15,7 @@ import butterknife.ButterKnife;
 public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppCompatActivity {
 
     public static final short EDITOR_REQUEST = 1;
-
-
     public static final String EDITOR_RESULT = "editor_result";
-    public static final String EDITOR_MAIL = "editor_mail";
     public static final short EDITOR_CREATED = 10000;
     public static final short EDITOR_UPDATED = 10001;
 
