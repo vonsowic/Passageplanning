@@ -10,9 +10,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
-
-import java.io.Serializable;
-
 import butterknife.ButterKnife;
 
 public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppCompatActivity {
@@ -93,5 +90,4 @@ public abstract class BaseEditorActivity<DAO extends Parcelable> extends AppComp
         setResult(Activity.RESULT_CANCELED, returnIntent);
         super.onBackPressed();
     }
-
 }

@@ -12,19 +12,19 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * A simple {@link Fragment} subclass.
+ * The  most base fragment class for this app. All created fragments should extend this fragment.
+ * @author Michał Wąsowicz
  */
 public abstract class BaseFragment extends Fragment {
 
+    /**
+     * Enables finding views by using ButterKnife.
+     */
     private Unbinder unbinder;
 
     protected abstract int getTitle();
 
     protected abstract int layoutId();
-
-    public BaseFragment() {
-        // Required empty public constructor
-    }
 
     @Nullable
     @Override
@@ -37,6 +37,10 @@ public abstract class BaseFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Fragments extending this class should connect to views from layouts in this section.
+     * @param parent - main view
+     */
     protected void findViews(View parent) {
     }
 
@@ -45,6 +49,10 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public BaseFragment() {
+        // Required empty public constructor
     }
 
 }

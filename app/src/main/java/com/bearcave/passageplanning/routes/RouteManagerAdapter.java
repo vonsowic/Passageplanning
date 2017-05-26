@@ -33,6 +33,9 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
         for(WaypointDAO waypoint : waypointsDatabase.readAllWaypoints()){
             waypoints.put(waypoint.getId(), waypoint);
         }
+
+        addOption("Start passage", element -> getDatabase().update(element));
+        addOption("Edit", element -> getDatabase().update(element));
     }
 
 

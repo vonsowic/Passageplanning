@@ -1,6 +1,5 @@
 package com.bearcave.passageplanning.waypoints_manager;
 
-import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +34,7 @@ public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
         latitude =      (EditText) findViewById(R.id.latitude_text);
         longitude =     (EditText) findViewById(R.id.longitude_text);
         gauge =         (TextView) findViewById(R.id.gauge_name);
+        gauge.setText(Gauge.MARGATE.getName());
 
         registerForContextMenu(gauge);
         gauge.setOnClickListener(this::openContextMenu);

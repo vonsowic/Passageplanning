@@ -12,7 +12,10 @@ import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.Data
 import butterknife.ButterKnife;
 
 /**
- * BaseManager fragment without FloatingActionButton.
+ * Shows ExpandableListView using adapter, which extends BaseManagerAdapter.
+ * @see BaseManagerAdapter
+ * @version 1.0
+ * @author Michał Wąsowicz
  */
 public abstract class BasePoorManagerFragment<DAO extends DatabaseElementWithCustomKey<T>, T> extends BaseFragment
         implements CRUD<DAO> {

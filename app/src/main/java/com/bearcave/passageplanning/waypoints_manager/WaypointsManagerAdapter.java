@@ -21,6 +21,13 @@ public class WaypointsManagerAdapter extends BaseManagerAdapter<WaypointDAO, Int
 
     public WaypointsManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
+        addOption("Edit", element -> getDatabase().update(element));
+        addOption("Delete", element -> {
+            getDatabase().delete(element);
+            getContainer().remove(element);
+            notifyDataSetChanged();
+        });
+
     }
 
     @Override
@@ -59,11 +66,6 @@ public class WaypointsManagerAdapter extends BaseManagerAdapter<WaypointDAO, Int
         position.setText(String.valueOf(waypoint.getLongitude()) + "\n" + String.valueOf(waypoint.getLatitude()));
 
         return view;
-    }
-
-    @Override
-    protected PopupMenu createPopupMenu(View anchor) {
-        return super.createPopupMenu(anchor);
     }
 
     @Override

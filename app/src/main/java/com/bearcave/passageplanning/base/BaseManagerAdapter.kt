@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.util.SparseArray
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
@@ -19,26 +20,42 @@ import java.util.ArrayList
 import butterknife.ButterKnife
 
 /**
- * Created by miwas on 20.05.17.
+ * All ExpandableListViews used in BasePoorManager should extend this class.
+ *
+ * @see BasePoorManagerFragment
+ * @author Michał Wąsowicz
+ * @version 1.0
+ * @since 20.05.17
  */
-
 abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BaseManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
 
+    /**
+     * This container has all DAOs shown in ExpandableListView.
+     */
     protected val container: ArrayList<Dao>
-    protected val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val menuActions = SparseArray<OnMenuItemSelectedAction<Dao>>()
+
+
+    protected val inflater: LayoutInflater
     protected val database: CRUD<Dao> = parent as CRUD<Dao>
+    private val commands = ArrayList<Command>()
 
 
     init {
         container = database.readAll() as ArrayList<Dao>
+        inflater = LayoutInflater.from(context)
     }
 
+    /**
+     * @param element - send from external class to be added in list view.
+     */
     fun add(element: Dao) {
         container.add(element)
         notifyDataSetChanged()
     }
 
+    /**
+     * @param toBeUpdated - send from external class to be updated in list view.
+     */
     fun update(toBeUpdated: Dao) {
         for (element in container) {
             var i = 0
@@ -75,7 +92,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         return 0
     }
 
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View, parent: ViewGroup): View {
+    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         val view = inflater.inflate(R.layout.manager_group_item, parent, false)
 
         val title = ButterKnife.findById<TextView>(view, R.id.name)
@@ -91,23 +108,25 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         return false
     }
 
-    protected open fun createPopupMenu(anchor: View): PopupMenu {
-        return PopupMenu(context, anchor)
-    }
-
     private fun showPopupMenu(anchor: View, selected: Dao) {
-        val menu = createPopupMenu(anchor)
+        val menu = PopupMenu(context, anchor)
+        for (command in commands){
+              menu.menu.add(Menu.NONE, command.i, Menu.NONE, command.name)
+        }
 
         menu.setOnMenuItemClickListener { item ->
-            menuActions.get(item.itemId).exec(selected)
+            commands[item.itemId].command.exec(selected)
             true
         }
 
         menu.show()
     }
 
-    protected fun addOption(title: String, option: OnMenuItemSelectedAction<T>) {
-        //menu.getMenu().add(Menu.NONE, EDIT_CODE, Menu.NONE, context.getString(R.string.action_edit));
+    var INDEX = 0 // used only in addOption for options indexing.
+
+
+    protected fun addOption(title: String, option: OnMenuItemSelectedAction<Dao>) {
+        commands.add(Command(INDEX++, title, option))
     }
 
 
@@ -116,4 +135,6 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     protected interface OnMenuItemSelectedAction<in Dao> {
         fun exec(element: Dao)
     }
+
+    private inner class Command(val i: Int, val name: String, val command: OnMenuItemSelectedAction<Dao>)
 }
