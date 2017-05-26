@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.SparseArray;
 
 import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
-import com.bearcave.passageplanning.data.database.tables.passage.PassageCRUD;
-import com.bearcave.passageplanning.data.database.tables.passage.PassageTable;
+import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.data.database.tables.route.RouteCRUD;
+import com.bearcave.passageplanning.data.database.tables.route.RouteTable;
 import com.bearcave.passageplanning.data.database.tables.tide.TidesTable;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
@@ -16,12 +17,12 @@ import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.
 
 public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener {
 
-    private final SparseArray<BaseTable> tables = new SparseArray<>();
+    private final SparseArray<BaseTableWithCustomKey> tables = new SparseArray<>();
 
     public DatabaseManager(final Context context, String databaseName) {
         super(new DatabaseContext(context), databaseName, null, VERSION);
         tables.put(WaypointCRUD.ID, new WaypointsTable(this));
-        tables.put(PassageCRUD.ID, new PassageTable(this));
+        tables.put(RouteCRUD.ID, new RouteTable(this));
 
         for(Gauge gauge: Gauge.values()){
             tables.put(gauge.getId(), new TidesTable(this, gauge));
@@ -48,9 +49,9 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     }
 
 
-    private static final int VERSION = 17;
+    private static final int VERSION = 19;
 
-    public BaseTable getTable(int tableId){
+    public BaseTableWithCustomKey getTable(int tableId){
         return tables.get(tableId);
     }
 

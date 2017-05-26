@@ -43,8 +43,6 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include
-        android:id="@+id/content_placeholder"
-        layout="@layout/content_base_editor" />
+    <include layout="@layout/content_base_editor" />
 
 </android.support.design.widget.CoordinatorLayout>

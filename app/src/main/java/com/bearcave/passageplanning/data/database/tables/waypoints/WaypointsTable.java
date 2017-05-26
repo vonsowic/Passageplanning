@@ -8,11 +8,12 @@ import com.bearcave.passageplanning.data.database.ManagerListener;
 import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
-public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoints{
+public class WaypointsTable extends BaseTable<WaypointDAO> {
 
     public WaypointsTable(ManagerListener manager) {
         super(manager);
@@ -43,7 +44,6 @@ public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoi
     @Override
     protected ContentValues getContentValue(WaypointDAO waypoint) {
         ContentValues values = new ContentValues();
-        //values.put(KEY_ID, waypoint.getId());
         values.put(KEY_NAME, waypoint.getName());
         values.put(KEY_NOTE, waypoint.getNote());
         values.put(KEY_CHARACTERISTIC, waypoint.getCharacteristic());
@@ -77,10 +77,4 @@ public class WaypointsTable extends BaseTable<WaypointDAO> implements ReadWaypoi
     private static final String KEY_LONGITUDE = "longitude";
     private static final String KEY_LATITUDE = "latitude";
     private static final String KEY_GAUGE = "gauge_id";
-
-    @Override
-    public List<WaypointDAO> read(List<Integer> ids) {
-
-        return null;
-    }
 }

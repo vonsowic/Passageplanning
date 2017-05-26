@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passages;
+package com.bearcave.passageplanning.routes;
 
 import android.content.Context;
 import android.util.SparseArray;
@@ -10,46 +10,44 @@ import android.widget.TextView;
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.data.database.tables.passage.PassageDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
+import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
 
-public class PassageManagerAdapter extends BaseManagerAdapter {
+public class RouteManagerAdapter extends BaseManagerAdapter {
 
 
     private ReadWaypoints waypointsDatabase;
     private SparseArray<WaypointDAO> waypoints;
 
-    public PassageManagerAdapter(BaseManagerFragment parent, Context context) {
+    public RouteManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
         this.waypoints = new SparseArray<>();
+        this.waypointsDatabase = (ReadWaypoints) context;
+
+        for(WaypointDAO waypoint : waypointsDatabase.readAllWaypoints()){
+            waypoints.put(waypoint.getId(), waypoint);
+        }
+
+        addOption("Start passage", element -> getDatabase().update(element));
+        addOption("Edit", element -> getDatabase().update(element));
     }
 
 
-    private WaypointDAO getWaypointById(Integer id, int group){
-        WaypointDAO requestedWaypoint = waypoints.get(id);
-
-        if (requestedWaypoint == null){
-            ArrayList<WaypointDAO> loaded = (ArrayList<WaypointDAO>) waypointsDatabase.read(getPassages().get(group).getWaypointsIds());
-            for (WaypointDAO waypoint: loaded) {
-                waypoints.put(id, waypoint);
-            }
-            return waypoints.get(id);
-        }
-
-        return requestedWaypoint;
+    private WaypointDAO getWaypointById(Integer id){
+        return waypoints.get(id);
     }
 
     private WaypointDAO getWaypointFromList(int group, int child){
-        return getWaypointById(getPassages().get(group).getWaypointsIds().get(child), group);
+        return getWaypointById(getPassages().get(group).getWaypointsIds().get(child));
     }
 
-    private ArrayList<PassageDAO> getPassages(){
+    private ArrayList<RouteDAO> getPassages(){
         return getContainer();
     }
 
@@ -71,14 +69,11 @@ public class PassageManagerAdapter extends BaseManagerAdapter {
         WaypointDAO waypoint = getWaypointFromList(groupPosition, childPosition);
 
         TextView title = ButterKnife.findById(view, R.id.name);
-        title.setText(getPassages().get(groupPosition).getName());
+        title.setText(waypoint.getName());
 
         ImageView up = ButterKnife.findById(view, R.id.up);
         ImageView down = ButterKnife.findById(view, R.id.down);
 
         return view;
     }
-
-
-
 }

@@ -4,20 +4,17 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_start_passage"
-            android:title="@string/start_passage" />
+            android:id="@+id/nav_passages_menu"
+            android:title="@string/passages_menu" />
+
+        <item
+            android:id="@+id/nav_routes_menu"
+            android:title="@string/routes_menu" />
 
         <item
             android:id="@+id/nav_waypoints_menu"
             android:title="@string/waypoints_menu" />
 
-        <item
-            android:id="@+id/nav_passages_menu"
-            android:title="@string/passages_menu" />
-
-        <item
-            android:id="@+id/nav_reports_menu"
-            android:title="@string/reports_menu" />
 
     </group>
 

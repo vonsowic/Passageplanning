@@ -20,11 +20,13 @@ import android.widget.Toast;
 import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.data.database.DatabaseManager;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
-import com.bearcave.passageplanning.data.database.tables.waypoints.ReadWaypoints;
+import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
 import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
-import com.bearcave.passageplanning.passages.PassagesManagerFragment;
-import com.bearcave.passageplanning.reports.ReportsManagerFragment;
+import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
+import com.bearcave.passageplanning.routes.ReadWaypoints;
+import com.bearcave.passageplanning.routes.RouteManagerAdapter;
+import com.bearcave.passageplanning.routes.RouteManagerFragment;
 import com.bearcave.passageplanning.waypoints_manager.WaypointsManagerFragment;
 
 import java.util.List;
@@ -32,7 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     OnDatabaseRequestedListener,
-                    ReadWaypoints{
+                    ReadWaypoints {
 
     private DatabaseManager database;
     private FilesManager files;
@@ -58,9 +60,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentHolder.put(R.id.nav_passages_menu, new PassagesManagerFragment());
+        fragmentHolder.put(R.id.nav_routes_menu, new RouteManagerFragment());
         fragmentHolder.put(R.id.nav_waypoints_menu, new WaypointsManagerFragment());
-        fragmentHolder.put(R.id.nav_reports_menu, new ReportsManagerFragment());
 
         askForPermission();
     }
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity
     private void afterPermissionIsChecked(){
         files = new FilesManager(this);
         database = files.createDatabase();
-        showFragment(R.id.nav_waypoints_menu);
+        showFragment(R.id.nav_routes_menu);
     }
 
     @Override
@@ -126,13 +127,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public BaseTable onGetTableListener(int tableId) {
+    public BaseTableWithCustomKey onGetTableListener(int tableId) {
         return database.getTable(tableId);
     }
 
     @Override
-    public List<WaypointDAO> read(List<Integer> ids) {
-        WaypointsManagerFragment tableHolder = (WaypointsManagerFragment) fragmentHolder.get(R.id.nav_waypoints_menu);
-        return tableHolder.read(ids);
+    public List<WaypointDAO> readAllWaypoints() {
+        WaypointsTable databaseTable = (WaypointsTable) database.getTable(WaypointCRUD.ID);
+        return databaseTable.readAll();
     }
 }

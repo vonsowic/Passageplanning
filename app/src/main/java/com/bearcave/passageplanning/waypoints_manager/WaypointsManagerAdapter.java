@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.waypoints_manager;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bearcave.passageplanning.R;
@@ -15,11 +16,18 @@ import butterknife.ButterKnife;
 
 
 
-public class WaypointsManagerAdapter extends BaseManagerAdapter<WaypointDAO>{
+public class WaypointsManagerAdapter extends BaseManagerAdapter<WaypointDAO, Integer>{
 
 
     public WaypointsManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
+        addOption("Edit", element -> getDatabase().update(element));
+        addOption("Delete", element -> {
+            getDatabase().delete(element);
+            getContainer().remove(element);
+            notifyDataSetChanged();
+        });
+
     }
 
     @Override

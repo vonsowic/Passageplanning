@@ -1,6 +1,8 @@
 package com.bearcave.passageplanning.utils
 
 import android.location.Location
+import android.os.Parcel
+import android.os.Parcelable
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
 import java.io.Serializable
 
@@ -12,10 +14,11 @@ open class Waypoint: Serializable {
 
     var name: String = ""
         private set
-    var characteristic: String = ""
-        private set
     var note: String = ""
         private set
+    var characteristic: String = ""
+        private set
+
 
     /**
      * UKC in metres.
@@ -37,7 +40,6 @@ open class Waypoint: Serializable {
 
     var gauge: Gauge = Gauge.MARGATE
         private set
-
 
     constructor(name: String,
                 characteristic: String,
@@ -140,4 +142,8 @@ open class Waypoint: Serializable {
     }
 
 
+
+
 }
+
+
