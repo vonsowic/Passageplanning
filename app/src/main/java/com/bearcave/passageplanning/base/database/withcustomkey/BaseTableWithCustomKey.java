@@ -61,7 +61,7 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
     /**
      * @return ArrayList, which contains 3-dimensional arrays [key id, foreign table name, foreign key id]
      */
-    private ArrayList<String[]> createReferences(){
+    protected ArrayList<String[]> createReferences(){
         return new ArrayList<>();
     }
 
