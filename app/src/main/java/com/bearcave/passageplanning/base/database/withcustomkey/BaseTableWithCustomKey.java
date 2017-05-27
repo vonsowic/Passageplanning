@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.data.database.tables.base.withcustomkey;
+package com.bearcave.passageplanning.base.database.withcustomkey;
 
 
 import android.content.ContentValues;

@@ -1,7 +1,6 @@
-package com.bearcave.passageplanning.data.database.tables.tide;
+package com.bearcave.passageplanning.thames_tide_provider.database;
 
-import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey;
+import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey;
 import com.bearcave.passageplanning.thames_tide_provider.TideItem;
 
 import org.joda.time.DateTime;

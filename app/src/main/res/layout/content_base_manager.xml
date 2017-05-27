@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".waypoints_manager.WaypointsManagerFragment"
+    tools:context=".waypoints.WaypointsManagerFragment"
     tools:showIn="@layout/fragment_base_manager">
 
 

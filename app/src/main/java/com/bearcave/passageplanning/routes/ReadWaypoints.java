@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.routes;
 
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
 import java.util.List;
 

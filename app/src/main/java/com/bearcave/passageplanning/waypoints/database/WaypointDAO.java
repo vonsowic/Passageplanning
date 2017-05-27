@@ -1,17 +1,17 @@
-package com.bearcave.passageplanning.data.database.tables.waypoints;
+package com.bearcave.passageplanning.waypoints.database;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
+import com.bearcave.passageplanning.base.database.DatabaseElement;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.passageplanning.utils.Waypoint;
+import com.bearcave.passageplanning.waypoints.Waypoint;
 
 import org.jetbrains.annotations.NotNull;
 
 public class WaypointDAO
-        extends com.bearcave.passageplanning.utils.Waypoint
+        extends Waypoint
         implements DatabaseElement,
         Parcelable  {
 

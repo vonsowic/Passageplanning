@@ -24,12 +24,12 @@
 
 
         <activity
-            android:name=".routes.RouteEditorActivity"
+            android:name=".routes.editor.RouteEditorActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name=".waypoints_manager.WaypointEditorActivity"
+            android:name=".waypoints.WaypointEditorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

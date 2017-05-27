@@ -1,7 +1,6 @@
 package com.bearcave.passageplanning.base
 
 import android.content.Context
-import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -9,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.*
 
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.data.database.tables.base.CRUD
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey
+import com.bearcave.passageplanning.base.database.CRUD
+import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 
 import java.util.ArrayList
 

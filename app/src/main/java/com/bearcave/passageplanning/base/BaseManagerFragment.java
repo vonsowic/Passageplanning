@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 
 import com.bearcave.passageplanning.R;
-import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey;
-
-import java.security.InvalidParameterException;
+import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey;
 
 import butterknife.OnClick;
 

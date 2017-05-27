@@ -1,34 +1,16 @@
-package com.bearcave.passageplanning.routes;
+package com.bearcave.passageplanning.routes.editor;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseEditorActivity;
-import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.passageplanning.utils.Waypoint;
+import com.bearcave.passageplanning.routes.database.route.RouteDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-
-import butterknife.BindView;
 
 
 public class RouteEditorActivity extends BaseEditorActivity<RouteDAO> implements RouteEditorAdapter.OnItemClickedListener {

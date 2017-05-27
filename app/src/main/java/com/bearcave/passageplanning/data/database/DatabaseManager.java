@@ -5,13 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.SparseArray;
 
-import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
-import com.bearcave.passageplanning.data.database.tables.route.RouteCRUD;
-import com.bearcave.passageplanning.data.database.tables.route.RouteTable;
-import com.bearcave.passageplanning.data.database.tables.tide.TidesTable;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
+import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.thames_tide_provider.database.TidesTable;
+import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
+import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
 

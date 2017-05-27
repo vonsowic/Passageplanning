@@ -1,7 +1,7 @@
-package com.bearcave.passageplanning.data.database.tables.waypoints;
+package com.bearcave.passageplanning.waypoints.database;
 
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.passageplanning.utils.Waypoint;
+import com.bearcave.passageplanning.waypoints.Waypoint;
 
 import org.junit.Test;
 

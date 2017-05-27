@@ -1,20 +1,15 @@
-package com.bearcave.passageplanning.routes;
+package com.bearcave.passageplanning.routes.editor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bearcave.passageplanning.R;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
 import java.util.ArrayList;
 

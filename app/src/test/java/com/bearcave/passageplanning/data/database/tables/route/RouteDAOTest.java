@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.data.database.tables.route;
 
-import com.bearcave.passageplanning.utils.Route;
+import com.bearcave.passageplanning.routes.database.route.RouteDAO;
 
 import org.junit.Assert;
 import org.junit.Test;

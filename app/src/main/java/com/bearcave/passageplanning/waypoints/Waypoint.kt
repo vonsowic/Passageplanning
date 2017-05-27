@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.utils
+package com.bearcave.passageplanning.waypoints
 
 import android.location.Location
 import android.os.Parcel
