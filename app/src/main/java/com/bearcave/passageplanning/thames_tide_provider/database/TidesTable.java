@@ -1,12 +1,10 @@
-package com.bearcave.passageplanning.data.database.tables.tide;
+package com.bearcave.passageplanning.thames_tide_provider.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.bearcave.passageplanning.data.database.ManagerListener;
-import com.bearcave.passageplanning.data.database.tables.base.BaseTable;
-import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
 import org.joda.time.DateTime;
@@ -54,7 +52,7 @@ public class TidesTable extends BaseTableWithCustomKey<TideItemDAO, DateTime> im
     }
 
     @Override
-    protected String getKeyAsString() {
+    protected String getIdKey() {
         return KEY_TIME;
     }
 

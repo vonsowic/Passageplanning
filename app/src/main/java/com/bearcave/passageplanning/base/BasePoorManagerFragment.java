@@ -5,9 +5,8 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.bearcave.passageplanning.R;
-import com.bearcave.passageplanning.data.database.tables.base.CRUD;
-import com.bearcave.passageplanning.data.database.tables.base.DatabaseElement;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.DatabaseElementWithCustomKey;
+import com.bearcave.passageplanning.base.database.CRUD;
+import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey;
 
 import butterknife.ButterKnife;
 

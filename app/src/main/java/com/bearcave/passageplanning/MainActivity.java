@@ -20,14 +20,13 @@ import android.widget.Toast;
 import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.data.database.DatabaseManager;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.data.database.tables.base.withcustomkey.BaseTableWithCustomKey;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
+import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 import com.bearcave.passageplanning.routes.ReadWaypoints;
-import com.bearcave.passageplanning.routes.RouteManagerAdapter;
 import com.bearcave.passageplanning.routes.RouteManagerFragment;
-import com.bearcave.passageplanning.waypoints_manager.WaypointsManagerFragment;
+import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment;
 
 import java.util.List;
 

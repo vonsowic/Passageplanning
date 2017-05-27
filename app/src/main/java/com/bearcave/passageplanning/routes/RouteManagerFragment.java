@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.bearcave.passageplanning.R;
+import com.bearcave.passageplanning.base.BaseEditorActivity;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.data.database.tables.route.RouteCRUD;
-import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
-import com.bearcave.passageplanning.data.database.tables.route.RouteTable;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
+import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.route.RouteDAO;
+import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.routes.editor.RouteEditorActivity;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
     }
 
     @Override
-    protected Class<?> getEditorClass() {
+    protected Class<? extends BaseEditorActivity<RouteDAO>> getEditorClass() {
         return RouteEditorActivity.class;
     }
 
@@ -74,6 +76,18 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
                 RouteEditorActivity.WAYPOINTS_KEY,
                 waypoints
         );
+    }
+
+    @Override
+    protected void onDataCreated(RouteDAO result) {
+        insert(result);
+        getAdapter().add(result);
+    }
+
+    @Override
+    protected void onDataUpdated(RouteDAO result) {
+        database.update(result);
+        getAdapter().update(result);
     }
 
     @Override

@@ -10,11 +10,10 @@ import android.widget.TextView;
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.data.database.tables.route.RouteDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
+import com.bearcave.passageplanning.routes.database.route.RouteDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 

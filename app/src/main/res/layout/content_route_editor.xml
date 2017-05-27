@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".routes.RouteEditorActivity">
+    tools:context=".routes.editor.RouteEditorActivity">
 
 
     <android.support.design.widget.TextInputLayout
@@ -19,7 +19,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/name_text"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

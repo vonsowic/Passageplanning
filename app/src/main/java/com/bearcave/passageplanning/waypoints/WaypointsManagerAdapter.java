@@ -1,16 +1,14 @@
-package com.bearcave.passageplanning.waypoints_manager;
+package com.bearcave.passageplanning.waypoints;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
-import com.bearcave.passageplanning.utils.Waypoint;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 
 import butterknife.ButterKnife;
 

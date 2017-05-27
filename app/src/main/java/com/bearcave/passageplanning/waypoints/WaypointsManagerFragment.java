@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.waypoints_manager;
+package com.bearcave.passageplanning.waypoints;
 
 
 import android.content.Context;
@@ -7,9 +7,9 @@ import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointCRUD;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointDAO;
-import com.bearcave.passageplanning.data.database.tables.waypoints.WaypointsTable;
+import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
+import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import java.util.List;
 public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, Integer> implements WaypointCRUD{
 
     private WaypointsTable database;
-    private WaypointsManagerAdapter adapter;
 
 
     @Override
@@ -28,8 +27,20 @@ public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, I
     }
 
     @Override
-    protected Class<?> getEditorClass() {
+    protected Class<? extends WaypointEditorActivity> getEditorClass() {
         return WaypointEditorActivity.class;
+    }
+
+    @Override
+    protected void onDataCreated(WaypointDAO result) {
+        insert(result);
+        getAdapter().add(result);
+    }
+
+    @Override
+    protected void onDataUpdated(WaypointDAO result) {
+        database.update(result);
+        getAdapter().update(result);
     }
 
 
