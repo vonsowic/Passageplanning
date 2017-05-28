@@ -21,6 +21,12 @@ import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.data.database.DatabaseManager;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
+import com.bearcave.passageplanning.passage.PassageManagerFragment;
+import com.bearcave.passageplanning.passage.database.ReadRoutes;
+import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.route.RouteDAO;
+import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.settings.SettingsFragment;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
 import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
@@ -28,12 +34,15 @@ import com.bearcave.passageplanning.routes.ReadWaypoints;
 import com.bearcave.passageplanning.routes.RouteManagerFragment;
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     OnDatabaseRequestedListener,
-                    ReadWaypoints {
+                    ReadWaypoints,
+                    ReadRoutes{
 
     private DatabaseManager database;
     private FilesManager files;
@@ -61,6 +70,8 @@ public class MainActivity extends AppCompatActivity
 
         fragmentHolder.put(R.id.nav_routes_menu, new RouteManagerFragment());
         fragmentHolder.put(R.id.nav_waypoints_menu, new WaypointsManagerFragment());
+        fragmentHolder.put(R.id.nav_passages_menu, new PassageManagerFragment());
+        fragmentHolder.put(R.id.nav_settings, new SettingsFragment());
 
         askForPermission();
     }
@@ -68,7 +79,7 @@ public class MainActivity extends AppCompatActivity
     private void afterPermissionIsChecked(){
         files = new FilesManager(this);
         database = files.createDatabase();
-        showFragment(R.id.nav_routes_menu);
+        showFragment(R.id.nav_passages_menu);
     }
 
     @Override
@@ -133,6 +144,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public List<WaypointDAO> readAllWaypoints() {
         WaypointsTable databaseTable = (WaypointsTable) database.getTable(WaypointCRUD.ID);
+        return databaseTable.readAll();
+    }
+
+    @NotNull
+    @Override
+    public List<RouteDAO> readAllRoutes() {
+        RouteTable databaseTable = (RouteTable) database.getTable(RouteCRUD.ID);
         return databaseTable.readAll();
     }
 }

@@ -21,7 +21,11 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
         implements ManagerListener,
         CRUDWithCustomKey<Dao, Id> {
 
-    private ManagerListener manager;
+    private final ManagerListener manager;
+
+    public ManagerListener getManager() {
+        return manager;
+    }
 
     public BaseTableWithCustomKey(ManagerListener manager) {
         this.manager = manager;

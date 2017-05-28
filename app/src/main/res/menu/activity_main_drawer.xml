@@ -5,7 +5,9 @@
 
         <item
             android:id="@+id/nav_passages_menu"
-            android:title="@string/passages_menu" />
+            android:title="@string/passages_menu"
+            android:checked="true"
+            />
 
         <item
             android:id="@+id/nav_routes_menu"
@@ -15,6 +17,10 @@
             android:id="@+id/nav_waypoints_menu"
             android:title="@string/waypoints_menu" />
 
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/action_settings"
+            android:icon="@drawable/ic_settings_black_12dp"/>
 
     </group>
 

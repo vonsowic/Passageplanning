@@ -23,7 +23,7 @@ import butterknife.ButterKnife
  * @version 1.0
  * @since 20.05.17
  */
-abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BaseManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
+abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
 
     /**
      * This container has all DAOs shown in ExpandableListView.
