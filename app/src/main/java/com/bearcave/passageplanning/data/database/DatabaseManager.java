@@ -9,9 +9,9 @@ import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCus
 import com.bearcave.passageplanning.passage.database.AccessToRouteTable;
 import com.bearcave.passageplanning.passage.database.PassageCRUD;
 import com.bearcave.passageplanning.passage.database.PassageTable;
-import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
-import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteTable;
 import com.bearcave.passageplanning.thames_tide_provider.database.TidesTable;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
@@ -63,7 +63,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
 
     @NotNull
     @Override
-    public RouteDAO readRoute(int id) {
+    public Route readRoute(int id) {
         return ((RouteTable) tables.get(RouteCRUD.ID)).read(id);
     }
 }

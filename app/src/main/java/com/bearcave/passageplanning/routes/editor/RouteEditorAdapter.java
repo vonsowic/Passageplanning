@@ -9,24 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bearcave.passageplanning.R;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
 /**
- * Created by miwas on 23.05.17, because ContextMenu hides after each click, OptionsMenu doesn't look good and list with CheckedTextView sucks.
+ * Because ContextMenu hides after each click, OptionsMenu doesn't look good and list with CheckedTextView sucks.
+ * @since 23.05.17
+ * @author Michał Wąsowicz
+ * @version 1.0
  */
 
 public class RouteEditorAdapter extends BaseAdapter {
 
-    private ArrayList<WaypointDAO> waypoints;
+    private ArrayList<Waypoint> waypoints;
     private Context context;
     private OnItemClickedListener listener;
     private LayoutInflater inflater;
 
-    public RouteEditorAdapter( Context context, ArrayList<WaypointDAO> waypoints) {
+    public RouteEditorAdapter( Context context, ArrayList<Waypoint> waypoints) {
         this.context = context;
         this.listener = (OnItemClickedListener) context;
         this.waypoints = waypoints;
@@ -53,7 +56,7 @@ public class RouteEditorAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.route_editor_list_item, parent, false);
 
-        WaypointDAO wpt = waypoints.get(position);
+        Waypoint wpt = waypoints.get(position);
 
         TextView view = ButterKnife.findById(convertView, R.id.waypoint_name);
         view.setText(wpt.getName());

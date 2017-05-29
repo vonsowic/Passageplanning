@@ -8,13 +8,13 @@ import android.widget.TextView;
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import butterknife.ButterKnife;
 
 
 
-public class WaypointsManagerAdapter extends BaseManagerAdapter<WaypointDAO, Integer>{
+public class WaypointsManagerAdapter extends BaseManagerAdapter<Waypoint, Integer>{
 
 
     public WaypointsManagerAdapter(BaseManagerFragment parent, Context context) {

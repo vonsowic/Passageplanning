@@ -7,14 +7,14 @@ import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 
 import java.util.List;
 
 
-public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, Integer> implements WaypointCRUD{
+public class WaypointsManagerFragment extends BaseManagerFragment<Waypoint, Integer> implements WaypointCRUD{
 
     private WaypointsTable database;
 
@@ -32,13 +32,13 @@ public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, I
     }
 
     @Override
-    protected void onDataCreated(WaypointDAO result) {
+    protected void onDataCreated(Waypoint result) {
         insert(result);
         getAdapter().add(result);
     }
 
     @Override
-    protected void onDataUpdated(WaypointDAO result) {
+    protected void onDataUpdated(Waypoint result) {
         database.update(result);
         getAdapter().update(result);
     }
@@ -50,29 +50,29 @@ public class WaypointsManagerFragment extends BaseManagerFragment<WaypointDAO, I
     }
 
     @Override
-    public long insert(WaypointDAO waypointDAO) {
-        return database.insert(waypointDAO);
+    public long insert(Waypoint waypoint) {
+        return database.insert(waypoint);
     }
 
     @Override
-    public WaypointDAO read(Integer id) {
+    public Waypoint read(Integer id) {
         return database.read(id);
     }
 
     @Override
-    public List<WaypointDAO> readAll() {
+    public List<Waypoint> readAll() {
         return database.readAll();
     }
 
     @Override
-    public int update(WaypointDAO waypointDAO) {
-        openEditor(waypointDAO);
+    public int update(Waypoint waypoint) {
+        openEditor(waypoint);
         return 1;
     }
 
     @Override
-    public int delete(WaypointDAO waypointDAO) {
-        return database.delete(waypointDAO);
+    public int delete(Waypoint waypoint) {
+        return database.delete(waypoint);
     }
 
     @Override

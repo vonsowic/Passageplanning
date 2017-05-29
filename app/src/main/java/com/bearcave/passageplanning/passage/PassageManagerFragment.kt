@@ -11,7 +11,7 @@ import com.bearcave.passageplanning.base.BaseManagerFragment
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.passage.database.PassageCRUD
-import com.bearcave.passageplanning.passage.database.PassageDao
+import com.bearcave.passageplanning.passage.database.Passage
 import com.bearcave.passageplanning.passage.database.PassageTable
 import com.bearcave.passageplanning.passage.database.ReadRoutes
 import java.util.*
@@ -22,21 +22,21 @@ import java.util.*
  * @since 27.05.17
  * @version 1.0
  */
-class PassageManagerFragment : BaseManagerFragment<PassageDao, Int>() {
+class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
 
     var database: PassageTable? = null
     var routeDatabase: ReadRoutes? = null
 
-    override fun getEditorClass(): Class<out BaseEditorActivity<PassageDao>> {
+    override fun getEditorClass(): Class<out BaseEditorActivity<Passage>> {
         return PassageEditorActivity::class.java
     }
 
-    override fun onDataCreated(result: PassageDao?) {
+    override fun onDataCreated(result: Passage?) {
         database!!.insert(result)
         adapter.add(result)
     }
 
-    override fun onDataUpdated(result: PassageDao?) {
+    override fun onDataUpdated(result: Passage?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -56,23 +56,23 @@ class PassageManagerFragment : BaseManagerFragment<PassageDao, Int>() {
         routeDatabase = context as ReadRoutes
     }
 
-    override fun insert(element: PassageDao): Long {
+    override fun insert(element: Passage): Long {
         return database!!.insert(element)
     }
 
-    override fun read(id: Int): PassageDao {
+    override fun read(id: Int): Passage {
         return database!!.read(id)
     }
 
-    override fun readAll(): MutableList<PassageDao> {
+    override fun readAll(): MutableList<Passage> {
         return database!!.readAll()
     }
 
-    override fun update(element: PassageDao): Int {
+    override fun update(element: Passage): Int {
         return database!!.update(element)
     }
 
-    override fun delete(element: PassageDao): Int {
+    override fun delete(element: Passage): Int {
         return database!!.delete(element)
     }
 

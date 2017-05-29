@@ -32,4 +32,5 @@
     <string name="passage_manager_title">Passages</string>
     <string name="editor_route_chooser_title">Choose route</string>
     <string name="routes_doesnt_exist">Routes doesn\'t exist</string>
+    <string name="night_mode_title">Night mode</string>
 </resources>

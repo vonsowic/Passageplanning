@@ -6,20 +6,20 @@ import android.widget.EditText;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseEditorActivity;
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class RouteEditorActivity extends BaseEditorActivity<RouteDAO> implements RouteEditorAdapter.OnItemClickedListener {
+public class RouteEditorActivity extends BaseEditorActivity<Route> implements RouteEditorAdapter.OnItemClickedListener {
 
     private EditText name;
     private ListView waypointChooser;
 
     private HashSet<Integer> chosenWaypoints = new HashSet<>();
-    private ArrayList<WaypointDAO> waypoints = new ArrayList<>();
+    private ArrayList<Waypoint> waypoints = new ArrayList<>();
 
     private Integer routeId = -2;
 
@@ -40,7 +40,7 @@ public class RouteEditorActivity extends BaseEditorActivity<RouteDAO> implements
     }
 
     @Override
-    protected void setViewsContent(RouteDAO passage) {
+    protected void setViewsContent(Route passage) {
         routeId = passage.getId();
         name.setText(passage.getName());
         chosenWaypoints = new HashSet<>(passage.getWaypointsIds());
@@ -57,8 +57,8 @@ public class RouteEditorActivity extends BaseEditorActivity<RouteDAO> implements
     }
 
     @Override
-    protected RouteDAO getFilledDAO() {
-        return new RouteDAO(
+    protected Route getFilledDAO() {
+        return new Route(
                 routeId,
                 name.getText().toString(),
                 new ArrayList<>(chosenWaypoints)

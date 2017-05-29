@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import java.util.ArrayList;
 
@@ -22,14 +22,14 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
 
 
     private ReadWaypoints waypointsDatabase;
-    private SparseArray<WaypointDAO> waypoints;
+    private SparseArray<Waypoint> waypoints;
 
     public RouteManagerAdapter(BaseManagerFragment parent, Context context) {
         super(parent, context);
         this.waypoints = new SparseArray<>();
         this.waypointsDatabase = (ReadWaypoints) context;
 
-        for(WaypointDAO waypoint : waypointsDatabase.readAllWaypoints()){
+        for(Waypoint waypoint : waypointsDatabase.readAllWaypoints()){
             waypoints.put(waypoint.getId(), waypoint);
         }
 
@@ -38,15 +38,15 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
     }
 
 
-    private WaypointDAO getWaypointById(Integer id){
+    private Waypoint getWaypointById(Integer id){
         return waypoints.get(id);
     }
 
-    private WaypointDAO getWaypointFromList(int group, int child){
+    private Waypoint getWaypointFromList(int group, int child){
         return getWaypointById(getPassages().get(group).getWaypointsIds().get(child));
     }
 
-    private ArrayList<RouteDAO> getPassages(){
+    private ArrayList<Route> getPassages(){
         return getContainer();
     }
 
@@ -65,7 +65,7 @@ public class RouteManagerAdapter extends BaseManagerAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View view = getInflater().inflate(R.layout.passage_manager_child_item, parent, false);
-        WaypointDAO waypoint = getWaypointFromList(groupPosition, childPosition);
+        Waypoint waypoint = getWaypointFromList(groupPosition, childPosition);
 
         TextView title = ButterKnife.findById(view, R.id.name);
         title.setText(waypoint.getName());

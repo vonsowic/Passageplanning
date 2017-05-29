@@ -5,17 +5,16 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bearcave.passageplanning.R;
 import com.bearcave.passageplanning.base.BaseEditorActivity;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import butterknife.ButterKnife;
 
-public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
+public class WaypointEditorActivity extends BaseEditorActivity<Waypoint> {
 
     private TextInputEditText name;
     private TextInputEditText note;
@@ -44,7 +43,7 @@ public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
     }
 
     @Override
-    protected void setViewsContent(WaypointDAO waypoint) {
+    protected void setViewsContent(Waypoint waypoint) {
         id = waypoint.getId();
         name.setText(waypoint.getName());
         note.setText(waypoint.getNote());
@@ -71,8 +70,8 @@ public class WaypointEditorActivity extends BaseEditorActivity<WaypointDAO> {
     }
 
     @Override
-    protected WaypointDAO getFilledDAO() {
-        return new WaypointDAO(
+    protected Waypoint getFilledDAO() {
+        return new Waypoint(
                 id,
                 name.getText().toString(),
                 note.getText().toString(),

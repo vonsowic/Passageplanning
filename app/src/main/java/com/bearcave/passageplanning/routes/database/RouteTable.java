@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.routes.database.route;
+package com.bearcave.passageplanning.routes.database;
 
 
 import android.content.ContentValues;
@@ -9,7 +9,7 @@ import com.bearcave.passageplanning.base.database.BaseTable;
 
 import java.util.LinkedHashMap;
 
-public class RouteTable extends BaseTable<RouteDAO> implements RouteCRUD {
+public class RouteTable extends BaseTable<Route> implements RouteCRUD {
     public RouteTable(ManagerListener manager) {
         super(manager);
     }
@@ -29,19 +29,19 @@ public class RouteTable extends BaseTable<RouteDAO> implements RouteCRUD {
     }
 
     @Override
-    protected ContentValues getContentValue(RouteDAO element) {
+    protected ContentValues getContentValue(Route element) {
         ContentValues value = new ContentValues();
         value.put(KEY_NAME, element.getName());
-        value.put(KEY_WAYPOINTS, RouteDAO.fromList(element.getWaypointsIds()));
+        value.put(KEY_WAYPOINTS, Route.Companion.fromList(element.getWaypointsIds()));
         return value;
     }
 
     @Override
-    protected RouteDAO loadFrom(Cursor cursor) {
-        return new RouteDAO(
+    protected Route loadFrom(Cursor cursor) {
+        return new Route(
                 cursor.getInt(0),
                 cursor.getString(1),
-                RouteDAO.fromString(cursor.getString(2))
+                Route.Companion.fromString(cursor.getString(2))
         );
     }
 

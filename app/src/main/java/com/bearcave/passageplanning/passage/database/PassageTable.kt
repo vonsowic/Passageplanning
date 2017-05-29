@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import com.bearcave.passageplanning.base.database.BaseTable
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
-import com.bearcave.passageplanning.data.database.ManagerListener
 import org.joda.time.DateTime
 import java.util.ArrayList
 import java.util.LinkedHashMap
@@ -16,7 +15,7 @@ import java.util.LinkedHashMap
  * @version 1.0
  */
 
-class PassageTable(listener: AccessToRouteTable) : BaseTable<PassageDao>(listener) {
+class PassageTable(listener: AccessToRouteTable) : BaseTable<Passage>(listener) {
 
     override fun getTableName(): String {
         return "passages"
@@ -33,7 +32,7 @@ class PassageTable(listener: AccessToRouteTable) : BaseTable<PassageDao>(listene
         return result
     }
 
-    override fun getContentValue(element: PassageDao): ContentValues {
+    override fun getContentValue(element: Passage): ContentValues {
         val result = ContentValues()
         result.put(BaseTableWithCustomKey.KEY_ID, element.id)
         result.put(KEY_ROUTE_ID, element.route.id)
@@ -48,9 +47,9 @@ class PassageTable(listener: AccessToRouteTable) : BaseTable<PassageDao>(listene
         return result
     }
 
-    override fun loadFrom(cursor: Cursor): PassageDao {
+    override fun loadFrom(cursor: Cursor): Passage {
 
-        return PassageDao(
+        return Passage(
                 cursor.getInt(0),
                 (manager as AccessToRouteTable).readRoute(cursor.getInt(1)),
                 DateTime.parse(cursor.getString(2)),

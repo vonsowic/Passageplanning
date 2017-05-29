@@ -23,12 +23,12 @@ import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.passage.PassageManagerFragment;
 import com.bearcave.passageplanning.passage.database.ReadRoutes;
-import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
-import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteTable;
 import com.bearcave.passageplanning.settings.SettingsFragment;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 import com.bearcave.passageplanning.routes.ReadWaypoints;
 import com.bearcave.passageplanning.routes.RouteManagerFragment;
@@ -142,14 +142,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public List<WaypointDAO> readAllWaypoints() {
+    public List<Waypoint> readAllWaypoints() {
         WaypointsTable databaseTable = (WaypointsTable) database.getTable(WaypointCRUD.ID);
         return databaseTable.readAll();
     }
 
     @NotNull
     @Override
-    public List<RouteDAO> readAllRoutes() {
+    public List<Route> readAllRoutes() {
         RouteTable databaseTable = (RouteTable) database.getTable(RouteCRUD.ID);
         return databaseTable.readAll();
     }

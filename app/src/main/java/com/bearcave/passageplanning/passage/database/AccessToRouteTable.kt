@@ -1,7 +1,7 @@
 package com.bearcave.passageplanning.passage.database
 
 import com.bearcave.passageplanning.data.database.ManagerListener
-import com.bearcave.passageplanning.routes.database.route.RouteDAO
+import com.bearcave.passageplanning.routes.database.Route
 
 /**
  *
@@ -10,5 +10,5 @@ import com.bearcave.passageplanning.routes.database.route.RouteDAO
  * @version 1.0
  */
 interface AccessToRouteTable : ManagerListener{
-    fun readRoute(id: Int): RouteDAO
+    fun readRoute(id: Int): Route
 }

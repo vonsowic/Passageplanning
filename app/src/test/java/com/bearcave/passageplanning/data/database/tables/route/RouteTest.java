@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.data.database.tables.route;
 
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
+import com.bearcave.passageplanning.routes.database.Route;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 /**
  * Created by miwas on 24.05.17.
  */
-public class RouteDAOTest {
+public class RouteTest {
 
 
     @Test
     public void fromStringToList() throws Exception {
         String ids = "1,2,3,4,";
 
-        ArrayList<Integer> result = RouteDAO.fromString(ids);
+        ArrayList<Integer> result = Route.Companion.fromString(ids);
         assertThat(result)
                 .hasSize(4)
                 .contains(1, 2, 3, 4)
@@ -35,7 +35,7 @@ public class RouteDAOTest {
         ids.add(3);
         ids.add(4);
 
-        Assert.assertEquals("1,2,3,4,", RouteDAO.fromList(ids));
+        Assert.assertEquals("1,2,3,4,", Route.Companion.fromList(ids));
     }
 
 

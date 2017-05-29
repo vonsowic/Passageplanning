@@ -8,6 +8,6 @@ import com.bearcave.passageplanning.base.database.CRUD;
  * @since 27.05.17
  */
 
-public interface PassageCRUD extends CRUD<PassageDao> {
+public interface PassageCRUD extends CRUD<Passage> {
     int ID = 103;
 }

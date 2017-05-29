@@ -13,14 +13,14 @@ import com.android.datetimepicker.time.RadialPickerLayout
 import com.android.datetimepicker.time.TimePickerDialog
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
-import com.bearcave.passageplanning.passage.database.PassageDao
-import com.bearcave.passageplanning.routes.database.route.RouteDAO
+import com.bearcave.passageplanning.passage.database.Passage
+import com.bearcave.passageplanning.routes.database.Route
 import org.joda.time.DateTime
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PassageEditorActivity : BaseEditorActivity<PassageDao>(),
+class PassageEditorActivity : BaseEditorActivity<Passage>(),
                                 DatePickerDialog.OnDateSetListener,
                                 TimePickerDialog.OnTimeSetListener {
 
@@ -32,10 +32,10 @@ class PassageEditorActivity : BaseEditorActivity<PassageDao>(),
     var speedText: EditText? = null
 
     var chosenRoute: Int = 0
-    var routes: ArrayList<RouteDAO> = ArrayList()
+    var routes: ArrayList<Route> = ArrayList()
 
 
-    override fun setViewsContent(passage: PassageDao) {
+    override fun setViewsContent(passage: Passage) {
         routeName!!.text = passage.route.name
         date!!.text = passage.dateTime.toDate().toString()
         time!!.text = passage.dateTime.toLocalTime().toString()
@@ -43,7 +43,7 @@ class PassageEditorActivity : BaseEditorActivity<PassageDao>(),
 
     override fun getParcelableExtra(intent: Intent?) {
         super.getParcelableExtra(intent)
-        routes = intent?.getParcelableArrayListExtra<RouteDAO>(STATIC_FIELDS.ROUTE_KEY) as ArrayList<RouteDAO>
+        routes = intent?.getParcelableArrayListExtra<Route>(STATIC_FIELDS.ROUTE_KEY) as ArrayList<Route>
     }
 
     override fun findViews() {
@@ -87,8 +87,8 @@ class PassageEditorActivity : BaseEditorActivity<PassageDao>(),
         return true
     }
 
-    override fun getFilledDAO(): PassageDao {
-        return PassageDao(
+    override fun getFilledDAO(): Passage {
+        return Passage(
                 id,
                 routes[chosenRoute],
                 DateTime(
@@ -113,6 +113,7 @@ class PassageEditorActivity : BaseEditorActivity<PassageDao>(),
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         chosenRoute = item.itemId
+        routeName!!.text = routes[chosenRoute].name
         return super.onContextItemSelected(item)
     }
 

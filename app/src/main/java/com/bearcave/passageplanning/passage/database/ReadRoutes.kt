@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.passage.database
 
-import com.bearcave.passageplanning.routes.database.route.RouteDAO
+import com.bearcave.passageplanning.routes.database.Route
 
 /**
  *
@@ -9,5 +9,5 @@ import com.bearcave.passageplanning.routes.database.route.RouteDAO
  * @version 1.0
  */
 interface ReadRoutes {
-    fun readAllRoutes(): List<RouteDAO>
+    fun readAllRoutes(): List<Route>
 }

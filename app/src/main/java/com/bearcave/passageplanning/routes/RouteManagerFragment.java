@@ -10,11 +10,11 @@ import com.bearcave.passageplanning.base.BaseEditorActivity;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.routes.database.route.RouteCRUD;
-import com.bearcave.passageplanning.routes.database.route.RouteDAO;
-import com.bearcave.passageplanning.routes.database.route.RouteTable;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteTable;
 import com.bearcave.passageplanning.routes.editor.RouteEditorActivity;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
+public class RouteManagerFragment extends BaseManagerFragment<Route, Integer>
         implements RouteCRUD,
         ReadWaypoints{
 
@@ -38,39 +38,39 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
     }
 
     @Override
-    protected Class<? extends BaseEditorActivity<RouteDAO>> getEditorClass() {
+    protected Class<? extends BaseEditorActivity<Route>> getEditorClass() {
         return RouteEditorActivity.class;
     }
 
     @Override
-    public long insert(RouteDAO route) {
+    public long insert(Route route) {
         return database.insert(route);
     }
 
     @Override
-    public RouteDAO read(Integer id) {
+    public Route read(Integer id) {
         return database.read(id);
     }
 
     @Override
-    public List<RouteDAO> readAll() {
+    public List<Route> readAll() {
         return database.readAll();
     }
 
     // TODO: implement
     @Override
-    public int update(RouteDAO element) {
+    public int update(Route element) {
         return 0;
     }
 
     @Override
-    public int delete(RouteDAO element) {
+    public int delete(Route element) {
         return database.delete(element);
     }
 
     @Override
     protected void putExtra(Intent mail) {
-        ArrayList<WaypointDAO> waypoints = (ArrayList<WaypointDAO>) readAllWaypoints();
+        ArrayList<Waypoint> waypoints = (ArrayList<Waypoint>) readAllWaypoints();
 
         mail.putParcelableArrayListExtra(
                 RouteEditorActivity.WAYPOINTS_KEY,
@@ -79,13 +79,13 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
     }
 
     @Override
-    protected void onDataCreated(RouteDAO result) {
+    protected void onDataCreated(Route result) {
         insert(result);
         getAdapter().add(result);
     }
 
     @Override
-    protected void onDataUpdated(RouteDAO result) {
+    protected void onDataUpdated(Route result) {
         database.update(result);
         getAdapter().update(result);
     }
@@ -106,7 +106,7 @@ public class RouteManagerFragment extends BaseManagerFragment<RouteDAO, Integer>
 
 
     @Override
-    public List<WaypointDAO> readAllWaypoints() {
+    public List<Waypoint> readAllWaypoints() {
         return waypointsHolder.readAllWaypoints();
     }
 }

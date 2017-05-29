@@ -11,7 +11,7 @@ import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.
 import java.util.LinkedHashMap;
 
 
-public class WaypointsTable extends BaseTable<WaypointDAO> {
+public class WaypointsTable extends BaseTable<Waypoint> {
 
     public WaypointsTable(ManagerListener manager) {
         super(manager);
@@ -40,7 +40,7 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
 
 
     @Override
-    protected ContentValues getContentValue(WaypointDAO waypoint) {
+    protected ContentValues getContentValue(Waypoint waypoint) {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, waypoint.getName());
         values.put(KEY_NOTE, waypoint.getNote());
@@ -53,9 +53,9 @@ public class WaypointsTable extends BaseTable<WaypointDAO> {
     }
 
     @Override
-    protected WaypointDAO loadFrom(Cursor cursor) {
+    protected Waypoint loadFrom(Cursor cursor) {
         int i = 0;
-        return new WaypointDAO(
+        return new Waypoint(
                 cursor.getInt(i++),               // id
                 cursor.getString(i++),            // name
                 cursor.getString(i++),            // note
