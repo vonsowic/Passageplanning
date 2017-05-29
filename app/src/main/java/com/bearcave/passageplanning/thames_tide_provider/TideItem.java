@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class TideItem implements Serializable{
     private float predictedTideHeight;
     private DateTime time;
-    private int gaugeId = -1;
 
     public TideItem(float predictedTideHeight, DateTime time) {
         this.predictedTideHeight = predictedTideHeight;
@@ -21,10 +20,6 @@ public class TideItem implements Serializable{
 
     public void setTime(DateTime time) {
         this.time = time;
-    }
-
-    public void setGaugeId(int gaugeId) {
-        this.gaugeId = gaugeId;
     }
 
     public float getPredictedTideHeight() {

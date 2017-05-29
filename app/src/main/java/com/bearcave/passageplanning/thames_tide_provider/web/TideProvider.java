@@ -24,7 +24,6 @@ public class TideProvider {
 
         for (Element element: data){
             com.bearcave.passageplanning.thames_tide_provider.TideItem item = convertElement(element);
-            item.setGaugeId(gauge.getId());
             result.add(item);
         }
 
