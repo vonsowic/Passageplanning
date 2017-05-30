@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:key="pref_night_mode"
-        android:title="@string/night_mode_title"
-        android:defaultValue="false" />
+    <PreferenceCategory
+        android:title="Types of units"
+        >
+
+        <ListPreference
+            android:title="Speed unit"
+            android:key="pref_speed_unit_type"
+            android:entries="@array/speed_entries"
+            android:entryValues="@array/speed_values"
+            android:defaultValue="0.514444F"
+            />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

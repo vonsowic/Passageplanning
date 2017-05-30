@@ -1,7 +1,9 @@
 package com.bearcave.passageplanning.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 
 import com.bearcave.passageplanning.R;
 
@@ -22,4 +24,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
     }
+
 }

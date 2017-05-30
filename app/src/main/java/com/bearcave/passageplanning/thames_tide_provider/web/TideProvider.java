@@ -1,6 +1,11 @@
 package com.bearcave.passageplanning.thames_tide_provider.web;
 
 
+import com.bearcave.passageplanning.thames_tide_provider.database.TideItem;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep;
+import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays;
+
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,12 +23,12 @@ public class TideProvider {
         this.url = new UrlBuilder();
     }
 
-    public HashSet<com.bearcave.passageplanning.thames_tide_provider.TideItem> load(com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge gauge, DateTime time, com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays numberOfDays, com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep step) throws IOException {
-        HashSet<com.bearcave.passageplanning.thames_tide_provider.TideItem> result = new HashSet<>();
+    public HashSet<TideItem> load(Gauge gauge, DateTime time, NumberOfDays numberOfDays, MinuteStep step) throws IOException {
+        HashSet<TideItem> result = new HashSet<>();
         Elements data = get(gauge, time, numberOfDays, step).getElementsByTag("item");
 
         for (Element element: data){
-            com.bearcave.passageplanning.thames_tide_provider.TideItem item = convertElement(element);
+            TideItem item = convertElement(element);
             result.add(item);
         }
 
@@ -38,8 +43,8 @@ public class TideProvider {
         return Jsoup.connect(url.build()).get();
     }
 
-    private com.bearcave.passageplanning.thames_tide_provider.TideItem convertElement(Element data){
-        return new com.bearcave.passageplanning.thames_tide_provider.TideItem(
+    private TideItem convertElement(Element data){
+        return new TideItem(
                 Float.valueOf(data.getElementsByTag("pred").first().text()),
                 getTimeFrom(data)
         );
@@ -56,10 +61,6 @@ public class TideProvider {
                 Integer.valueOf(time.substring(0, 2)),
                 Integer.valueOf(time.substring(3, 5))
         );
-
-    }
-
-    public static void main(String args[]){
 
     }
 }

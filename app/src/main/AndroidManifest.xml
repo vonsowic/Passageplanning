@@ -22,12 +22,18 @@
         </activity>
         <activity
             android:name=".routes.editor.RouteEditorActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".waypoints.WaypointEditorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".passage.PassageEditorActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".passage.PassageEditorActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".thames_tide_provider.TideDownloaderService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

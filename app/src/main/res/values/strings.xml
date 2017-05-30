@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Passage planning</string>
-    <string name="title_activity_main_menu">MainMenuActivity</string>
-
 
     <string name="submit">Submit</string>
-    <string name="title_activity_editor">EditorActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -13,7 +10,6 @@
     <string name="editor_title">Editor</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="waypoints_menu">Waypoints</string>
     <string name="passages_menu">Passages</string>
@@ -21,16 +17,20 @@
     <string name="routes_menu">Routes</string>
 
 
-    <string name="title_activity_passage_editor">It is to be removed</string>
-
     <string name="editor_gauge_chooser_title">Choose gauge</string>
     <string name="choose_waypoints">Choose waypoints</string>
     <string name="close">Close</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="passage_manager_title">Passages</string>
     <string name="editor_route_chooser_title">Choose route</string>
     <string name="routes_doesnt_exist">Routes doesn\'t exist</string>
+
+
     <string name="night_mode_title">Night mode</string>
+
+    <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="title_activity_editor">EditorActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_passage_editor">It is to be removed</string>
+
 </resources>
