@@ -1,7 +1,7 @@
-package com.bearcave.passageplanning.thames_tide_provider.web.configurationitems;
+package com.bearcave.passageplanning.tides.web.configurationitems;
 
 
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.exceptions.GaugeNotFoundException;
+import com.bearcave.passageplanning.tides.web.configurationitems.exceptions.GaugeNotFoundException;
 
 public enum Gauge {
     MARGATE(1,"Margate", "0103"),

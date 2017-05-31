@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.utils
 
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import org.junit.Assert
 import org.junit.Test

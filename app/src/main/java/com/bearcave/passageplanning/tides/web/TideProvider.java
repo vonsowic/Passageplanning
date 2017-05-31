@@ -1,10 +1,10 @@
-package com.bearcave.passageplanning.thames_tide_provider.web;
+package com.bearcave.passageplanning.tides.web;
 
 
-import com.bearcave.passageplanning.thames_tide_provider.database.TideItem;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays;
+import com.bearcave.passageplanning.tides.database.TideItem;
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep;
+import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays;
 
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -35,7 +35,7 @@ public class TideProvider {
         return result;
     }
 
-    private Document get(com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge gauge, DateTime time, com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays numberOfDays, com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep step) throws IOException {
+    private Document get(com.bearcave.passageplanning.tides.web.configurationitems.Gauge gauge, DateTime time, com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays numberOfDays, com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep step) throws IOException {
         url.setGaugeCode(gauge);
         url.setNumberOfDays(numberOfDays);
         url.setTime(time);
@@ -45,9 +45,9 @@ public class TideProvider {
 
     private TideItem convertElement(Element data){
         return new TideItem(
-                Float.valueOf(data.getElementsByTag("pred").first().text()),
-                getTimeFrom(data)
-        );
+                getTimeFrom(data),
+                Float.valueOf(data.getElementsByTag("pred").first().text())
+                );
     }
 
     private DateTime getTimeFrom(Element element){

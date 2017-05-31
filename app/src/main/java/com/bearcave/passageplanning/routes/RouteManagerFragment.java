@@ -10,8 +10,8 @@ import com.bearcave.passageplanning.base.BaseEditorActivity;
 import com.bearcave.passageplanning.base.BaseManagerAdapter;
 import com.bearcave.passageplanning.base.BaseManagerFragment;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.RouteTable;
 import com.bearcave.passageplanning.routes.editor.RouteEditorActivity;
 import com.bearcave.passageplanning.waypoints.database.Waypoint;
@@ -57,10 +57,9 @@ public class RouteManagerFragment extends BaseManagerFragment<Route, Integer>
         return database.readAll();
     }
 
-    // TODO: implement
     @Override
     public int update(Route element) {
-        return 0;
+        return database.update(element);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class RouteManagerFragment extends BaseManagerFragment<Route, Integer>
         ArrayList<Waypoint> waypoints = (ArrayList<Waypoint>) readAllWaypoints();
 
         mail.putParcelableArrayListExtra(
-                RouteEditorActivity.WAYPOINTS_KEY,
+                RouteEditorActivity.Companion.getWAYPOINTS_KEY(),
                 waypoints
         );
     }

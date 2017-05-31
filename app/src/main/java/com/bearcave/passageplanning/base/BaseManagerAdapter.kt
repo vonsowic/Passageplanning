@@ -6,14 +6,11 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-
+import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.CRUD
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
-
-import java.util.ArrayList
-
-import butterknife.ButterKnife
+import java.util.*
 
 /**
  * All ExpandableListViews used in BasePoorManager should extend this class.
@@ -23,7 +20,7 @@ import butterknife.ButterKnife
  * @version 1.0
  * @since 20.05.17
  */
-abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
+abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(parent: BasePoorManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
 
     /**
      * This container has all DAOs shown in ExpandableListView.
@@ -53,18 +50,13 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
      * @param toBeUpdated - sent from external class to be updated in list view.
      */
     fun update(toBeUpdated: Dao) {
-        for (element in container) {
-            var i = 0
+        for ((i, element) in container.withIndex()) {
             if (element.id == toBeUpdated.id) {
                 container[ i ] = element
                 notifyDataSetChanged()
-                Toast.makeText(context, "Updated!", Toast.LENGTH_SHORT).show()
                 return
             }
-            i++
         }
-        Toast.makeText(context, "Not updated!", Toast.LENGTH_SHORT).show()
-
     }
 
     override fun getGroupCount(): Int {
@@ -114,7 +106,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         }
 
         menu.setOnMenuItemClickListener { item ->
-            commands[item.itemId].command.exec(selected)
+            commands[item.itemId].command(selected)
             true
         }
 
@@ -124,16 +116,10 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     var INDEX = 0 // used only in addOption for options indexing.
 
 
-    protected fun addOption(title: String, option: OnMenuItemSelectedAction<Dao>) {
+    protected fun addOption(title: String, option: (Dao)->Unit) {
         commands.add(Command(INDEX++, title, option))
     }
 
 
-
-    @FunctionalInterface
-    protected interface OnMenuItemSelectedAction<in Dao> {
-        fun exec(element: Dao)
-    }
-
-    private inner class Command(val i: Int, val name: String, val command: OnMenuItemSelectedAction<Dao>)
+    private inner class Command(val i: Int, val name: String, val command: (Dao)->Unit)
 }

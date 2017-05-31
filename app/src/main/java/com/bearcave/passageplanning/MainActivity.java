@@ -17,22 +17,22 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.data.database.DatabaseManager;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.passage.PassageManagerFragment;
 import com.bearcave.passageplanning.passage.database.ReadRoutes;
-import com.bearcave.passageplanning.routes.database.RouteCRUD;
+import com.bearcave.passageplanning.routes.ReadWaypoints;
+import com.bearcave.passageplanning.routes.RouteManagerFragment;
 import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.RouteTable;
 import com.bearcave.passageplanning.settings.SettingsFragment;
+import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment;
 import com.bearcave.passageplanning.waypoints.database.Waypoint;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
-import com.bearcave.passageplanning.routes.ReadWaypoints;
-import com.bearcave.passageplanning.routes.RouteManagerFragment;
-import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment;
 
 import org.jetbrains.annotations.NotNull;
 

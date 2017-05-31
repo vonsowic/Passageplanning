@@ -1,9 +1,8 @@
-package com.bearcave.passageplanning.thames_tide_provider;
+package com.bearcave.passageplanning.tides;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 
 public class TideDownloaderService extends Service {
     public TideDownloaderService() {

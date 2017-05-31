@@ -3,7 +3,10 @@ package com.bearcave.passageplanning.passage
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.bearcave.passageplanning.base.BaseManagerAdapter
+import android.widget.TextView
+import butterknife.ButterKnife
+import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.base.BaseManagerAdapterWithWaypoints
 import com.bearcave.passageplanning.passage.database.Passage
 
 /**
@@ -12,13 +15,31 @@ import com.bearcave.passageplanning.passage.database.Passage
  * @since 27.05.17
  * @version 1.0
  */
-class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : BaseManagerAdapter<Passage, Int>(parent, context) {
+class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : BaseManagerAdapterWithWaypoints<Passage, Int>(parent, context) {
+
+    init {
+        addOption("Start passage", { dao ->
+            parent.startPassage(dao)
+        })
+
+        addOption(context.getString(R.string.action_edit), { dao ->
+            parent.openEditor(dao)
+        })
+    }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val view = inflater.inflate(R.layout.passage_child_item, parent, false)
+
+        val title = ButterKnife.findById<TextView>(view, R.id.waypoint_name)
+        title.text = getWaypointById(
+                container[groupPosition]
+                        .route
+                        .waypointsIds[childPosition]
+        ).name
+
+        return view
     }
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getChildrenCount(groupPosition: Int): Int = container[groupPosition].route.waypointsIds.size
+
 }

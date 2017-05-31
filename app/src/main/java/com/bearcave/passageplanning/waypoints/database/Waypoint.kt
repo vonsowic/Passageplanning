@@ -4,7 +4,7 @@ import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.DatabaseElement
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import java.io.Serializable
 
 

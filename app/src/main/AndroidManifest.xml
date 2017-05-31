@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".thames_tide_provider.TideDownloaderService"
+            android:name=".tides.TideDownloaderService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

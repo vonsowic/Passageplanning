@@ -1,12 +1,10 @@
-package com.bearcave.passageplanning.thames_tide_provider.database
+package com.bearcave.passageplanning.tides.database
 
 import android.os.Parcel
 import android.os.Parcelable
 
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import org.joda.time.DateTime
-
-import java.io.Serializable
 
 
 data class TideItem(override val id: DateTime, val predictedTideHeight: Float) : Parcelable, DatabaseElementWithCustomKey<DateTime> {
@@ -32,7 +30,7 @@ data class TideItem(override val id: DateTime, val predictedTideHeight: Float) :
 
     companion object {
 
-        val CREATOR: Parcelable.Creator<TideItem> = object : Parcelable.Creator<TideItem> {
+        @JvmField val CREATOR: Parcelable.Creator<TideItem> = object : Parcelable.Creator<TideItem> {
             override fun createFromParcel(`in`: Parcel): TideItem {
                 return TideItem(`in`)
             }

@@ -1,9 +1,9 @@
-package com.bearcave.passageplanning.thames_tide_provider.web;
+package com.bearcave.passageplanning.tides.web;
 
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.FileType;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.MinuteStep;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.NumberOfDays;
+import com.bearcave.passageplanning.tides.web.configurationitems.FileType;
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep;
+import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays;
 
 import org.joda.time.DateTime;
 

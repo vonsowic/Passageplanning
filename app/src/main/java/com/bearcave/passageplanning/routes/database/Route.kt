@@ -3,11 +3,8 @@ package com.bearcave.passageplanning.routes.database
 
 import android.os.Parcel
 import android.os.Parcelable
-
 import com.bearcave.passageplanning.base.database.DatabaseElement
-
-import java.util.ArrayList
-import java.util.Arrays
+import java.util.*
 
 
 open class Route(override val id: Int, override val name: String, val waypointsIds: ArrayList<Int>) : DatabaseElement, Parcelable {

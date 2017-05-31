@@ -4,8 +4,8 @@ package com.bearcave.passageplanning.routes.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.bearcave.passageplanning.data.database.ManagerListener;
 import com.bearcave.passageplanning.base.database.BaseTable;
+import com.bearcave.passageplanning.data.database.ManagerListener;
 
 import java.util.LinkedHashMap;
 

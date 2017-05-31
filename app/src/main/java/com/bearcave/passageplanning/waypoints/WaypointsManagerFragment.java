@@ -43,7 +43,6 @@ public class WaypointsManagerFragment extends BaseManagerFragment<Waypoint, Inte
         getAdapter().update(result);
     }
 
-
     @Override
     protected BaseManagerAdapter createAdapter() {
         return new WaypointsManagerAdapter(this, getContext());
@@ -66,8 +65,7 @@ public class WaypointsManagerFragment extends BaseManagerFragment<Waypoint, Inte
 
     @Override
     public int update(Waypoint waypoint) {
-        openEditor(waypoint);
-        return 1;
+        return database.update(waypoint);
     }
 
     @Override

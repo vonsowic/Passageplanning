@@ -10,8 +10,8 @@ import com.bearcave.passageplanning.base.BaseManagerAdapter
 import com.bearcave.passageplanning.base.BaseManagerFragment
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
-import com.bearcave.passageplanning.passage.database.PassageCRUD
 import com.bearcave.passageplanning.passage.database.Passage
+import com.bearcave.passageplanning.passage.database.PassageCRUD
 import com.bearcave.passageplanning.passage.database.PassageTable
 import com.bearcave.passageplanning.passage.database.ReadRoutes
 import java.util.*
@@ -37,14 +37,15 @@ class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
     }
 
     override fun onDataUpdated(result: Passage?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        update(result!!)
+        adapter.update(result)
     }
 
     override fun putExtra(mail: Intent?) {
         super.putExtra(mail)
 
         mail?.putParcelableArrayListExtra(
-                PassageEditorActivity.STATIC_FIELDS.ROUTE_KEY,
+                PassageEditorActivity.ROUTE_KEY,
                 routeDatabase!!.readAllRoutes() as ArrayList<out Parcelable>
                 )
     }
@@ -82,5 +83,9 @@ class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
 
     override fun createAdapter(): BaseManagerAdapter<out DatabaseElementWithCustomKey<*>, *> {
         return PassageManagerAdapter(this, context)
+    }
+
+    fun  startPassage(dao: Passage) {
+
     }
 }

@@ -9,13 +9,13 @@ import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCus
 import com.bearcave.passageplanning.passage.database.AccessToRouteTable;
 import com.bearcave.passageplanning.passage.database.PassageCRUD;
 import com.bearcave.passageplanning.passage.database.PassageTable;
-import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.RouteTable;
-import com.bearcave.passageplanning.thames_tide_provider.database.TidesTable;
+import com.bearcave.passageplanning.tides.database.TidesTable;
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -4,9 +4,9 @@ package com.bearcave.passageplanning.waypoints.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.bearcave.passageplanning.data.database.ManagerListener;
 import com.bearcave.passageplanning.base.database.BaseTable;
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.data.database.ManagerListener;
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
 
 import java.util.LinkedHashMap;
 

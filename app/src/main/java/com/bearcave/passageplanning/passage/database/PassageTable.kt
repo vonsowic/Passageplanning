@@ -5,8 +5,7 @@ import android.database.Cursor
 import com.bearcave.passageplanning.base.database.BaseTable
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import org.joda.time.DateTime
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import java.util.*
 
 /**
  *

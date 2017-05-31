@@ -1,10 +1,10 @@
-package com.bearcave.passageplanning.thames_tide_provider
+package com.bearcave.passageplanning.tides
 
 import android.os.AsyncTask
-import com.bearcave.passageplanning.thames_tide_provider.database.TideCRUD
-import com.bearcave.passageplanning.thames_tide_provider.database.TideItem
-import com.bearcave.passageplanning.thames_tide_provider.web.TideProvider
-import com.bearcave.passageplanning.thames_tide_provider.web.configurationitems.DownloadingConfiguration
+import com.bearcave.passageplanning.tides.database.TideCRUD
+import com.bearcave.passageplanning.tides.database.TideItem
+import com.bearcave.passageplanning.tides.web.TideProvider
+import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
 import java.io.IOException
 
 /**
@@ -32,6 +32,6 @@ class DownloadTideTableTask(val database: TideCRUD) : AsyncTask<DownloadingConfi
 
     override fun onPostExecute(result: HashSet<TideItem>?) {
         super.onPostExecute(result)
-
+        database.insertAll(result)
     }
 }

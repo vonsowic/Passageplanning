@@ -23,7 +23,6 @@ import java.util.*
 class PassageEditorActivity : BaseEditorActivity<Passage>(),
                                 DatePickerDialog.OnDateSetListener,
                                 TimePickerDialog.OnTimeSetListener {
-
     var id = -2
 
     var time: TextView? = null
@@ -34,16 +33,30 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     var chosenRoute: Int = 0
     var routes: ArrayList<Route> = ArrayList()
 
+    override val isAllFilled: Boolean
+        get() = !speedText!!.text.isEmpty()
 
-    override fun setViewsContent(passage: Passage) {
-        routeName!!.text = passage.route.name
-        date!!.text = passage.dateTime.toDate().toString()
-        time!!.text = passage.dateTime.toLocalTime().toString()
+    override val contentLayoutId: Int
+        get() = R.layout.content_passage_editor
+
+
+    override fun setViewsContent(`object`: Passage) {
+        routeName!!.text = `object`.route.name
+
+        calendar.set(
+                `object`.dateTime.year,
+                `object`.dateTime.monthOfYear - 1,
+                `object`.dateTime.dayOfMonth,
+                `object`.dateTime.hourOfDay,
+                `object`.dateTime.minuteOfHour
+        )
+
+        updateTimeView()
     }
 
-    override fun getParcelableExtra(intent: Intent?) {
+    override fun getParcelableExtra(intent: Intent) {
         super.getParcelableExtra(intent)
-        routes = intent?.getParcelableArrayListExtra<Route>(STATIC_FIELDS.ROUTE_KEY) as ArrayList<Route>
+        routes = intent.getParcelableArrayListExtra<Route>(ROUTE_KEY) as ArrayList<Route>
     }
 
     override fun findViews() {
@@ -79,28 +92,23 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
         speedText = ButterKnife.findById(this, R.id.speed)
     }
 
-    override fun getContentLayoutId(): Int {
-        return R.layout.content_passage_editor
-    }
 
-    override fun isAllFilled(): Boolean {
-        return true
-    }
+    override val filledDAO: Passage
+        get() {
+            return Passage(
+                    id,
+                    routes[chosenRoute],
+                    DateTime(
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH) + 1,
+                            calendar.get(Calendar.DAY_OF_MONTH),
+                            calendar.get(Calendar.HOUR),
+                            calendar.get(Calendar.MINUTE)
+                    ),
+                    speedText!!.text.toString().toFloat()
+            )
+        }
 
-    override fun getFilledDAO(): Passage {
-        return Passage(
-                id,
-                routes[chosenRoute],
-                DateTime(
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH),
-                        calendar.get(Calendar.HOUR),
-                        calendar.get(Calendar.MINUTE)
-                ),
-                speedText!!.text.toString().toFloat()
-        )
-    }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
@@ -119,19 +127,21 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
     override fun onDateSet(dialog: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         calendar.set(year, monthOfYear, dayOfMonth)
-
-        date!!.text = dateFormat.format(calendar.time)
+        updateTimeView()
     }
 
     override fun onTimeSet(view: RadialPickerLayout?, hourOfDay: Int, minute: Int) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
-
-        time!!.text = timeFormat.format(calendar.time)
+        updateTimeView()
     }
 
+    fun updateTimeView() {
+        time!!.text = timeFormat.format(calendar.time)
+        date!!.text = dateFormat.format(calendar.time)
+    }
 
-    object STATIC_FIELDS {
+    companion object {
         val ROUTE_KEY = "key_for_routes_to_be_received"
     }
 

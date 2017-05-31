@@ -17,7 +17,7 @@ data class Passage(override val id: Int, val route: Route, val dateTime: DateTim
         Parcelable {
 
     override val name: String
-        get() = "${route.name}\n$dateTime".replace("T", "\n")
+        get() = "${route.name}\n$dateTime\nSpeed: $speed".replace("T", "\n")
 
     constructor(parcel: Parcel): this(
             parcel.readInt(),

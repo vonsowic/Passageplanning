@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.thames_tide_provider.web.configurationitems
+package com.bearcave.passageplanning.tides.web.configurationitems
 
 import org.joda.time.DateTime
 
