@@ -17,23 +17,32 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
 import com.bearcave.passageplanning.data.FilesManager;
 import com.bearcave.passageplanning.data.database.DatabaseManager;
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener;
-import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
-import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
-import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
+import com.bearcave.passageplanning.passage.PassageManagerFragment;
+import com.bearcave.passageplanning.passage.database.ReadRoutes;
 import com.bearcave.passageplanning.routes.ReadWaypoints;
 import com.bearcave.passageplanning.routes.RouteManagerFragment;
+import com.bearcave.passageplanning.routes.database.Route;
+import com.bearcave.passageplanning.routes.database.RouteCRUD;
+import com.bearcave.passageplanning.routes.database.RouteTable;
+import com.bearcave.passageplanning.settings.SettingsFragment;
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
+import com.bearcave.passageplanning.waypoints.database.WaypointCRUD;
+import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     OnDatabaseRequestedListener,
-                    ReadWaypoints {
+                    ReadWaypoints,
+                    ReadRoutes{
 
     private DatabaseManager database;
     private FilesManager files;
@@ -53,7 +62,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -61,6 +69,8 @@ public class MainActivity extends AppCompatActivity
 
         fragmentHolder.put(R.id.nav_routes_menu, new RouteManagerFragment());
         fragmentHolder.put(R.id.nav_waypoints_menu, new WaypointsManagerFragment());
+        fragmentHolder.put(R.id.nav_passages_menu, new PassageManagerFragment());
+        fragmentHolder.put(R.id.nav_settings, new SettingsFragment());
 
         askForPermission();
     }
@@ -68,7 +78,7 @@ public class MainActivity extends AppCompatActivity
     private void afterPermissionIsChecked(){
         files = new FilesManager(this);
         database = files.createDatabase();
-        showFragment(R.id.nav_routes_menu);
+        showFragment(R.id.nav_passages_menu);
     }
 
     @Override
@@ -131,8 +141,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public List<WaypointDAO> readAllWaypoints() {
+    public List<Waypoint> readAllWaypoints() {
         WaypointsTable databaseTable = (WaypointsTable) database.getTable(WaypointCRUD.ID);
+        return databaseTable.readAll();
+    }
+
+    @NotNull
+    @Override
+    public List<Route> readAllRoutes() {
+        RouteTable databaseTable = (RouteTable) database.getTable(RouteCRUD.ID);
         return databaseTable.readAll();
     }
 }

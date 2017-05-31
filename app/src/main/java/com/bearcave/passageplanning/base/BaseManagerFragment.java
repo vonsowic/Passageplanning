@@ -32,11 +32,11 @@ public abstract class BaseManagerFragment<DAO extends Parcelable & DatabaseEleme
         Intent intent = new Intent(getContext(), getEditorClass());
 
         if(element != null){
-            intent.putExtra(BaseEditorActivity.EDITOR_RESULT, element);
+            intent.putExtra(BaseEditorActivity.Companion.getEDITOR_RESULT(), element);
         }
 
         putExtra(intent);
-        startActivityForResult(intent, BaseEditorActivity.EDITOR_REQUEST);
+        startActivityForResult(intent, BaseEditorActivity.Companion.getEDITOR_REQUEST());
     }
 
     protected abstract Class<? extends BaseEditorActivity<DAO>> getEditorClass();
@@ -62,13 +62,13 @@ public abstract class BaseManagerFragment<DAO extends Parcelable & DatabaseEleme
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BaseEditorActivity.EDITOR_REQUEST) {
-            if (resultCode == BaseEditorActivity.EDITOR_CREATED) {
-                DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
+        if (requestCode == BaseEditorActivity.Companion.getEDITOR_REQUEST()) {
+            if (resultCode == BaseEditorActivity.Companion.getEDITOR_CREATED()) {
+                DAO result = data.getParcelableExtra(BaseEditorActivity.Companion.getEDITOR_RESULT());
                 onDataCreated(result);
 
-            } else if (resultCode == BaseEditorActivity.EDITOR_UPDATED) {
-                DAO result = data.getParcelableExtra(BaseEditorActivity.EDITOR_RESULT);
+            } else if (resultCode == BaseEditorActivity.Companion.getEDITOR_UPDATED()) {
+                DAO result = data.getParcelableExtra(BaseEditorActivity.Companion.getEDITOR_RESULT());
                 onDataUpdated(result);
             }
         }

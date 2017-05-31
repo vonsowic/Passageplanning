@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="speed_entries">
+        <item>knot</item>
+        <item>mph</item>
+        <item>km/h</item>
+        <item>m/s</item>
+    </string-array>
+
+    <string-array name="speed_values">
+        <item>0.514444F</item>
+        <item>0.4470F</item>
+        <item>0.277778F</item>
+        <item>1.0F</item>
+    </string-array>
+</resources>

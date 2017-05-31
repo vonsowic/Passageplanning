@@ -4,6 +4,7 @@ package com.bearcave.passageplanning.base.database.withcustomkey;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import com.bearcave.passageplanning.data.database.ManagerListener;
 
@@ -20,7 +21,11 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
         implements ManagerListener,
         CRUDWithCustomKey<Dao, Id> {
 
-    private ManagerListener manager;
+    private final ManagerListener manager;
+
+    public ManagerListener getManager() {
+        return manager;
+    }
 
     public BaseTableWithCustomKey(ManagerListener manager) {
         this.manager = manager;
@@ -46,11 +51,29 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
             table.append(entry.getKey() + " " +  entry.getValue() + "," );
         }
 
+        for (String[] reference: createReferences()){
+            table.append(referenceTemplate(reference[0], reference[1], reference[2]));
+        }
+
         table.delete(table.length()-1, table.length());
+
         table.append(");");
 
         return table.toString();
     }
+
+    /**
+     * @return ArrayList, which contains 3-dimensional arrays [key id, foreign table name, foreign key id]
+     */
+    protected ArrayList<String[]> createReferences(){
+        return new ArrayList<>();
+    }
+
+    @NonNull
+    private final String referenceTemplate(String keyId, String table, String foreignKeyId){
+        return " FOREIGN KEY ("+keyId+") REFERENCES "+table+"("+foreignKeyId+"),";
+    }
+
 
     private String[] getTableColumns(){
         LinkedHashMap<String, String> typeHolder = createKeyToValueTypeHolder();
@@ -151,4 +174,8 @@ public abstract class BaseTableWithCustomKey<Dao extends DatabaseElementWithCust
     protected static final String AUTOINCREMENT = " AUTOINCREMENT ";
     protected static final String PRIMARY_KEY = " PRIMARY KEY ";
     protected static final String UNIQUE = " UNIQUE ";
+    protected static final String REFERENCE = " REFERENCES ";
+    protected static final String FOREIGN_KEY = " FOREIGN KEY ";
+
+
 }

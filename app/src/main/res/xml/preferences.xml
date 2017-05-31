@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Types of units"
+        >
+
+        <ListPreference
+            android:title="Speed unit"
+            android:key="pref_speed_unit_type"
+            android:entries="@array/speed_entries"
+            android:entryValues="@array/speed_values"
+            android:defaultValue="0.514444F"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.routes;
 
-import com.bearcave.passageplanning.waypoints.database.WaypointDAO;
+import com.bearcave.passageplanning.waypoints.database.Waypoint;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface ReadWaypoints {
-    List<WaypointDAO> readAllWaypoints();
+    List<Waypoint> readAllWaypoints();
 }
