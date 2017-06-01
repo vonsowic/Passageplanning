@@ -29,10 +29,7 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        var view = convertView
-        if ( view == null){
-            view = inflater.inflate(R.layout.waypoint_child_item, parent, false)
-        }
+        val view = convertView ?: inflater.inflate(R.layout.waypoint_child_item, parent, false)
 
         val (_, _, note1, characteristic1, ukc1, latitude, longitude, gauge1) = container[groupPosition]
 

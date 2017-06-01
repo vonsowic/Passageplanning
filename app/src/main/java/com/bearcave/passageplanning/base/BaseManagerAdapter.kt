@@ -87,7 +87,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-        val view = inflater.inflate(R.layout.manager_group_item, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.manager_group_item, parent, false)
 
         val title = ButterKnife.findById<TextView>(view, R.id.name)
         title.text = container[groupPosition].name

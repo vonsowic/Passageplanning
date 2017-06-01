@@ -40,10 +40,8 @@ class RouteManagerAdapter(parent: RouteManagerFragment, context: Context) : Base
 
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        var view = convertView
-        if (view == null){
-            view = inflater.inflate(R.layout.passage_manager_child_item, parent, false)
-        }
+        val view = convertView ?: inflater.inflate(R.layout.passage_manager_child_item, parent, false)
+
 
         val (_, name) = getWaypointFromList(groupPosition, childPosition)
 
