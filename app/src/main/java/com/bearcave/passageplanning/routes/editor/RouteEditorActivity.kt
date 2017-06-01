@@ -1,17 +1,13 @@
 package com.bearcave.passageplanning.routes.editor
 
 import android.content.Intent
-import android.os.Parcelable
 import android.widget.EditText
 import android.widget.ListView
-
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.waypoints.database.Waypoint
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 
 class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnItemClickedListener {

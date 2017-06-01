@@ -26,9 +26,9 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
 
     public DatabaseManager(final Context context, String databaseName) {
         super(new DatabaseContext(context), databaseName, null, VERSION);
-        tables.put(WaypointCRUD.ID, new WaypointsTable(this));
-        tables.put(RouteCRUD.ID, new RouteTable(this));
-        tables.put(PassageCRUD.ID, new PassageTable(this));
+        tables.put(WaypointCRUD.Companion.getID(), new WaypointsTable(this));
+        tables.put(RouteCRUD.Companion.getID(), new RouteTable(this));
+        tables.put(PassageCRUD.Companion.getID(), new PassageTable(this));
 
         for(Gauge gauge: Gauge.values()){
             tables.put(gauge.getId(), new TidesTable(this, gauge));
@@ -64,6 +64,6 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     @NotNull
     @Override
     public Route readRoute(int id) {
-        return ((RouteTable) tables.get(RouteCRUD.ID)).read(id);
+        return ((RouteTable) tables.get(RouteCRUD.Companion.getID())).read(id);
     }
 }

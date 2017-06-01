@@ -32,6 +32,6 @@ class DownloadTideTableTask(val database: TideCRUD) : AsyncTask<DownloadingConfi
 
     override fun onPostExecute(result: HashSet<TideItem>?) {
         super.onPostExecute(result)
-        database.insertAll(result)
+        database.insertAll(result!!)
     }
 }

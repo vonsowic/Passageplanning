@@ -43,7 +43,7 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
         characteristic.append(characteristic1)
 
         val gauge = ButterKnife.findById<TextView>(view, R.id.gauge)
-        gauge.append(gauge1.getName())
+        gauge.append(gauge1.humanCode)
 
         val ukc = ButterKnife.findById<TextView>(view, R.id.ukc)
         ukc.append(ukc1.toString())

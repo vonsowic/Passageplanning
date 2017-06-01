@@ -16,24 +16,23 @@ import java.util.*
 
 class PassageTable(listener: AccessToRouteTable) : BaseTable<Passage>(listener) {
 
-    override fun getTableName(): String {
-        return "passages"
-    }
+    override val tableName: String
+        get() = "passages"
+
 
     override fun createKeyToValueTypeHolder(): LinkedHashMap<String, String> {
         val result = LinkedHashMap<String, String>()
 
-        result.put(KEY_ID, BaseTableWithCustomKey.INTEGER + BaseTableWithCustomKey.PRIMARY_KEY + BaseTableWithCustomKey.AUTOINCREMENT)
-        result.put(KEY_ROUTE_ID, BaseTableWithCustomKey.INTEGER + BaseTableWithCustomKey.NOT_NULL)
-        result.put(KEY_DATE_AND_TIME, BaseTableWithCustomKey.DATETIME + BaseTableWithCustomKey.NOT_NULL)
-        result.put(KEY_SPEED, BaseTableWithCustomKey.FLOAT + BaseTableWithCustomKey.NOT_NULL )
+        result.put(KEY_ID, INTEGER + PRIMARY_KEY + AUTOINCREMENT)
+        result.put(KEY_ROUTE_ID, INTEGER + NOT_NULL)
+        result.put(KEY_DATE_AND_TIME, DATETIME + NOT_NULL)
+        result.put(KEY_SPEED, FLOAT + NOT_NULL )
 
         return result
     }
 
     override fun getContentValue(element: Passage): ContentValues {
         val result = ContentValues()
-        result.put(BaseTableWithCustomKey.KEY_ID, element.id)
         result.put(KEY_ROUTE_ID, element.route.id)
         result.put(KEY_DATE_AND_TIME, element.dateTime.toString())
         result.put(KEY_SPEED, element.speed)

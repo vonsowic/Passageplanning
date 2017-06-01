@@ -33,7 +33,7 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         latitude = ButterKnife.findById<TextInputEditText>(this, R.id.latitude_text)
         longitude = ButterKnife.findById<TextInputEditText>(this, R.id.longitude_text)
         gauge = ButterKnife.findById<TextView>(this, R.id.gauge_name)
-        gauge!!.text = Gauge.MARGATE.getName()
+        gauge!!.text = Gauge.MARGATE.humanCode
 
         registerForContextMenu(gauge)
         gauge!!.setOnClickListener({ this.openContextMenu(it) })
@@ -47,7 +47,7 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         ukc!!.setText(waypoint.ukc.toString())
         latitude!!.setText(waypoint.getLatitudeInSecondFormat())
         longitude!!.setText(waypoint.getLongitudeInSecondFormat())
-        gauge!!.text = waypoint.gauge.getName()
+        gauge!!.text = waypoint.gauge.humanCode
     }
 
     override val contentLayoutId: Int
@@ -80,12 +80,12 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         menu.setHeaderTitle(R.string.editor_gauge_chooser_title)
 
         for (gauge in Gauge.values()) {
-            menu.add(Menu.NONE, gauge.id, Menu.NONE, gauge.getName())
+            menu.add(Menu.NONE, gauge.id, Menu.NONE, gauge.humanCode)
         }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        gauge!!.text = Gauge.getById(item.itemId).getName()
+        gauge!!.text = Gauge.getById(item.itemId).humanCode
         return super.onContextItemSelected(item)
     }
 }
