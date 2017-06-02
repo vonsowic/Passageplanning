@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Parcelable
 import android.support.design.widget.FloatingActionButton
 import android.view.View
-import android.widget.Button
 import butterknife.ButterKnife
-import butterknife.OnClick
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 

@@ -1,22 +1,16 @@
 package com.bearcave.passageplanning.routes
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.support.annotation.RequiresPermission
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.base.BaseManagerAdapter
 import com.bearcave.passageplanning.base.BaseManagerFragment
-import com.bearcave.passageplanning.base.database.CRUD
-import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
-import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.editor.RouteEditorActivity
 import com.bearcave.passageplanning.waypoints.database.Waypoint
-import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import java.util.*
 
 

@@ -11,7 +11,6 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.base.database.CRUD
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import java.util.*
