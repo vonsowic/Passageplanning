@@ -32,5 +32,6 @@
     <string name="title_activity_editor">EditorActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_passage_editor">It is to be removed</string>
+    <string name="ukc">UKS</string>
 
 </resources>

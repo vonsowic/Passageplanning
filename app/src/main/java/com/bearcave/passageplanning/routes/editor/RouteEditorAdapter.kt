@@ -41,9 +41,7 @@ class RouteEditorAdapter(context: Context, private val waypoints: ArrayList<Wayp
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view: View? = convertView
-        if (view == null)
-            view = inflater.inflate(R.layout.route_editor_list_item, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.route_editor_list_item, parent, false)
 
         val (id, name) = waypoints[position]
 

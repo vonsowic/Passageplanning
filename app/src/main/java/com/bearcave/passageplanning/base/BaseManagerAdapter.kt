@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseExpandableListAdapter
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.base.database.CRUD
+import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import java.util.*
 
@@ -20,7 +23,7 @@ import java.util.*
  * @version 1.0
  * @since 20.05.17
  */
-abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(parent: BasePoorManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
+abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, protected val context: Context) : BaseExpandableListAdapter() {
 
     /**
      * This container has all DAOs shown in ExpandableListView.
@@ -29,7 +32,9 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(
 
 
     protected val inflater: LayoutInflater
-    protected val database: CRUD<Dao> = parent as CRUD<Dao>
+
+    @Suppress("UNCHECKED_CAST")
+    protected val database: CRUDWithCustomKey<Dao, T> = parent as CRUDWithCustomKey<Dao, T>
     private val commands = ArrayList<Command>()
 
 
@@ -84,7 +89,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-        val view = inflater.inflate(R.layout.manager_group_item, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.manager_group_item, parent, false)
 
         val title = ButterKnife.findById<TextView>(view, R.id.name)
         title.text = container[groupPosition].name

@@ -16,47 +16,40 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
         addOption(context.getString(R.string.action_edit), { dao -> parent.openEditor(dao)})
     }
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        return 1
-    }
+    override fun getChildrenCount(groupPosition: Int): Int = 1
 
-    override fun getGroupId(groupPosition: Int): Long {
-        return container[groupPosition].id.toLong()
-    }
+    override fun getGroupId(groupPosition: Int): Long = container[groupPosition].id.toLong()
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long {
-        return 0
-    }
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = 0
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        var view = convertView
-        if ( view == null){
-            view = inflater.inflate(R.layout.waypoint_child_item, parent, false)
-        }
+        val view = convertView ?: inflater.inflate(R.layout.waypoint_child_item, parent, false)
 
-        val (_, _, note1, characteristic1, ukc1, latitude, longitude, gauge1) = container[groupPosition]
+        val (_, _, note, characteristic, ukc, latitude, longitude, gauge) = container[groupPosition]
 
-        val note = ButterKnife.findById<TextView>(view!!, R.id.note)
-        note.append(note1)
+        // note
+        ButterKnife.findById<TextView>(view!!, R.id.note)
+            .text = "Note $note"
 
-        val characteristic = ButterKnife.findById<TextView>(view, R.id.characteristic)
-        characteristic.append(characteristic1)
+        // characteristic
+        ButterKnife.findById<TextView>(view, R.id.characteristic)
+            .text = "Characteristic: $characteristic"
 
-        val gauge = ButterKnife.findById<TextView>(view, R.id.gauge)
-        gauge.append(gauge1.getName())
+        // gauge
+        ButterKnife.findById<TextView>(view, R.id.gauge)
+            .text = "Gauge: ${gauge.humanCode}"
 
-        val ukc = ButterKnife.findById<TextView>(view, R.id.ukc)
-        ukc.append(ukc1.toString())
+        // ukc
+        ButterKnife.findById<TextView>(view, R.id.ukc)
+            .text = "${context.getString(R.string.ukc)} $ukc"
 
-        val position = ButterKnife.findById<TextView>(view, R.id.position)
-        position.text = "$longitude\n$latitude"
+        // position
+        ButterKnife.findById<TextView>(view, R.id.position)
+            .text = "$longitude\n$latitude"
 
         return view
     }
 
-    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return false
-    }
-
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = false
 }
 

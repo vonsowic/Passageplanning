@@ -28,7 +28,7 @@ class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : 
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = inflater.inflate(R.layout.passage_child_item, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.passage_child_item, parent, false)
 
         val title = ButterKnife.findById<TextView>(view, R.id.waypoint_name)
         title.text = getWaypointById(

@@ -20,15 +20,21 @@ import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * DO NOT CONVERT THIS CLASS TO KOTLIN!
+ * This would lead to platform declaration clash, because of the
+ * {@see com.bearcave.passageplanning.data.database.ManagerLister} and {@see SQLiteOpenHelper}
+ * database getters.
+ */
 public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener, AccessToRouteTable {
 
     private final SparseArray<BaseTableWithCustomKey> tables = new SparseArray<>();
 
     public DatabaseManager(final Context context, String databaseName) {
         super(new DatabaseContext(context), databaseName, null, VERSION);
-        tables.put(WaypointCRUD.ID, new WaypointsTable(this));
-        tables.put(RouteCRUD.ID, new RouteTable(this));
-        tables.put(PassageCRUD.ID, new PassageTable(this));
+        tables.put(WaypointCRUD.Companion.getID(), new WaypointsTable(this));
+        tables.put(RouteCRUD.Companion.getID(), new RouteTable(this));
+        tables.put(PassageCRUD.Companion.getID(), new PassageTable(this));
 
         for(Gauge gauge: Gauge.values()){
             tables.put(gauge.getId(), new TidesTable(this, gauge));
@@ -55,7 +61,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     }
 
 
-    private static final int VERSION = 21;
+    private static final int VERSION = 24;
 
     public BaseTableWithCustomKey getTable(int tableId){
         return tables.get(tableId);
@@ -64,6 +70,6 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     @NotNull
     @Override
     public Route readRoute(int id) {
-        return ((RouteTable) tables.get(RouteCRUD.ID)).read(id);
+        return ((RouteTable) tables.get(RouteCRUD.Companion.getID())).read(id);
     }
 }
