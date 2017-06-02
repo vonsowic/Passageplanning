@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.base.database.withcustomkey
 
-interface CRUDWithCustomKey<T, Key> {
+interface CRUDWithCustomKey<T, in Key> {
     /**
      * @param element
      * *

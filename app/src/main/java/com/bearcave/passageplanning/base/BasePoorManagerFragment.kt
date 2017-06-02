@@ -27,6 +27,7 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
 
     protected var database: CRUDWithCustomKey<DAO, T>? = null
 
+    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val databaseHolder = context as OnDatabaseRequestedListener

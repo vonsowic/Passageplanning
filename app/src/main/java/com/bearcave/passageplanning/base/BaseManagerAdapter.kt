@@ -32,6 +32,8 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
 
 
     protected val inflater: LayoutInflater
+
+    @Suppress("UNCHECKED_CAST")
     protected val database: CRUDWithCustomKey<Dao, T> = parent as CRUDWithCustomKey<Dao, T>
     private val commands = ArrayList<Command>()
 

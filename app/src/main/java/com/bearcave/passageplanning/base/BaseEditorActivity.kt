@@ -15,6 +15,7 @@ abstract class BaseEditorActivity<DAO : Parcelable> : AppCompatActivity() {
 
     private var updateMode = false
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_editor)

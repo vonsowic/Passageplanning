@@ -1,20 +1,19 @@
 package com.bearcave.passageplanning.data.database;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.pm.PackageManager;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 
 /**
- * Created by miwas on 12.05.17.
+ * @author Michał Wąsowicz
+ * @since 12.05.17.
+ * @version 1.0
  */
 
 public class DatabaseContext extends ContextWrapper {
@@ -58,12 +57,6 @@ public class DatabaseContext extends ContextWrapper {
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
         return openOrCreateDatabase(name, mode, factory);
-    }
-
-    private boolean checkPermission(){
-        return ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-
     }
 
     @Override
