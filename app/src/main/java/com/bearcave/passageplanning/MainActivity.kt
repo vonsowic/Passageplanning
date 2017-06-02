@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun afterPermissionIsChecked() {
         files = FilesManager(this)
         database = files!!.createDatabase()
-        showFragment(R.id.nav_waypoints_menu)
+        showFragment(R.id.nav_passages_menu)
     }
 
     override fun onBackPressed() {
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_FILE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     afterPermissionIsChecked()
                 } else {
                     Toast.makeText(this, "Application cannot work properly without this permission", Toast.LENGTH_LONG).show()

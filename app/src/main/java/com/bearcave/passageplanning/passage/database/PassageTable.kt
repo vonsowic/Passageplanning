@@ -19,11 +19,10 @@ class PassageTable(listener: AccessToRouteTable) : BaseTable<Passage>(listener) 
     override val tableName: String
         get() = "passages"
 
-
     override fun createKeyToValueTypeHolder(): LinkedHashMap<String, String> {
         val result = LinkedHashMap<String, String>()
 
-        result.put(KEY_ID, INTEGER + PRIMARY_KEY + AUTOINCREMENT)
+        result.put(KEY_ID, INTEGER + PRIMARY_KEY + AUTOINCREMENT )
         result.put(KEY_ROUTE_ID, INTEGER + NOT_NULL)
         result.put(KEY_DATE_AND_TIME, DATETIME + NOT_NULL)
         result.put(KEY_SPEED, FLOAT + NOT_NULL )
@@ -46,14 +45,12 @@ class PassageTable(listener: AccessToRouteTable) : BaseTable<Passage>(listener) 
     }
 
     override fun loadFrom(cursor: Cursor): Passage {
-
         return Passage(
                 cursor.getInt(0),
                 (manager as AccessToRouteTable).readRoute(cursor.getInt(1)),
                 DateTime.parse(cursor.getString(2)),
                 cursor.getFloat(3)
         )
-
     }
 
     val KEY_ROUTE_ID = "route_id"

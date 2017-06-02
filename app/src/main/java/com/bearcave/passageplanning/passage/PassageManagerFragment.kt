@@ -25,25 +25,12 @@ class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
     override val databaseKey: Int
         get() = PassageCRUD.ID
 
-    override var adapter: BaseManagerAdapter<Passage, Int>
-        get() = adapter
-        set(value) { adapter = value }
 
     override val editorClass: Class<out BaseEditorActivity<Passage>>
         get() = PassageEditorActivity::class.java
 
     var routeDatabase: ReadRoutes? = null
-        get() = null
 
-    override fun onDataCreated(result: Passage) {
-        database!!.insert(result)
-        adapter.add(result)
-    }
-
-    override fun onDataUpdated(result: Passage) {
-        update(result)
-        adapter.update(result)
-    }
 
     override fun putExtra(mail: Intent) {
         super.putExtra(mail)

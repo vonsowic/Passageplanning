@@ -12,6 +12,7 @@ import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.CRUD
+import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 import java.util.*
 
@@ -23,7 +24,7 @@ import java.util.*
  * @version 1.0
  * @since 20.05.17
  */
-abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(parent: BasePoorManagerFragment<*, *>, private val context: Context) : BaseExpandableListAdapter() {
+abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, protected val context: Context) : BaseExpandableListAdapter() {
 
     /**
      * This container has all DAOs shown in ExpandableListView.
@@ -32,7 +33,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, out T>(
 
 
     protected val inflater: LayoutInflater
-    protected val database: CRUD<Dao> = parent as CRUD<Dao>
+    protected val database: CRUDWithCustomKey<Dao, T> = parent as CRUDWithCustomKey<Dao, T>
     private val commands = ArrayList<Command>()
 
 

@@ -13,7 +13,7 @@ import com.bearcave.passageplanning.waypoints.database.Waypoint
  * @version 1.0
  * @since 31.05.17
  */
-abstract class BaseManagerAdapterWithWaypoints<Dao : DatabaseElementWithCustomKey<T>, out T>(parent: BasePoorManagerFragment<*, *>, context: Context)
+abstract class BaseManagerAdapterWithWaypoints<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, context: Context)
     : BaseManagerAdapter<Dao, T>(parent, context) {
 
     private val waypointsDatabase: ReadWaypoints = context as ReadWaypoints

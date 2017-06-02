@@ -34,7 +34,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     var routes: ArrayList<Route> = ArrayList()
 
     override val isAllFilled: Boolean
-        get() = !speedText!!.text.isEmpty()
+        get() = !speedText!!.text.isEmpty() and !routes.isEmpty()
 
     override val contentLayoutId: Int
         get() = R.layout.content_passage_editor

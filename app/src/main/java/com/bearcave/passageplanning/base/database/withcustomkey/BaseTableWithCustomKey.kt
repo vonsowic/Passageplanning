@@ -9,7 +9,6 @@ import java.util.*
 
 /**
  * @param <DAO> - Data Access Object
- * *
  * @param <Id> - Column id in database.
 </Id></DAO> */
 abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id>(val manager: ManagerListener) : ManagerListener, CRUDWithCustomKey<DAO, Id> {
@@ -60,7 +59,6 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
     private val tableColumns: Array<String?>
         get() {
             val typeHolder = createKeyToValueTypeHolder()
-
             val result = arrayOfNulls<String>(typeHolder.size)
 
             var i = 0
@@ -71,13 +69,9 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
             return result
         }
 
-    override val writableDatabase: SQLiteDatabase
-        get() = manager.writableDatabase
+    override fun getWritableDatabase(): SQLiteDatabase = manager.writableDatabase
 
-
-    override val readableDatabase: SQLiteDatabase
-        get() = manager.readableDatabase
-
+    override fun getReadableDatabase(): SQLiteDatabase = manager.readableDatabase
 
     override fun insert(element: DAO): Long {
         return writableDatabase

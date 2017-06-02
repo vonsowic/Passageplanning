@@ -19,31 +19,25 @@ enum class Gauge constructor(val id: Int, val humanCode: String, val code: Strin
     companion object {
 
         fun getById(id: Int): Gauge {
-            for (item in Gauge.values()) {
-                if (item.id == id) {
-                    return item
-                }
-            }
+            Gauge.values()
+                    .filter { it.id == id }
+                    .forEach { return it }
 
             throw GaugeNotFoundException()
         }
 
         fun getByCode(code: String): Gauge {
-            for (item in Gauge.values()) {
-                if (item.code == code) {
-                    return item
-                }
-            }
+            Gauge.values()
+                    .filter { it.code == code }
+                    .forEach { return it }
 
             throw GaugeNotFoundException()
         }
 
         fun getByName(name: String): Gauge {
-            for (item in Gauge.values()) {
-                if (item.humanCode == name) {
-                    return item
-                }
-            }
+            Gauge.values()
+                    .filter { it.humanCode == name }
+                    .forEach { return it }
 
             throw GaugeNotFoundException()
         }

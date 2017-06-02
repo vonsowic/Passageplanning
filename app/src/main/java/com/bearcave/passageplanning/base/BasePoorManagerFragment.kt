@@ -21,7 +21,7 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
     : BaseFragment(),
         CRUDWithCustomKey<DAO, T> {
 
-    protected abstract var adapter: BaseManagerAdapter<DAO, T>
+    protected var adapter: BaseManagerAdapter<DAO, T>? = null
 
     protected abstract val databaseKey: Int
 

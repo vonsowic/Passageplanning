@@ -20,6 +20,12 @@ import com.bearcave.passageplanning.waypoints.database.WaypointsTable;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * DO NOT CONVERT THIS CLASS TO KOTLIN!
+ * This would lead to platform declaration clash, because of the
+ * {@see com.bearcave.passageplanning.data.database.ManagerLister} and {@see SQLiteOpenHelper}
+ * database getters.
+ */
 public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener, AccessToRouteTable {
 
     private final SparseArray<BaseTableWithCustomKey> tables = new SparseArray<>();
@@ -55,7 +61,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     }
 
 
-    private static final int VERSION = 21;
+    private static final int VERSION = 24;
 
     public BaseTableWithCustomKey getTable(int tableId){
         return tables.get(tableId);

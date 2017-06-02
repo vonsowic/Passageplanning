@@ -3,6 +3,10 @@ package com.bearcave.passageplanning.base
 
 import android.content.Intent
 import android.os.Parcelable
+import android.support.design.widget.FloatingActionButton
+import android.view.View
+import android.widget.Button
+import butterknife.ButterKnife
 import butterknife.OnClick
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
@@ -16,9 +20,14 @@ import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementW
 abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() where DAO : Parcelable, DAO : DatabaseElementWithCustomKey<T>{
 
 
-    @OnClick(R.id.open_editor)
-    fun openEditor() {
+    //@OnClick(R.id.open_editor)
+    fun openEditor()  {
         openEditor(null)
+    }
+
+    override fun findViews(parent: View) {
+        super.findViews(parent)
+        ButterKnife.findById<FloatingActionButton>(parent, R.id.open_editor).setOnClickListener { openEditor() }
     }
 
     /**
@@ -54,20 +63,27 @@ abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() w
      * @param data - DAO is sent in this intent.
      * @see BaseManagerFragment.openEditor
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == BaseEditorActivity.EDITOR_REQUEST.toInt()) {
             if (resultCode == BaseEditorActivity.EDITOR_CREATED.toInt()) {
-                val result = data!!.getParcelableExtra<DAO>(BaseEditorActivity.EDITOR_RESULT)
+                val result = data.getParcelableExtra<DAO>(BaseEditorActivity.EDITOR_RESULT)
                 onDataCreated(result)
 
             } else if (resultCode == BaseEditorActivity.EDITOR_UPDATED.toInt()) {
-                val result = data!!.getParcelableExtra<DAO>(BaseEditorActivity.EDITOR_RESULT)
+                val result = data.getParcelableExtra<DAO>(BaseEditorActivity.EDITOR_RESULT)
                 onDataUpdated(result)
             }
         }
     }
 
-    protected abstract fun onDataCreated(result: DAO)
+    fun onDataCreated(result: DAO) {
+        insert(result)
+        adapter!!.add(result)
+    }
 
-    protected abstract fun onDataUpdated(result: DAO)
+    fun onDataUpdated(result: DAO) {
+        database!!.update(result)
+        adapter!!.update(result)
+    }
+
 }
