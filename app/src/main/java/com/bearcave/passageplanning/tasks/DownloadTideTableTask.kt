@@ -2,13 +2,11 @@ package com.bearcave.passageplanning.tasks
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.tides.database.TideCRUD
 import com.bearcave.passageplanning.tides.database.TideItem
 import com.bearcave.passageplanning.tides.web.TideProvider
 import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
-import java.io.IOException
 
 /**
  *
@@ -19,7 +17,6 @@ import java.io.IOException
 class DownloadTideTableTask(context: Context) : InternetTask<DownloadingConfiguration, Void, HashSet<TideItem>>(context) {
 
     val provider = TideProvider()
-    var exception: Exception? = null
     var database: TideCRUD? = null
 
     private val LOG_MESSAGE = "DOWNLOADING TIDE TASK: "
