@@ -27,6 +27,9 @@ import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
 import com.bearcave.passageplanning.settings.SettingsFragment
+import com.bearcave.passageplanning.tasks.DownloadTideTableTask
+import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
+import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
@@ -61,6 +64,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission()
+
+        for (gauge in Gauge.values()) {
+            DownloadTideTableTask(this).execute(
+                    DownloadingConfiguration(
+                            gauge
+                    )
+            )
+        }
     }
 
     private fun afterPermissionIsChecked() {
@@ -98,7 +109,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MY_PERMISSIONS_REQUEST_FILE
+                    PASSAGE_PERMISSIONS_REQUEST_FILE
             )
         } else {
             afterPermissionIsChecked()
@@ -107,11 +118,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            MY_PERMISSIONS_REQUEST_FILE -> {
+            PASSAGE_PERMISSIONS_REQUEST_FILE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     afterPermissionIsChecked()
                 } else {
                     Toast.makeText(this, "Application cannot work properly without this permission", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+                return
+            }
+            PASSAGE_PERMISSIONS_REQUEST_INTERNET -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
                     finish()
                 }
                 return
@@ -134,6 +153,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     companion object {
-        private val MY_PERMISSIONS_REQUEST_FILE = 54
+        val PASSAGE_PERMISSIONS_REQUEST_FILE = 54
+        val PASSAGE_PERMISSIONS_REQUEST_INTERNET = 55
     }
 }

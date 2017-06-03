@@ -58,10 +58,11 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'joda-time:joda-time:2.9.9'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.8.0'
     compile 'com.github.citux:datetimepicker:0.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.android.support:support-v13:25.3.1'
+
+    testCompile 'org.assertj:assertj-core:2.8.0'
 }
 
 repositories {

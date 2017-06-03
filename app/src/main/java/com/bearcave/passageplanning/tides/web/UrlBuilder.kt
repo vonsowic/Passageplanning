@@ -26,8 +26,9 @@ class UrlBuilder(
         builder.append(separator + time.monthOfYear)
         builder.append(separator + time.dayOfMonth)
         builder.append(separator + numberOfDays.length)
-        builder.append(separator + 0)
         builder.append(separator + step.step)
+        builder.append(separator + 0)
+        builder.append(separator + fileType.typeName)
 
         return builder.toString()
     }

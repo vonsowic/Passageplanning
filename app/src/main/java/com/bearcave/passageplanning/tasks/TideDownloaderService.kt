@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.tides
+package com.bearcave.passageplanning.tasks
 
 import android.app.Service
 import android.content.Intent
