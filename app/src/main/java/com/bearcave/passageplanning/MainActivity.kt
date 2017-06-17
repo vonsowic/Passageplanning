@@ -1,8 +1,6 @@
 package com.bearcave.passageplanning
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -29,21 +27,25 @@ import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
 import com.bearcave.passageplanning.settings.SettingsFragment
-import com.bearcave.passageplanning.tasks.DownloadTideTableTask
-import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager.CONNECTIVITY_ACTION
-import android.net.ConnectivityManager
 import butterknife.ButterKnife
+import com.bearcave.passageplanning.tasks.TideManagerService
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnDatabaseRequestedListener, ReadWaypoints, ReadRoutes {
+class MainActivity
+    : AppCompatActivity(),
+        NavigationView.OnNavigationItemSelectedListener,
+        OnDatabaseRequestedListener,
+        ReadWaypoints,
+        ReadRoutes,
+        TideManagerService.TideManagerListener
+{
+    override fun onNoInternetConnection() {
+        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
+    }
 
     private var database: DatabaseManager? = null
     private var files: FilesManager? = null
@@ -75,54 +77,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 { afterFilePermissionIsChecked() }
         )
 
-        afterNetworkAccessGranted()
-    }
-
-    private fun onNoInternetConnection() {
-        val filter = IntentFilter()
-        filter.addAction(CONNECTIVITY_ACTION)
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (isInternetConnectionActive()) {
-                    updateTidesTable()
-                    unregisterReceiver(this)
-                }
-            }
-        }
-
-        registerReceiver(receiver, filter)
-        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
-    }
-
-    private fun isInternetConnectionActive(): Boolean {
-        val activeNetwork = (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-                .activeNetworkInfo
-
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-    }
-
-    private fun updateTidesTable(){
-        for (gauge in Gauge.values()) {
-            DownloadTideTableTask(this).execute(
-                    DownloadingConfiguration(
-                            gauge
-                    )
-            )
-        }
     }
 
     private fun afterFilePermissionIsChecked() {
         files = FilesManager(this)
         database = files!!.createDatabase()
         showFragment(R.id.nav_passages_menu)
-    }
-
-    private fun afterNetworkAccessGranted(){
-        if (isInternetConnectionActive()) {
-            updateTidesTable()
-        } else {
-            onNoInternetConnection()
-        }
     }
 
     override fun onBackPressed() {

@@ -4,6 +4,7 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.view.View
 import android.widget.ExpandableListView
+import android.widget.Toast
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
@@ -32,7 +33,12 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val databaseHolder = context as OnDatabaseRequestedListener
+        saveDatabaseHolder(databaseHolder)
         database = databaseHolder.onGetTableListener(databaseKey) as CRUDWithCustomKey<DAO, T>
+    }
+
+    protected open fun saveDatabaseHolder(holder: OnDatabaseRequestedListener){
+        // to override
     }
 
     override fun layoutId() = R.layout.fragment_base_poor_manager

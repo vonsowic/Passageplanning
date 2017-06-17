@@ -81,25 +81,27 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
                 )
     }
 
-    override fun read(id: Id): DAO {
-        val cursor = readableDatabase.query(
-                tableName,
-                tableColumns,
-                idKey + ANY,
-                arrayOf(id.toString()), null, null, null, null
-        )
+    private fun readableCursor(id :Id) = readableDatabase.query(
+            tableName,
+            tableColumns,
+            idKey + ANY,
+            arrayOf(id.toString()), null, null, null, null
+    )
 
+    override fun read(id: Id): DAO {
+        val cursor = readableCursor(id)
         cursor?.moveToFirst()
 
         return loadFrom(cursor)
     }
 
+    fun exists(id: Id) = readableCursor(id).count > 0
+
     override fun readAll(): List<DAO> {
         val requestedList = ArrayList<DAO>()
         val selectQuery = "SELECT  * FROM " + tableName
 
-        val db = this.writableDatabase
-        val cursor = db.rawQuery(selectQuery, null)
+        val cursor = writableDatabase.rawQuery(selectQuery, null)
 
         if (cursor.moveToFirst()) {
             do {

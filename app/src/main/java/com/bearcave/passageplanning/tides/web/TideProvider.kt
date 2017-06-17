@@ -2,6 +2,7 @@ package com.bearcave.passageplanning.tides.web
 
 
 import com.bearcave.passageplanning.tides.database.TideItem
+import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep
 import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays
@@ -14,19 +15,17 @@ import java.util.*
 
 class TideProvider {
 
+    fun load(configuration: DownloadingConfiguration)
+            = load(configuration.gauge, configuration.dateTime, configuration.numberOfDays, configuration.step)
 
     @Throws(IOException::class)
     fun load(gauge: Gauge, time: DateTime, numberOfDays: NumberOfDays, step: MinuteStep): HashSet<TideItem> {
-        val result = HashSet<TideItem>()
         val data = get(gauge, time, numberOfDays, step).getElementsByTag("item")
-
-        for (element in data) {
-            val item = convertElement(element)
-            result.add(item)
-        }
-
-        return result
+        return data.mapTo(HashSet<TideItem>()) { convertElement(it) }
     }
+
+    private operator fun get(conf: DownloadingConfiguration) =
+        get(conf.gauge, conf.dateTime, conf.numberOfDays, conf.step)
 
     @Throws(IOException::class)
     private operator fun get(gauge: Gauge, time: DateTime, numberOfDays: NumberOfDays, step: MinuteStep): Document {
