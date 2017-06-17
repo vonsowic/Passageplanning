@@ -31,8 +31,21 @@ import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
+import butterknife.ButterKnife
+import com.bearcave.passageplanning.tasks.TideManagerService
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnDatabaseRequestedListener, ReadWaypoints, ReadRoutes {
+
+class MainActivity
+    : AppCompatActivity(),
+        NavigationView.OnNavigationItemSelectedListener,
+        OnDatabaseRequestedListener,
+        ReadWaypoints,
+        ReadRoutes,
+        TideManagerService.TideManagerListener
+{
+    override fun onNoInternetConnection() {
+        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
+    }
 
     private var database: DatabaseManager? = null
     private var files: FilesManager? = null
@@ -43,34 +56,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = ButterKnife.findById<Toolbar>(this, R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        val drawer = ButterKnife.findById<DrawerLayout>(this, R.id.drawer_layout)
+        ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            .syncState()
 
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        val toggle = ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        toggle.syncState()
-
-        val navigationView = findViewById(R.id.nav_view) as NavigationView
-        navigationView.setNavigationItemSelectedListener(this)
+        ButterKnife.findById<NavigationView>(this, R.id.nav_view)
+            .setNavigationItemSelectedListener(this)
 
         fragmentHolder.put(R.id.nav_routes_menu, RouteManagerFragment())
         fragmentHolder.put(R.id.nav_waypoints_menu, WaypointsManagerFragment())
         fragmentHolder.put(R.id.nav_passages_menu, PassageManagerFragment())
         fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
-        askForPermission()
+        askForPermission(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                PASSAGE_PERMISSIONS_REQUEST_FILE,
+                { afterFilePermissionIsChecked() }
+        )
+
     }
 
-    private fun afterPermissionIsChecked() {
+    private fun afterFilePermissionIsChecked() {
         files = FilesManager(this)
         database = files!!.createDatabase()
         showFragment(R.id.nav_passages_menu)
     }
 
     override fun onBackPressed() {
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = ButterKnife.findById<DrawerLayout>(this, R.id.drawer_layout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
@@ -93,23 +109,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private fun askForPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    private fun askForPermission(permission: String, requestCode: Int, onPermissionGranted: () -> Unit) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MY_PERMISSIONS_REQUEST_FILE
+                    arrayOf(permission),
+                    requestCode
             )
         } else {
-            afterPermissionIsChecked()
+            onPermissionGranted()
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            MY_PERMISSIONS_REQUEST_FILE -> {
+            PASSAGE_PERMISSIONS_REQUEST_FILE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    afterPermissionIsChecked()
+                    afterFilePermissionIsChecked()
                 } else {
                     Toast.makeText(this, "Application cannot work properly without this permission", Toast.LENGTH_LONG).show()
                     finish()
@@ -119,9 +135,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onGetTableListener(tableId: Int): BaseTableWithCustomKey<*, *> {
-        return database!!.getTable(tableId)
-    }
+    override fun onGetTableListener(tableId: Int): BaseTableWithCustomKey<*, *> = database!!.getTable(tableId)
 
     override fun readAllWaypoints(): List<Waypoint> {
         val databaseTable = database!!.getTable(WaypointCRUD.ID) as WaypointsTable
@@ -134,6 +148,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     companion object {
-        private val MY_PERMISSIONS_REQUEST_FILE = 54
+        val PASSAGE_PERMISSIONS_REQUEST_FILE = 1
     }
 }

@@ -4,6 +4,7 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.view.View
 import android.widget.ExpandableListView
+import android.widget.Toast
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
@@ -11,7 +12,7 @@ import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementW
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 
 /**
- * Shows ExpandableListView using adapter, which extends BaseManagerAdapter.
+ * Shows DAOs from database using adapter extending BaseManagerAdapter.
  *
  * @see BaseManagerAdapter
  * @version 1.0
@@ -22,6 +23,7 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
         CRUDWithCustomKey<DAO, T> {
 
     protected var adapter: BaseManagerAdapter<DAO, T>? = null
+    protected var listView: ExpandableListView? = null
 
     protected abstract val databaseKey: Int
 
@@ -31,29 +33,37 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val databaseHolder = context as OnDatabaseRequestedListener
+        saveDatabaseHolder(databaseHolder)
         database = databaseHolder.onGetTableListener(databaseKey) as CRUDWithCustomKey<DAO, T>
     }
 
-    override fun layoutId(): Int {
-        return R.layout.fragment_base_poor_manager
+    protected open fun saveDatabaseHolder(holder: OnDatabaseRequestedListener){
+        // to override
     }
+
+    override fun layoutId() = R.layout.fragment_base_poor_manager
 
     protected abstract fun createAdapter(): BaseManagerAdapter<DAO, T>
 
     override fun findViews(parent: View) {
         super.findViews(parent)
-        val listView = ButterKnife.findById<ExpandableListView>(parent, R.id.list_view)
+        listView = ButterKnife.findById<ExpandableListView>(parent, R.id.list_view)
         adapter = createAdapter()
-        listView.setAdapter(adapter)
+        listView!!.setAdapter(adapter)
     }
 
-    override fun insert(element: DAO): Long = database!!.insert(element)
+    override fun onDetach() {
+        super.onDetach()
+        listView!!.removeAllViewsInLayout() // detach view
+    }
 
-    override fun read(id: T): DAO = database!!.read(id)
+    override fun insert(element: DAO) = database!!.insert(element)
 
-    override fun readAll(): List<DAO> = database!!.readAll()
+    override fun read(id: T) = database!!.read(id)
 
-    override fun update(element: DAO): Int = database!!.update(element)
+    override fun readAll() = database!!.readAll()
 
-    override fun delete(element: DAO): Int = database!!.delete(element)
+    override fun update(element: DAO) = database!!.update(element)
+
+    override fun delete(element: DAO) = database!!.delete(element)
 }

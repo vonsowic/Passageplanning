@@ -7,9 +7,7 @@ import com.bearcave.passageplanning.R
 
 /**
  * @author Michał Wąsowicz
- * *
  * @version 1.0
- * *
  * @since 29.05.17
  */
 
@@ -23,4 +21,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     }
 
+    companion object {
+
+    }
 }
