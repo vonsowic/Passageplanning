@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage.database
+package com.bearcave.passageplanning.passages.database
 
 import com.bearcave.passageplanning.routes.database.Route
 

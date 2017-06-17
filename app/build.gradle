@@ -48,21 +48,22 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
 
+    // theme
 
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:preference-v7:25.3.1'
-    compile 'com.takisoft.fix:preference-v7:25.3.1.0' // theme
+    compile 'com.takisoft.fix:preference-v7:25.3.1.0'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'joda-time:joda-time:2.9.9'
-    testCompile 'junit:junit:4.12'
     compile 'com.github.citux:datetimepicker:0.2.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.android.support:support-v13:25.3.1'
-
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
+    testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:2.8.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
 
 repositories {

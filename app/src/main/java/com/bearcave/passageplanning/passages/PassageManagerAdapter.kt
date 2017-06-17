@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage
+package com.bearcave.passageplanning.passages
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseManagerAdapterWithWaypoints
-import com.bearcave.passageplanning.passage.database.Passage
+import com.bearcave.passageplanning.passages.database.Passage
 
 /**
  *

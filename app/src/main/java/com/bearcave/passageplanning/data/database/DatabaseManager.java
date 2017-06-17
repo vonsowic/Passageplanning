@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.SparseArray;
 
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey;
-import com.bearcave.passageplanning.passage.database.AccessToRouteTable;
-import com.bearcave.passageplanning.passage.database.PassageCRUD;
-import com.bearcave.passageplanning.passage.database.PassageTable;
+import com.bearcave.passageplanning.passages.database.AccessToRouteTable;
+import com.bearcave.passageplanning.passages.database.PassageCRUD;
+import com.bearcave.passageplanning.passages.database.PassageTable;
 import com.bearcave.passageplanning.routes.database.Route;
 import com.bearcave.passageplanning.routes.database.RouteCRUD;
 import com.bearcave.passageplanning.routes.database.RouteTable;

@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage
+package com.bearcave.passageplanning.passages
 
 import android.content.Intent
 import android.view.ContextMenu
@@ -13,7 +13,7 @@ import com.android.datetimepicker.time.RadialPickerLayout
 import com.android.datetimepicker.time.TimePickerDialog
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
-import com.bearcave.passageplanning.passage.database.Passage
+import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.routes.database.Route
 import org.joda.time.DateTime
 import java.text.DateFormat

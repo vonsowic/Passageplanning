@@ -19,8 +19,8 @@ import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCus
 import com.bearcave.passageplanning.data.FilesManager
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
-import com.bearcave.passageplanning.passage.PassageManagerFragment
-import com.bearcave.passageplanning.passage.database.ReadRoutes
+import com.bearcave.passageplanning.passages.PassageManagerFragment
+import com.bearcave.passageplanning.passages.database.ReadRoutes
 import com.bearcave.passageplanning.routes.ReadWaypoints
 import com.bearcave.passageplanning.routes.RouteManagerFragment
 import com.bearcave.passageplanning.routes.database.Route

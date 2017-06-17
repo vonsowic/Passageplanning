@@ -30,13 +30,15 @@
             android:name=".waypoints.WaypointEditorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".passage.PassageEditorActivity"
+            android:name=".passages.PassageEditorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".tasks.TideManagerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".passage_monitor.PassageMonitorActivity"></activity>
     </application>
 
 </manifest>

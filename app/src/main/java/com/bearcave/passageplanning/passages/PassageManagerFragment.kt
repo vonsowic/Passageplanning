@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage
+package com.bearcave.passageplanning.passages
 
 
 import android.content.Context
@@ -8,9 +8,9 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.base.BaseManagerAdapter
 import com.bearcave.passageplanning.base.BaseManagerFragment
-import com.bearcave.passageplanning.passage.database.Passage
-import com.bearcave.passageplanning.passage.database.PassageCRUD
-import com.bearcave.passageplanning.passage.database.ReadRoutes
+import com.bearcave.passageplanning.passages.database.Passage
+import com.bearcave.passageplanning.passages.database.PassageCRUD
+import com.bearcave.passageplanning.passages.database.ReadRoutes
 import java.util.*
 
 

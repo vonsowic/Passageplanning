@@ -7,7 +7,7 @@ import com.bearcave.passageplanning.base.database.DatabaseElement
 import java.util.*
 
 
-open class Route(override val id: Int, override val name: String, val waypointsIds: ArrayList<Int>) : DatabaseElement, Parcelable {
+open class Route(override val id: Int, override val name: String, val waypointsIds: ArrayList<Long>) : DatabaseElement, Parcelable {
 
     override fun toString(): String {
         return Route.fromList(this)
@@ -22,7 +22,7 @@ open class Route(override val id: Int, override val name: String, val waypointsI
     private constructor(`in`: Parcel) : this(
             `in`.readInt(),
             `in`.readString(),
-            `in`.readArrayList(Route::class.java.classLoader) as ArrayList<Int>
+            `in`.readArrayList(Route::class.java.classLoader) as ArrayList<Long>
     )
 
     override fun describeContents(): Int {
@@ -41,19 +41,16 @@ open class Route(override val id: Int, override val name: String, val waypointsI
             }
         }
 
-        fun fromString(waypoints: String): ArrayList<Int> {
-            val waypointsIds = ArrayList<Int>()
-            for (item in Arrays.asList(*waypoints.split("\\s*,\\s*".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())) {
-                waypointsIds.add(Integer.valueOf(item))
-            }
-            return waypointsIds
-        }
+        fun fromString(waypoints: String): ArrayList<Int> = Arrays.asList(
+                    *waypoints
+                            .split("\\s*,\\s*".toRegex())
+                            .dropLastWhile { it.isEmpty() }.toTypedArray())
+                    .mapTo(ArrayList<Int>()) { Integer.valueOf(it) }
 
-        fun fromList(route: Route): String {
-            return Route.fromList(route.waypointsIds)
-        }
 
-        fun fromList(ids: ArrayList<Int>): String {
+        fun fromList(route: Route): String = Route.fromList(route.waypointsIds)
+
+        fun fromList(ids: ArrayList<Long>): String {
             val joiner = StringBuilder()
             for (id in ids) {
                 joiner.append(id)

@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage.database
+package com.bearcave.passageplanning.passages.database
 
 import android.os.Parcel
 import android.os.Parcelable
