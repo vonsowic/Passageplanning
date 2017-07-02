@@ -7,7 +7,7 @@ import com.bearcave.passageplanning.base.database.DatabaseElement
 import java.util.*
 
 
-open class Route(override val id: Int, override val name: String, val waypointsIds: ArrayList<Long>) : DatabaseElement, Parcelable {
+open class Route(override val id: Int, override val name: String, val waypointsIds: ArrayList<Int>) : DatabaseElement, Parcelable {
 
     override fun toString(): String {
         return Route.fromList(this)
@@ -22,7 +22,7 @@ open class Route(override val id: Int, override val name: String, val waypointsI
     private constructor(`in`: Parcel) : this(
             `in`.readInt(),
             `in`.readString(),
-            `in`.readArrayList(Route::class.java.classLoader) as ArrayList<Long>
+            `in`.readArrayList(Route::class.java.classLoader) as ArrayList<Int>
     )
 
     override fun describeContents(): Int {
@@ -50,7 +50,7 @@ open class Route(override val id: Int, override val name: String, val waypointsI
 
         fun fromList(route: Route): String = Route.fromList(route.waypointsIds)
 
-        fun fromList(ids: ArrayList<Long>): String {
+        fun fromList(ids: ArrayList<Int>): String {
             val joiner = StringBuilder()
             for (id in ids) {
                 joiner.append(id)

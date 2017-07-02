@@ -36,4 +36,8 @@
     <string name="fetching_data">Fetching data</string>
     <string name="no_internet_connection">No Internet connection</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="generate_doc">Show as pdf</string>
+
 </resources>

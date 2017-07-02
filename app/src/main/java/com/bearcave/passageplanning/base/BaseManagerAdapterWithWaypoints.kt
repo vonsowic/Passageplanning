@@ -3,7 +3,7 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.util.SparseArray
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
-import com.bearcave.passageplanning.routes.ReadWaypoints
+import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 
 /**
