@@ -45,8 +45,8 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         note!!.setText(waypoint.note)
         characteristic!!.setText(waypoint.characteristic)
         ukc!!.setText(waypoint.ukc.toString())
-        latitude!!.setText(waypoint.getLatitudeInSecondFormat())
-        longitude!!.setText(waypoint.getLongitudeInSecondFormat())
+        latitude!!.setText(waypoint.latitudeInSecondFormat)
+        longitude!!.setText(waypoint.longitudeInSecondFormat)
         gauge!!.text = waypoint.gauge.humanCode
     }
 

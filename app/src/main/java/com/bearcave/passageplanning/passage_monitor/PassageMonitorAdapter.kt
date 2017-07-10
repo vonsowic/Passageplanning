@@ -1,10 +1,14 @@
 package com.bearcave.passageplanning.passage_monitor
 
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
@@ -23,16 +27,28 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
     private val inflater
         get() = LayoutInflater.from(context)
 
-    val waypoints: ArrayList<Waypoint> = (context as ReadWaypoints)
+    val waypoints = PassagePlan(
+            passage,
+        (context as ReadWaypoints)
             .readWith(passage.route.waypointsIds) as ArrayList<Waypoint>
+    )
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(R.layout.passage_item, parent, false)
         val wpt = waypoints[position]
+
         ButterKnife.findById<TextView>(view, R.id.waypoint)
                 .text = wpt.name
         ButterKnife.findById<TextView>(view, R.id.ukc)
                 .text = wpt.ukc.toString()
+        ButterKnife.findById<TextView>(view, R.id.togo)
+                .text = waypoints.toGo(position).toString()
+        ButterKnife.findById<TextView>(view, R.id.bearing)
+                .text = waypoints.course(position).toString()
+        ButterKnife.findById<TextView>(view, R.id.dist)
+                .text = waypoints.dist(position).toString()
+        ButterKnife.findById<ImageView>(view, R.id.options_button)
+                .setOnClickListener { showPopupMenu(it, wpt) }
 
         return view
     }
@@ -41,5 +57,26 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
 
     override fun getItemId(position: Int): Long = passage.route.waypointsIds[position].toLong()
 
-    override fun getCount(): Int = passage.route.waypointsIds.size
+    override fun getCount(): Int = passage.route.waypointsIds.size - 1
+
+    private fun showNotes(waypoint: Waypoint) {
+        val alertDialog = AlertDialog.Builder(context).create()
+        alertDialog.setMessage("Characteristic: ${waypoint.characteristic}\n\nNotes: ${waypoint.note}")
+        alertDialog.show()
+    }
+
+    private fun showPopupMenu(anchor: View, selected: Waypoint) {
+        val menu = PopupMenu(context, anchor)
+
+        menu.menu.add(Menu.NONE, 0, Menu.NONE, R.string.show_notes)
+
+        menu.setOnMenuItemClickListener { item ->
+            when(item.itemId){
+                0 -> showNotes(selected)
+            }
+            true
+        }
+
+        menu.show()
+    }
 }
