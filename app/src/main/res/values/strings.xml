@@ -36,4 +36,7 @@
     <string name="fetching_data">Fetching data</string>
     <string name="no_internet_connection">No Internet connection</string>
 
+    <string name="generate_doc">Show as pdf</string>
+    <string name="show_notes">Show notes</string>
+
 </resources>

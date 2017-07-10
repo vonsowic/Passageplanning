@@ -91,7 +91,6 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
     override fun read(id: Id): DAO {
         val cursor = readableCursor(id)
         cursor?.moveToFirst()
-
         return loadFrom(cursor)
     }
 
@@ -111,6 +110,9 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
 
         return requestedList
     }
+
+    fun readWith(ids: List<Id>) = ids.map { read(it) }
+
 
     override fun update(element: DAO): Int {
         return writableDatabase.update(

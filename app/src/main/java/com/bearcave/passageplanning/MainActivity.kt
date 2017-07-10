@@ -21,7 +21,7 @@ import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.passages.PassageManagerFragment
 import com.bearcave.passageplanning.passages.database.ReadRoutes
-import com.bearcave.passageplanning.routes.ReadWaypoints
+import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.routes.RouteManagerFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
@@ -43,11 +43,14 @@ class MainActivity
         ReadRoutes,
         TideManagerService.TideManagerListener
 {
+
     override fun onNoInternetConnection() {
         Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
     }
 
-    private var database: DatabaseManager? = null
+    var database: DatabaseManager? = null
+        private set
+
     private var files: FilesManager? = null
 
     private val fragmentHolder = SparseArray<Fragment>()
@@ -76,6 +79,8 @@ class MainActivity
                 PASSAGE_PERMISSIONS_REQUEST_FILE,
                 { afterFilePermissionIsChecked() }
         )
+
+        MainActivity.context = this
 
     }
 
@@ -142,6 +147,10 @@ class MainActivity
         return databaseTable.readAll()
     }
 
+    override fun readWith(ids: List<Int>) = (database!!.getTable(WaypointCRUD.ID) as WaypointsTable)
+            .readWith(ids)
+
+
     override fun readAllRoutes(): List<Route> {
         val databaseTable = database!!.getTable(RouteCRUD.ID) as RouteTable
         return databaseTable.readAll()
@@ -149,5 +158,7 @@ class MainActivity
 
     companion object {
         val PASSAGE_PERMISSIONS_REQUEST_FILE = 1
+
+        var context: MainActivity? = null
     }
 }

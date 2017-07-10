@@ -1,6 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/ukc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ukc_text"
+        android:layout_alignBottom="@+id/ukc_text"
+        android:layout_toEndOf="@+id/ukc_text"
+        android:layout_toRightOf="@+id/ukc_text"
+        android:text="@string/ukc"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ukc_text"
+        app:layout_constraintLeft_toRightOf="@+id/ukc_text"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/ukc_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/waypoint"
+        android:text="UKC:"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/waypoint" />
+
+    <TextView
+        android:id="@+id/actual_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/waypoint"
+        android:layout_toEndOf="@+id/waypoint"
+        android:layout_toRightOf="@+id/waypoint"
+        android:text="Actual: "
+        android:layout_marginTop="7dp"
+        app:layout_constraintTop_toBottomOf="@+id/ukc_text"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/waypoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waypoint"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/actual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/actual_text"
+        app:layout_constraintLeft_toRightOf="@+id/actual_text"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/bearing_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bearing: "
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/actual_text" />
+
+    <TextView
+        android:id="@+id/bearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/bearing_text"
+        app:layout_constraintLeft_toRightOf="@+id/bearing_text"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/togo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To go: "
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/bearing_text" />
+
+    <TextView
+        android:id="@+id/togo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/togo_text"
+        app:layout_constraintLeft_toRightOf="@+id/togo_text"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/dist_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Dist:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/togo_text" />
+
+    <TextView
+        android:id="@+id/dist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/dist_text"
+        app:layout_constraintLeft_toRightOf="@+id/dist_text" />
+
+    <ImageView
+        android:id="@+id/options_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+</android.support.constraint.ConstraintLayout>

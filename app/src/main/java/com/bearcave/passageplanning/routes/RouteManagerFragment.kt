@@ -10,6 +10,7 @@ import com.bearcave.passageplanning.base.BaseManagerFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.editor.RouteEditorActivity
+import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import java.util.*
 
@@ -47,7 +48,7 @@ class RouteManagerFragment : BaseManagerFragment<Route, Int>(), RouteCRUD, ReadW
     override fun createAdapter(): BaseManagerAdapter<Route, Int> = RouteManagerAdapter(this, context)
 
 
-    override fun readAllWaypoints(): List<Waypoint> {
-        return waypointsHolder!!.readAllWaypoints()
-    }
+    override fun readAllWaypoints() = waypointsHolder!!.readAllWaypoints()
+
+    override fun readWith(ids: List<Int>) = waypointsHolder!!.readWith(ids)
 }

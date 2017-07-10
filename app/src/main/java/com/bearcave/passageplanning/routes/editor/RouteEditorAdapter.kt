@@ -45,7 +45,7 @@ class RouteEditorAdapter(context: Context, private val waypoints: ArrayList<Wayp
 
         val (id, name) = waypoints[position]
 
-        val title = ButterKnife.findById<TextView>(view!!, R.id.waypoint_name)
+        val title = ButterKnife.findById<TextView>(view!!, R.id.waypoint)
         title!!.text = name
 
         val checkbox = ButterKnife.findById<ImageView>(view, R.id.checkbox)

@@ -46,22 +46,17 @@ data class Waypoint(
      * @return the approximate distance in meters between this location and the given location.
      */
     fun distanceTo(waypoint: Waypoint): Float {
-        /*return Math.sqrt(
-                Math.pow(this.longitude-waypoint.longitude, 2.0) + Math.pow(this.latitude-waypoint.latitude, 2.0)
-        )*/
         val result = FloatArray(3)
         Location.distanceBetween(this.latitude, this.longitude, waypoint.latitude, waypoint.longitude, result)
         return result[0]
 
     }
 
-    fun getLatitudeInSecondFormat(): String {
-        return Location.convert(this.latitude, Location.FORMAT_SECONDS)
-    }
+    val latitudeInSecondFormat: String
+        get() = Location.convert(this.latitude, Location.FORMAT_SECONDS)
 
-    fun getLongitudeInSecondFormat(): String {
-        return Location.convert(this.longitude, Location.FORMAT_SECONDS)
-    }
+    val longitudeInSecondFormat: String
+        get() = Location.convert(this.longitude, Location.FORMAT_SECONDS)
 
 
     constructor(parcel: Parcel) : this(

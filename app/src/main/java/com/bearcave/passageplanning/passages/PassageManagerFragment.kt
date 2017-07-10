@@ -8,6 +8,7 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.base.BaseManagerAdapter
 import com.bearcave.passageplanning.base.BaseManagerFragment
+import com.bearcave.passageplanning.passage_monitor.PassageActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.database.PassageCRUD
 import com.bearcave.passageplanning.passages.database.ReadRoutes
@@ -46,13 +47,15 @@ class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
         routeDatabase = context as ReadRoutes
     }
 
-    override val title: Int
+    override val title
         get() = R.string.passage_manager_title
 
 
     override fun createAdapter(): BaseManagerAdapter<Passage, Int> = PassageManagerAdapter(this, context)
 
-    fun  startPassage(dao: Passage) {
-
+    fun startPassage(dao: Passage) {
+        val intent = Intent(context, PassageActivity::class.java)
+        intent.putExtra(PassageActivity.PASSAGE_KEY, dao)
+        startActivity(intent)
     }
 }

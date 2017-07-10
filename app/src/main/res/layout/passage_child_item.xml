@@ -9,7 +9,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/waypoint_name"
+        android:id="@+id/waypoint"
         android:textSize="@dimen/child_item_title_text_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
