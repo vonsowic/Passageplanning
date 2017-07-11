@@ -38,5 +38,6 @@
 
     <string name="generate_doc">Show as pdf</string>
     <string name="show_notes">Show notes</string>
-
+    <string name="generate_web_page">Show in webbrowser</string>
+    <string name="degree_circle">°</string>
 </resources>

@@ -1,21 +1,26 @@
 package com.bearcave.passageplanning.passage_monitor
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import org.joda.time.DateTime
-import java.io.Serializable
-import java.security.SecureRandom
+import j2html.TagCreator.*
+import j2html.TagCreator.attrs
+import j2html.tags.ContainerTag
+import org.jsoup.select.Collector
+import org.jsoup.select.Collector.collect
+import java.util.stream.Collectors
 
 
 /**
- *
  * @author Michał Wąsowicz
  * @since 02.07.17
  * @version 1.0
  */
-class PassagePlan(val name: String, val date: DateTime, private val waypoints: List<Waypoint>) : Parcelable, Serializable {
+class PassagePlan(val name: String, val date: DateTime, private val waypoints: List<Waypoint>) : Parcelable {
 
     val lastWaypoint
         get() = waypoints.last()
@@ -26,12 +31,16 @@ class PassagePlan(val name: String, val date: DateTime, private val waypoints: L
             : this(passage.name, passage.dateTime, waypoints)
 
     /**
-     * Distance to the last waypoint.
+     * @return distance to the last waypoint.
      */
-    fun toGo(waypointPosition: Int) = this[waypointPosition].distanceTo(lastWaypoint)
+    fun toGo(waypointPosition: Int) = waypoints
+            .withIndex()
+            .filter { it.index >= waypointPosition }
+            .map { dist(it.index) }
+            .sum()
 
     /**
-     * Distance to the next waypoint.
+     * @return distance to the next waypoint.
      */
     fun dist(waypointPosition: Int) =
         if (waypointPosition == waypoints.size - 1) 0.0F   // if it is last waypoint the distance is 0
@@ -39,7 +48,7 @@ class PassagePlan(val name: String, val date: DateTime, private val waypoints: L
                 .distanceTo(this[waypointPosition + 1])
 
     /**
-     * Course to the next waypoint.
+     * @return course to the next waypoint.
      */
     fun course(waypointPosition: Int) =
         if (waypointPosition == waypoints.size - 1) -1.0F    // if it is last waypoint the course is -1
@@ -47,9 +56,39 @@ class PassagePlan(val name: String, val date: DateTime, private val waypoints: L
                 .bearingTo(this[waypointPosition + 1])
 
 
-    fun toHTML() {
+    fun toHTML(context: Context) = document(
+        html(
+            head(
+                title(context.getString(R.string.app_name))
+                ),
+            body(
+                 table(
+                    waypoints
+                            .withIndex()
+                            .map { tr(
+                                    td(it.value.name),
+                                    td(it.value.characteristic),
+                                    td(course(it.index).toString()),
+                                    td(dist(it.index).toString()),
+                                    td(toGo(it.index).toString())
+                                    )
+                            }
+                            .fold(
+                                tr(
+                                    th("WPT"),
+                                    th("CHARACTERISTIC"),
+                                    th("BEARING TO"),
+                                    th("DIST"),
+                                    th("TO GO")
+                                    ),
+                                ContainerTag::with
+                            )
+                 )
+            )
+        )
+    )
 
-    }
+
 
     fun toPDF() {
 

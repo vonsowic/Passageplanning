@@ -17,6 +17,7 @@ import com.bearcave.passageplanning.waypoints.database.Waypoint
 
 class PassageMonitorFragment : Fragment() {
 
+    var adapter: PassageMonitorAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -24,19 +25,22 @@ class PassageMonitorFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_passage_monitor, container, false)
 
         val waypointsView = ButterKnife.findById<ListView>(view, R.id.list)
-        val adapter = PassageMonitorAdapter(context, arguments.getParcelable(PASSAGE_KEY))
+        adapter = PassageMonitorAdapter(context, arguments.getParcelable(PASSAGE_KEY))
         waypointsView.adapter = adapter
 
         val ftransaction = activity.supportFragmentManager.beginTransaction()
         val footFragment = FootFragment()
         val footBundle = Bundle()
-        footBundle.putParcelable(FootFragment.WAYPOINT_KEY, adapter.waypoints.lastWaypoint)
+        footBundle.putParcelable(FootFragment.WAYPOINT_KEY, adapter!!.waypoints.lastWaypoint)
         footFragment.arguments = footBundle
         ftransaction.replace(R.id.last_waypoint, footFragment)
         ftransaction.commit()
 
         return view
     }
+
+    val passagePlan
+        get() = adapter!!.waypoints
 
     companion object {
         val PASSAGE_KEY = "passage key"

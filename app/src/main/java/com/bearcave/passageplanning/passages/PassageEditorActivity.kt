@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.android.datetimepicker.date.DatePickerDialog
@@ -28,13 +29,13 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     var time: TextView? = null
     var date: TextView? = null
     var routeName: TextView? = null
-    var speedText: EditText? = null
+    var speedSlide: SeekBar? = null
 
     var chosenRoute: Int = 0
     var routes: ArrayList<Route> = ArrayList()
 
     override val isAllFilled: Boolean
-        get() = !speedText!!.text.isEmpty() and !routes.isEmpty()
+        get() = !routes.isEmpty()
 
     override val contentLayoutId: Int
         get() = R.layout.content_passage_editor
@@ -56,7 +57,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
     override fun getParcelableExtra(intent: Intent) {
         super.getParcelableExtra(intent)
-        routes = intent.getParcelableArrayListExtra<Route>(ROUTE_KEY) as ArrayList<Route>
+        routes = intent.getParcelableArrayListExtra<Route>(ROUTE_KEY)
     }
 
     override fun findViews() {
@@ -89,7 +90,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
             ).show(fragmentManager, "timePicker")
         }
 
-        speedText = ButterKnife.findById(this, R.id.speed)
+        speedSlide = ButterKnife.findById<SeekBar>(this, R.id.speed)
     }
 
 
@@ -105,7 +106,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                             calendar.get(Calendar.HOUR),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    speedText!!.text.toString().toFloat()
+                    speedSlide!!.progress.toFloat()
             )
         }
 

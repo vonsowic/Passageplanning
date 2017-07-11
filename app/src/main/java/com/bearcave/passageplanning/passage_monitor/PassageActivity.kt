@@ -1,5 +1,6 @@
 package com.bearcave.passageplanning.passage_monitor
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.SparseArray
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import com.bearcave.passageplanning.MainActivity
 
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.passage_monitor.pdf_viewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.tides.database.TidesTable
@@ -17,13 +19,24 @@ import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
 
 class PassageActivity : AppCompatActivity(),
-        ReadWaypoints {
+        ReadWaypoints,
+        PlanGetter{
 
-
-    val waypointsTable: WaypointsTable
-    val tideTables = SparseArray<TidesTable>(Gauge.values().size)
     var passage: Passage? = null
         private set
+
+    val passagePlan: PassagePlan = PassagePlan(
+            passage!!,
+            readWith(passage!!.route.waypointsIds) as ArrayList<Waypoint>
+    )
+
+    override fun getPlan() = passagePlan
+
+
+    val passageFragment: PassageMonitorFragment = PassageMonitorFragment()
+    val waypointsTable: WaypointsTable
+    val tideTables = SparseArray<TidesTable>(Gauge.values().size)
+
 
     init {
         // FIXME: maybe it could be better
@@ -46,11 +59,10 @@ class PassageActivity : AppCompatActivity(),
 
         // add fragment with content to view
         val ftransaction = supportFragmentManager.beginTransaction()
-        val fragment = PassageMonitorFragment()
         val bundle = Bundle()
         bundle.putParcelable(PassageMonitorFragment.PASSAGE_KEY, passage)
-        fragment.arguments = bundle
-        ftransaction.replace(R.id.container, fragment)
+        passageFragment.arguments = bundle
+        ftransaction.replace(R.id.container, passageFragment)
         ftransaction.commit()
     }
 
@@ -60,6 +72,11 @@ class PassageActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_generate_doc) {
+            val viewer = Intent(this, PassagePlanViewerActivity::class.java)
+            viewer.putExtra(PassagePlanViewerActivity.PASSAGE_PLAN_KEY, passageFragment.passagePlan)
+            startActivity(viewer)
+        }
         return super.onOptionsItemSelected(item)
     }
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_generate_doc"
-        android:orderInCategory="100"
         android:title="@string/generate_doc"
         app:showAsAction="never" />
+
 </menu>
