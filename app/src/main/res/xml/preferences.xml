@@ -9,8 +9,16 @@
             android:title="Speed unit"
             android:key="pref_speed_unit_type"
             android:entries="@array/speed_entries"
-            android:entryValues="@array/speed_values"
-            android:defaultValue="0.514444F"
+            android:entryValues="@array/speed_entries"
+            android:defaultValue="kts"
+            />
+
+        <ListPreference
+            android:title="Length unit"
+            android:key="pref_length_unit_type"
+            android:entries="@array/length_entries"
+            android:entryValues="@array/length_entries"
+            android:defaultValue="Mm"
             />
 
     </PreferenceCategory>

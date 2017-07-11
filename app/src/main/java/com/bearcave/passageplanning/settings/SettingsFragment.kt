@@ -1,7 +1,9 @@
 package com.bearcave.passageplanning.settings
 
 import android.os.Bundle
+import android.support.v7.preference.ListPreference
 import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.PreferenceManager
 
 import com.bearcave.passageplanning.R
 
@@ -19,9 +21,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 
-    }
 
-    companion object {
 
     }
 }

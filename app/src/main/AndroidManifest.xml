@@ -39,6 +39,7 @@
             android:exported="true" />
 
         <activity android:name=".passage_monitor.PassageActivity" />
+        <activity android:name=".passage_monitor.pdf_viewer.PassagePlanViewerActivity"></activity>
     </application>
 
 </manifest>
