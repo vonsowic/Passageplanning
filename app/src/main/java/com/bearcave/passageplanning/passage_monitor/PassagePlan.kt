@@ -138,11 +138,11 @@ class PassagePlan(
                                         td(it.value.name),
                                         td(it.value.characteristic),
                                         td("${course(it.index)}"),
-                                        td(eta(it.index).toString(/*"HH:mm"*/)),
+                                        td(eta(it.index).toString("HH:mm")),
                                         td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${it.value.ukc}"),
-                                        td("${actualDepth(0)}")
+                                        td("${actualDepth(it.index)}")
                                         )
                                 }
                                 .fold(
