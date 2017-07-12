@@ -11,7 +11,7 @@ import java.util.*
  * @param <DAO> - Data Access Object
  * @param <Id> - Column id in database.
 </Id></DAO> */
-abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id>(val manager: ManagerListener) : ManagerListener, CRUDWithCustomKey<DAO, Id> {
+abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Key>, Key>(val manager: ManagerListener) : ManagerListener, CRUDWithCustomKey<DAO, Key> {
 
     abstract val tableName: String
 
@@ -81,20 +81,20 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
                 )
     }
 
-    private fun readableCursor(id :Id) = readableDatabase.query(
+    private fun readableCursor(id :Key) = readableDatabase.query(
             tableName,
             tableColumns,
             idKey + ANY,
             arrayOf(id.toString()), null, null, null, null
     )
 
-    override fun read(id: Id): DAO {
+    override fun read(id: Key): DAO {
         val cursor = readableCursor(id)
         cursor?.moveToFirst()
         return loadFrom(cursor)
     }
 
-    fun exists(id: Id) = readableCursor(id).count > 0
+    fun exists(id: Key) = readableCursor(id).count > 0
 
     override fun readAll(): List<DAO> {
         val requestedList = ArrayList<DAO>()
@@ -111,7 +111,7 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Id>, Id
         return requestedList
     }
 
-    fun readWith(ids: List<Id>) = ids.map { read(it) }
+    fun readWith(ids: List<Key>) = ids.map { read(it) }
 
 
     override fun update(element: DAO): Int {

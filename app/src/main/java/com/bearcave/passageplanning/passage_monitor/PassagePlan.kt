@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import j2html.TagCreator.*
 import j2html.tags.ContainerTag
@@ -26,6 +28,7 @@ class PassagePlan(
 
     operator fun get(position: Int) = waypoints[position]
 
+
     /**
      * @return distance to the last waypoint in meters.
      */
@@ -35,6 +38,7 @@ class PassagePlan(
             .map { dist(it.index) }
             .sum()
 
+
     /**
      * @return distance to the next waypoint in meters.
      */
@@ -42,6 +46,7 @@ class PassagePlan(
         if (waypointPosition == waypoints.lastIndex) 0F   // if it is last waypoint the distance is 0
         else this[waypointPosition]
                 .distanceTo(this[waypointPosition + 1])
+
 
     /**
      * @return course to the next waypoint in degrees.
@@ -51,10 +56,27 @@ class PassagePlan(
         else this[waypointPosition]
                 .bearingTo(this[waypointPosition + 1])
 
+
     /**
      * @param i index of waypoint
      */
-    fun actualDepth(i: Int) = waypoints[i].ukc
+    fun actualDepth(i: Int) = waypoints[i].ukc + predictedTideHeight(i)
+
+
+    /**
+     * @param i index of waypoint for which tide table is returned.
+     */
+    private fun getTideTable(i: Int) = DatabaseManager
+            .DATABASE_MANAGER
+            .getTable(waypoints[i].gauge.id) as TidesTable
+
+
+    /**
+     * @param i index of waypoint for which tide height is returned.
+     */
+    private fun predictedTideHeight(i: Int) = getTideTable(i)
+            .read(eta(i))
+            .predictedTideHeight
 
 
     /**
@@ -86,6 +108,7 @@ class PassagePlan(
     private fun etas() = timesToEnd()
             .map { etaAtEnd().minusSeconds(it.toInt()) }
 
+
     /**
      * Estimated time arrival.
      * @param i index of waypoint
@@ -97,7 +120,7 @@ class PassagePlan(
             .dateTime
             .plusSeconds(
                     timeToEnd(0).toInt()
-            )
+            )!!
 
 
 
@@ -115,11 +138,11 @@ class PassagePlan(
                                         td(it.value.name),
                                         td(it.value.characteristic),
                                         td("${course(it.index)}"),
-                                        td(eta(it.index).toString("HH:mm")),
+                                        td(eta(it.index).toString(/*"HH:mm"*/)),
                                         td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${it.value.ukc}"),
-                                        td("${actualDepth(it.index)}")
+                                        td("${actualDepth(0)}")
                                         )
                                 }
                                 .fold(

@@ -50,6 +50,9 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         }
     }
 
+    override fun read(id: DateTime) = super.read(id.minusSeconds(id.secondOfMinute))
+
+
     override val idKey: String
         get() = KEY_TIME
 
