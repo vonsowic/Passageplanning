@@ -15,24 +15,23 @@ import android.support.v7.widget.Toolbar
 import android.util.SparseArray
 import android.view.MenuItem
 import android.widget.Toast
+import butterknife.ButterKnife
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.FilesManager
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.passages.PassageManagerFragment
 import com.bearcave.passageplanning.passages.database.ReadRoutes
-import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.routes.RouteManagerFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
-import com.bearcave.passageplanning.settings.SettingsFragment
+import com.bearcave.passageplanning.tasks.TideManagerService
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
+import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
-import butterknife.ButterKnife
-import com.bearcave.passageplanning.tasks.TideManagerService
 
 
 class MainActivity
@@ -72,16 +71,13 @@ class MainActivity
         fragmentHolder.put(R.id.nav_routes_menu, RouteManagerFragment())
         fragmentHolder.put(R.id.nav_waypoints_menu, WaypointsManagerFragment())
         fragmentHolder.put(R.id.nav_passages_menu, PassageManagerFragment())
-        fragmentHolder.put(R.id.nav_settings, SettingsFragment())
+        //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 PASSAGE_PERMISSIONS_REQUEST_FILE,
                 { afterFilePermissionIsChecked() }
         )
-
-        MainActivity.context = this
-
     }
 
     private fun afterFilePermissionIsChecked() {
@@ -158,7 +154,5 @@ class MainActivity
 
     companion object {
         val PASSAGE_PERMISSIONS_REQUEST_FILE = 1
-
-        var context: MainActivity? = null
     }
 }

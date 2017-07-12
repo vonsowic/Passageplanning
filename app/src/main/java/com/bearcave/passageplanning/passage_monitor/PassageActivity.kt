@@ -1,19 +1,18 @@
 package com.bearcave.passageplanning.passage_monitor
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
-import com.bearcave.passageplanning.MainActivity
-
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passage_monitor.pdf_viewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
-import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
@@ -25,12 +24,9 @@ class PassageActivity : AppCompatActivity(),
     var passage: Passage? = null
         private set
 
-    val passagePlan: PassagePlan = PassagePlan(
-            passage!!,
-            readWith(passage!!.route.waypointsIds) as ArrayList<Waypoint>
-    )
+    var passagePlan: PassagePlan? = null
 
-    override fun getPlan() = passagePlan
+    override fun getPlan() = passagePlan!!
 
 
     val passageFragment: PassageMonitorFragment = PassageMonitorFragment()
@@ -40,7 +36,7 @@ class PassageActivity : AppCompatActivity(),
 
     init {
         // FIXME: maybe it could be better
-        val database = MainActivity.context?.database
+        val database = DatabaseManager.DATABASE_MANAGER
 
         waypointsTable = database?.getTable(WaypointCRUD.ID) as WaypointsTable
         for (gauge in Gauge.values()) tideTables.put(gauge.id, database.getTable(gauge.id) as TidesTable)
@@ -56,6 +52,11 @@ class PassageActivity : AppCompatActivity(),
         // receive passage and change title
         passage = intent.getParcelableExtra<Passage>(PASSAGE_KEY)
         title = passage!!.route.name
+
+        passagePlan = PassagePlan(
+                passage!!,
+                readWith(passage!!.route.waypointsIds) as ArrayList<Waypoint>
+        )
 
         // add fragment with content to view
         val ftransaction = supportFragmentManager.beginTransaction()

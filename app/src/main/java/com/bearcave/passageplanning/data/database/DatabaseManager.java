@@ -39,6 +39,8 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
         for(Gauge gauge: Gauge.values()){
             tables.put(gauge.getId(), new TidesTable(this, gauge));
         }
+
+        DATABASE_MANAGER = this;
     }
 
     @Override
@@ -51,7 +53,6 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: implement data migration
         for(int i = 0; i < tables.size(); i++) {
             int key = tables.keyAt(i);
             db.execSQL("DROP TABLE IF EXISTS " + tables.get(key).getTableName());
@@ -72,4 +73,6 @@ public class DatabaseManager extends SQLiteOpenHelper implements ManagerListener
     public Route readRoute(int id) {
         return ((RouteTable) tables.get(RouteCRUD.Companion.getID())).read(id);
     }
+
+    public static DatabaseManager DATABASE_MANAGER = null;
 }

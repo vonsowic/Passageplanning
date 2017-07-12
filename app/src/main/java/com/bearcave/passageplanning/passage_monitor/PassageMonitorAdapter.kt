@@ -14,7 +14,6 @@ import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
-import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 
 /**
@@ -44,7 +43,7 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
                 .text = wpt.ukc.toString()
 
         ButterKnife.findById<TextView>(view, R.id.togo)
-                 .text = (waypoints.toGo(position) / 1852).toString()
+                 .text = (waypoints.toGo(position) / Settings.NAUTICAL_MILE).toString()
 
         ButterKnife.findById<TextView>(view, R.id.togo_unit)
                 .text = "Mm"//TODO: Settings.lengthUnit(context)
@@ -53,7 +52,7 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
                 .text = waypoints.course(position).toString()
 
         ButterKnife.findById<TextView>(view, R.id.dist)
-                .text = (waypoints.dist(position) / 1852).toString()
+                .text = (waypoints.dist(position) / Settings.NAUTICAL_MILE).toString()
 
         ButterKnife.findById<TextView>(view, R.id.dist_unit)
                 .text = "Mm"
