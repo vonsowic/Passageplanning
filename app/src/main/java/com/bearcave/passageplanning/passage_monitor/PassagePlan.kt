@@ -180,8 +180,12 @@ class PassagePlan(
     )!!
 
 
+    /**
+     * Saves passage plan to pdf file in cache directory.
+     * @return pdf file saved in cache.
+     */
     fun toPDF(context: Context, html: String = toHTML(context)): File {
-        val tmpFile = File.createTempFile("test", "pdf", context.cacheDir)
+        val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
         val pdfFileWriter = FileOutputStream(tmpFile)
 
         val document = Document()
