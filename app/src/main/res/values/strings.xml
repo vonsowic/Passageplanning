@@ -15,6 +15,7 @@
     <string name="passages_menu">Passages</string>
     <string name="reports_menu">Reports</string>
     <string name="routes_menu">Routes</string>
+    <string name="tides_menu">Tide heights</string>
 
 
     <string name="editor_gauge_chooser_title">Choose gauge</string>
@@ -32,7 +33,7 @@
     <string name="title_activity_editor">EditorActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_passage_editor">It is to be removed</string>
-    <string name="ukc">UKS</string>
+    <string name="ukc">UKC</string>
     <string name="fetching_data">Fetching data</string>
     <string name="no_internet_connection">No Internet connection</string>
 

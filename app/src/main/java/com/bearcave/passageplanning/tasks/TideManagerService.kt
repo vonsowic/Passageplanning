@@ -32,7 +32,9 @@ class TideManagerService(val activityContext: Context): Service() {
     private val provider = TideProvider()
 
     init {
-        gauges.forEach { _, _ -> TideManagerStatus.UNCHECKED }
+        for (gauge in Gauge.values()){
+            gauges[gauge] = TideManagerStatus.UNCHECKED
+        }
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -107,6 +109,8 @@ class TideManagerService(val activityContext: Context): Service() {
 
 
     fun execute(){
-        gauges.forEach { gauge, _ -> thread(block = { run(gauge) } ) }
+        for (gauge in gauges){
+            thread(block = { run(gauge.key) } )
+        }
     }
 }

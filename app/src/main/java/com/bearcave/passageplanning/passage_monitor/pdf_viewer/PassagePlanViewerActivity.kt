@@ -45,7 +45,7 @@ class PassagePlanViewerActivity : AppCompatActivity() {
             intent.type = "application/pdf"
             intent.putExtra(Intent.EXTRA_STREAM, uri)
 
-            startActivity(Intent.createChooser(intent, "Send nudes"))
+            startActivity(Intent.createChooser(intent, "Send to"))
         }
 
         return true

@@ -10,6 +10,7 @@ package com.bearcave.passageplanning.tasks
 enum class TideManagerStatus {
     UNCHECKED,
     UPDATE_NECESSARY,
+    WAITING_FOR_CONNECTION,
     IN_PROGRESS,
     UP_TO_DATE
 }

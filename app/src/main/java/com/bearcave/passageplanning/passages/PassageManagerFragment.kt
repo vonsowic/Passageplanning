@@ -48,7 +48,7 @@ class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
     }
 
     override val title
-        get() = R.string.passage_manager_title
+        get() = getString(R.string.passage_manager_title)
 
 
     override fun createAdapter(): BaseManagerAdapter<Passage, Int> = PassageManagerAdapter(this, context)

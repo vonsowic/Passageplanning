@@ -72,21 +72,13 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         return container[groupPosition]
     }
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any? {
-        return null
-    }
+    override fun getChild(groupPosition: Int, childPosition: Int): Any? = null
 
-    override fun hasStableIds(): Boolean {
-        return false
-    }
+    override fun hasStableIds() = false
 
-    override fun getGroupId(groupPosition: Int): Long {
-        return 0
-    }
+    override fun getGroupId(groupPosition: Int): Long = 0
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long {
-        return 0
-    }
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = 0
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: inflater.inflate(R.layout.manager_group_item, parent, false)
@@ -100,9 +92,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         return view
     }
 
-    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return false
-    }
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int) = false
 
     private fun showPopupMenu(anchor: View, selected: Dao) {
         val menu = PopupMenu(context, anchor)

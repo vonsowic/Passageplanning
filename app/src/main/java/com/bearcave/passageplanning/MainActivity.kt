@@ -27,6 +27,7 @@ import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
 import com.bearcave.passageplanning.tasks.TideManagerService
+import com.bearcave.passageplanning.tides.view.TidesManagerFragment
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
@@ -71,6 +72,7 @@ class MainActivity
         fragmentHolder.put(R.id.nav_routes_menu, RouteManagerFragment())
         fragmentHolder.put(R.id.nav_waypoints_menu, WaypointsManagerFragment())
         fragmentHolder.put(R.id.nav_passages_menu, PassageManagerFragment())
+        fragmentHolder.put(R.id.nav_tides_menu, TidesManagerFragment())
         //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission(

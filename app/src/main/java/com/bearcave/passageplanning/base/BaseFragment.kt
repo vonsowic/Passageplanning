@@ -21,16 +21,16 @@ abstract class BaseFragment : Fragment() {
      */
     private var unbinder: Unbinder? = null
 
-    protected abstract val title: Int
+    protected abstract val title: String
 
     protected abstract fun layoutId(): Int
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        activity.title = getString(title)
         val view = inflater!!.inflate(layoutId(), container, false)
-        findViews(view)
         unbinder = ButterKnife.bind(this, view)
+        findViews(view)
+        activity.title = title
         return view
     }
 

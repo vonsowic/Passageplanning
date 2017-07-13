@@ -3,10 +3,12 @@ package com.bearcave.passageplanning.tides.view
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.bearcave.passageplanning.base.BaseManagerAdapter
-import com.bearcave.passageplanning.base.BasePoorManagerFragment
+import android.widget.BaseAdapter
+import android.widget.TextView
+import butterknife.ButterKnife
+import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.tides.database.TideComparator
 import com.bearcave.passageplanning.tides.database.TideItem
-import org.joda.time.DateTime
 
 /**
  *
@@ -14,15 +16,33 @@ import org.joda.time.DateTime
  * @since 04.06.17
  * @version 1.0
  */
-class TideManagerAdapter(parent: BasePoorManagerFragment<TideItem, DateTime>, context: Context)
-    : BaseManagerAdapter<TideItem, DateTime>(parent, context) {
+class TideManagerAdapter(parent: TidesManagerFragment, val context: Context)
+    : BaseAdapter() {
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        TODO("not implemented")
+    val tides = parent.readAll() as ArrayList<TideItem>
+
+    init {
+        tides.sortWith(TideComparator())
     }
 
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        TODO("not implemented")
+    val inflater
+        get() = android.view.LayoutInflater.from(context)
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = convertView ?: inflater.inflate(R.layout.tide_item, parent, false)
+
+        ButterKnife.findById<TextView>(view, R.id.time)
+                .text = tides[position].id.toString("dd.MM.YY - HH:mm")
+
+        ButterKnife.findById<TextView>(view, R.id.tide_height)
+                .text = tides[position].predictedTideHeight.toString()
+
+        return view
     }
 
+    override fun getItem(position: Int) = tides[position]
+
+    override fun getItemId(position: Int): Long = 0
+
+    override fun getCount() = tides.size
 }
