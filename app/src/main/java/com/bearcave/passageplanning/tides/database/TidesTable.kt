@@ -2,6 +2,7 @@ package com.bearcave.passageplanning.tides.database
 
 import android.content.ContentValues
 import android.database.Cursor
+import android.database.CursorIndexOutOfBoundsException
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
@@ -50,7 +51,15 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         }
     }
 
-    override fun read(id: DateTime) = super.read(id.minusSeconds(id.secondOfMinute))
+    override fun read(id: DateTime): TideItem {
+        try {
+            return super.read(
+                    id.minusSeconds(id.secondOfMinute)      // time in database is saved without seconds ( seconds are 0s).
+            )
+        } catch (e: CursorIndexOutOfBoundsException){
+            throw TideNotInDatabaseException()
+        }
+    }
 
 
     override val idKey: String

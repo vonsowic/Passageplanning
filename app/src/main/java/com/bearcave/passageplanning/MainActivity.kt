@@ -131,7 +131,6 @@ class MainActivity
                     Toast.makeText(this, "Application cannot work properly without this permission", Toast.LENGTH_LONG).show()
                     finish()
                 }
-                return
             }
         }
     }
