@@ -4,18 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-<include layout="@layout/content_tides_manager" />
-
-<android.support.design.widget.FloatingActionButton
-    android:id="@+id/update_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    app:srcCompat="@drawable/ic_file_download_black_24dp" />
+    <include layout="@layout/content_tides_manager" />
 
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_file_download_black_24dp" />
+
+    <View
+        android:id="@+id/selector"
+        android:layout_width="1dp"
+        android:layout_height="@dimen/activity_vertical_margin"
+        app:layout_anchor="@id/update_button"
+        app:layout_anchorGravity="top|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|right"
+        app:backgroundTint="@color/line_dark"
+        app:fabSize="mini"
+        app:layout_anchor="@id/selector"
+        app:layout_anchorGravity="top"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:srcCompat="@drawable/ic_autorenew_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 

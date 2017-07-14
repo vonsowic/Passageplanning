@@ -74,7 +74,7 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
                 Gauge.getByName(gauge!!.text.toString())
         )
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
 
         menu.setHeaderTitle(R.string.editor_gauge_chooser_title)

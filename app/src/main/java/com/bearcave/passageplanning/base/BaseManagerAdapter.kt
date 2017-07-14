@@ -13,6 +13,7 @@ import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
+import com.bearcave.passageplanning.tasks.BackgroundTask
 import java.util.*
 
 /**
@@ -28,10 +29,11 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     /**
      * This container has all DAOs shown in ExpandableListView.
      */
-    protected val container: ArrayList<Dao>
+    protected var container = ArrayList<Dao>()
 
 
     protected val inflater: LayoutInflater
+        get() = LayoutInflater.from(context)
 
     @Suppress("UNCHECKED_CAST")
     protected val database: CRUDWithCustomKey<Dao, T> = parent as CRUDWithCustomKey<Dao, T>
@@ -39,8 +41,9 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
 
 
     init {
-        container = database.readAll() as ArrayList<Dao>
-        inflater = LayoutInflater.from(context)
+        AdapterTask().execute({
+            container = database.readAll() as ArrayList<Dao>
+        })
     }
 
     /**
@@ -64,13 +67,9 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         }
     }
 
-    override fun getGroupCount(): Int {
-        return container.size
-    }
+    override fun getGroupCount() = container.size
 
-    override fun getGroup(groupPosition: Int): Any {
-        return container[groupPosition]
-    }
+    override fun getGroup(groupPosition: Int): Any = container[groupPosition]
 
     override fun getChild(groupPosition: Int, childPosition: Int): Any? = null
 
@@ -117,4 +116,11 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
 
 
     private inner class Command(val i: Int, val name: String, val command: (Dao)->Unit)
+
+    private inner class AdapterTask : BackgroundTask(context) {
+        override fun onPostExecute(result: Int) {
+            super.onPostExecute(result)
+            notifyDataSetChanged()
+        }
+    }
 }

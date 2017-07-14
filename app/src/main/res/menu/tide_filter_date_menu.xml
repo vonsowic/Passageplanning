@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/today"
+        android:title="Today"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/tomorrow"
+        android:title="Tomorrow"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/week"
+        android:title="Week"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/all"
+        android:title="All"
+        app:showAsAction="never" />
+</menu>

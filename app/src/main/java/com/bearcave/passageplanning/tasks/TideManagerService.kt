@@ -109,8 +109,8 @@ class TideManagerService(val activityContext: Context): Service() {
 
 
     fun execute(){
-        for (gauge in gauges){
-            thread(block = { run(gauge.key) } )
+        for ((key) in gauges){
+            thread(block = { run(key) } )
         }
     }
 }

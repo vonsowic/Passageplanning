@@ -53,7 +53,7 @@ class MainActivity
 
     private var files: FilesManager? = null
 
-    private val fragmentHolder = SparseArray<Fragment>()
+    private val fragmentHolder = SparseArray<Lazy<Fragment>>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +69,11 @@ class MainActivity
         ButterKnife.findById<NavigationView>(this, R.id.nav_view)
             .setNavigationItemSelectedListener(this)
 
-        fragmentHolder.put(R.id.nav_routes_menu, RouteManagerFragment())
-        fragmentHolder.put(R.id.nav_waypoints_menu, WaypointsManagerFragment())
-        fragmentHolder.put(R.id.nav_passages_menu, PassageManagerFragment())
-        fragmentHolder.put(R.id.nav_tides_menu, TidesManagerFragment())
+
+        fragmentHolder.put(R.id.nav_routes_menu, lazy { RouteManagerFragment() })
+        fragmentHolder.put(R.id.nav_waypoints_menu, lazy { WaypointsManagerFragment() })
+        fragmentHolder.put(R.id.nav_passages_menu, lazy { PassageManagerFragment() })
+        fragmentHolder.put(R.id.nav_tides_menu, lazy { TidesManagerFragment() })
         //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission(
@@ -99,7 +100,7 @@ class MainActivity
 
     private fun showFragment(id: Int) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_placeholder, fragmentHolder.get(id))
+        ft.replace(R.id.fragment_placeholder, fragmentHolder.get(id).value)
         ft.commit()
     }
 

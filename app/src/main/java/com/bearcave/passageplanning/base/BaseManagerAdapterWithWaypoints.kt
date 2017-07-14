@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.util.SparseArray
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
+import com.bearcave.passageplanning.tasks.BackgroundTask
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 
@@ -20,10 +21,12 @@ abstract class BaseManagerAdapterWithWaypoints<Dao : DatabaseElementWithCustomKe
     private val waypoints = SparseArray<Waypoint>()
 
     init {
-        val waypointsList = waypointsDatabase.readAllWaypoints()
-        for (waypoint in waypointsList){
-            waypoints.put(waypoint.id, waypoint)
-        }
+        BackgroundTask(context).execute({
+            val waypointsList = waypointsDatabase.readAllWaypoints()
+            for (waypoint in waypointsList){
+                waypoints.put(waypoint.id, waypoint)
+            }
+        })
     }
 
     protected fun getWaypointById(id: Int?): Waypoint = waypoints.get(id!!)
