@@ -77,7 +77,56 @@ class TideManagerAdapter(val parent: TidesManagerFragment)
     private fun filterStep(item: TideItem) = item.id.minuteOfHour % stepFilter.value == 0
 
     fun filterOnlyTides() {
+        val demandedIndexes = HashSet<Int>()
 
+        val heights = allTides
+                .map { it.predictedTideHeight }
+                .withIndex()
+                .toList()
+
+        var first = 0
+        var last = 0
+
+        var isFirstSmallerThan = false
+        var isFirstBiggerThan = false
+
+        var isLastSmallerThanFirst = false
+        var isLastBiggerThanFirst  = false
+
+        for ((index, height) in heights){
+            if( !(isFirstBiggerThan || isFirstSmallerThan)) {
+                isFirstSmallerThan = height > heights[first].value
+                isFirstBiggerThan = height < heights[first].value
+
+                if( isFirstBiggerThan || isFirstSmallerThan){
+                    first = index
+                }
+            } else {
+                isLastSmallerThanFirst = height < heights[first].value
+                isLastBiggerThanFirst  = height > heights[first].value
+
+                if( isLastBiggerThanFirst || isLastSmallerThanFirst){
+                    last = index
+
+                    if ((isFirstBiggerThan && isLastSmallerThanFirst) || (isFirstSmallerThan && isLastBiggerThanFirst)){  // the point that was looked for is found
+                        demandedIndexes.add((first + last) / 2)
+                    }
+
+                    first = index
+                    isFirstBiggerThan = isLastBiggerThanFirst
+                    isFirstSmallerThan= isLastSmallerThanFirst
+                    isLastSmallerThanFirst = false
+                    isLastBiggerThanFirst  = false
+
+                }
+            }
+        }
+
+        tides = allTides
+                .filterIndexed { index, _ -> demandedIndexes.contains(index) }
+                as ArrayList<TideItem>
+
+        notifyDataSetChanged()
     }
 
 
