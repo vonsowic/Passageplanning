@@ -15,6 +15,7 @@ inline fun List<TideItem>.filterByStep(step: Int) = this.filter { it.id.minuteOf
 inline fun List<TideItem>.filterByDate(dateFilter: (TideItem) -> Boolean) = this.filter(dateFilter)
 
 inline fun List<TideItem>.filterOnlyTides(): List<TideItem> {
+    if (size == 0) return this
     val demandedIndexes = HashSet<Int>()
 
     val heights = this
@@ -22,48 +23,43 @@ inline fun List<TideItem>.filterOnlyTides(): List<TideItem> {
             .withIndex()
             .toList()
 
+    val initialPoint = heights.find { it.value != first().predictedTideHeight }
     var first = 0
-    var last = 0
+    var last = initialPoint!!.index
 
-    var isFirstSmallerThan = false
-    var isFirstBiggerThan = false
+    var isLastSmallerThanFirst = initialPoint.value < first().predictedTideHeight
+    var isLastBiggerThanFirst  = initialPoint.value > first().predictedTideHeight
+    var isFirstSmallerThan = isLastSmallerThanFirst
+    var isFirstBiggerThan = isLastBiggerThanFirst
 
-    var isLastSmallerThanFirst = false
-    var isLastBiggerThanFirst  = false
-
-    for ((index, height) in heights){
+    for ((index, height) in heights.subList(last, size)){
+        // looking for first difference
         if( !(isFirstBiggerThan || isFirstSmallerThan)) {
             isFirstSmallerThan = height > heights[first].value
             isFirstBiggerThan = height < heights[first].value
 
-            if( isFirstBiggerThan || isFirstSmallerThan){
+            if( isFirstBiggerThan || isFirstSmallerThan){ // first difference is found
                 first = index
             }
-        } else {
+        } else {    // looking for second difference
             isLastSmallerThanFirst = height < heights[first].value
             isLastBiggerThanFirst  = height > heights[first].value
 
-            if( isLastBiggerThanFirst || isLastSmallerThanFirst){
-                last = index
+            if( isLastBiggerThanFirst || isLastSmallerThanFirst){   // second difference is found
 
-                if ((isFirstBiggerThan && isLastSmallerThanFirst) || (isFirstSmallerThan && isLastBiggerThanFirst)){  // the point that was looked for is found
-                    demandedIndexes.add((first + last) / 2)
+                if ((isFirstBiggerThan && isLastSmallerThanFirst) || (isFirstSmallerThan && isLastBiggerThanFirst)){  // the extreme point that is found
+                    demandedIndexes.add((first + index) / 2)
                 }
 
+                // initialize and start searching for the next point
                 first = index
                 isFirstBiggerThan = isLastBiggerThanFirst
                 isFirstSmallerThan= isLastSmallerThanFirst
-                isLastSmallerThanFirst = false
-                isLastBiggerThanFirst  = false
-
             }
         }
     }
 
-    return this
-            .filterIndexed { index, _ -> demandedIndexes.contains(index) }
-
-
+    return filterIndexed { index, _ -> demandedIndexes.contains(index) }
 }
 
 class DateFilter {
