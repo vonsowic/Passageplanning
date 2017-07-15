@@ -27,7 +27,7 @@ class UpdateTideTablesTask(val parent: Fragment) : AsyncTask<Gauge, Void, Int>()
     val context: Context
         get() = parent.context
 
-    var noInternetConnection = false
+    private var noInternetConnection = false
 
     override fun onPreExecute() {
         super.onPreExecute()

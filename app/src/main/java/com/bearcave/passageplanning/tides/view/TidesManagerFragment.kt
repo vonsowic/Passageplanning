@@ -15,6 +15,7 @@ import com.bearcave.passageplanning.base.BaseFragment
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.tasks.TaskUpdaterListener
 import com.bearcave.passageplanning.tasks.UpdateTideTablesTask
+import com.bearcave.passageplanning.tides.database.DateFilter
 import com.bearcave.passageplanning.tides.database.TideCRUD
 import com.bearcave.passageplanning.tides.database.TideItem
 import com.bearcave.passageplanning.tides.database.TidesTable
@@ -82,7 +83,7 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         when (item?.itemId ) {
             R.id.filter_date -> showFilterDateMenu(ButterKnife.findById(activity, R.id.filter_date))
             R.id.filter_step -> showFilterStepMenu(ButterKnife.findById(activity, R.id.filter_step))
-            R.id.filter_tides-> adapter!!.filterOnlyTides()
+            R.id.filter_tides-> adapter!!.showOnlyTides()
             else -> {
                selectedGauge = Gauge.getById(item?.itemId!!)
                adapter!!.reload()
@@ -99,10 +100,10 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
         menu.setOnMenuItemClickListener { item ->
             when(item.itemId){
-                R.id.today ->       adapter!!.dateFilter = TideManagerAdapter.Companion::TODAY
-                R.id.tomorrow ->    adapter!!.dateFilter = TideManagerAdapter.Companion::TOMORROW
-                R.id.week ->        adapter!!.dateFilter = TideManagerAdapter.Companion::WEEK
-                R.id.all ->         adapter!!.dateFilter = TideManagerAdapter.Companion::ALL
+                R.id.today ->       adapter!!.dateFilter = DateFilter.Companion::TODAY
+                R.id.tomorrow ->    adapter!!.dateFilter = DateFilter.Companion::TOMORROW
+                R.id.week ->        adapter!!.dateFilter = DateFilter.Companion::WEEK
+                R.id.all ->         adapter!!.dateFilter = DateFilter.Companion::ALL
             }
             true
         }
@@ -150,5 +151,11 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
     override fun onTaskFinished() {
         adapter!!.reload()
+    }
+
+
+    override fun onDetach() {
+        super.onDetach()
+        adapter = null
     }
 }
