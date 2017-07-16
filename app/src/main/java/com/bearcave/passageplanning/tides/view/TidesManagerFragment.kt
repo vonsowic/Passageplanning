@@ -60,8 +60,6 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         ButterKnife.findById<ListView>(parent, R.id.list_view)
                 .adapter = adapter
 
-        ButterKnife.findById<FloatingActionButton>(parent, R.id.reload)
-                .setOnClickListener { adapter!!.reload() }
 
         ButterKnife.findById<FloatingActionButton>(parent, R.id.update_button)
                 .setOnClickListener { updateTidesDatabase() }

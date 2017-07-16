@@ -25,27 +25,31 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(R.layout.waypoint_child_item, parent, false)
 
-        val (_, _, note, characteristic, ukc, latitude, longitude, gauge) = container[groupPosition]
+        val wpt = container[groupPosition]
 
         // note
         ButterKnife.findById<TextView>(view!!, R.id.note)
-            .text = "Note $note"
+            .text = "Note ${wpt.note}"
 
         // characteristic
         ButterKnife.findById<TextView>(view, R.id.characteristic)
-            .text = "Characteristic: $characteristic"
+            .text = "Characteristic: ${wpt.characteristic}"
 
         // gauge
         ButterKnife.findById<TextView>(view, R.id.gauge)
-            .text = "Gauge: ${gauge.humanCode}"
+            .text = "Gauge: ${wpt.gauge.humanCode}"
 
         // ukc
         ButterKnife.findById<TextView>(view, R.id.ukc)
-            .text = "${context.getString(R.string.ukc)} $ukc"
+            .text = "${context.getString(R.string.ukc)} ${wpt.ukc}"
 
-        // position
-        ButterKnife.findById<TextView>(view, R.id.position)
-            .text = "$longitude\n$latitude"
+        // latitude
+        ButterKnife.findById<TextView>(view, R.id.latitude)
+            .text = wpt.latitudeInSecondFormat
+
+        // longitude
+        ButterKnife.findById<TextView>(view, R.id.longitude)
+                .text = wpt.longitudeInSecondFormat
 
         return view
     }

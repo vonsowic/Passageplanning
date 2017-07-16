@@ -53,11 +53,21 @@ data class Waypoint(
     }
 
     val latitudeInSecondFormat: String
-        get() = Location.convert(this.latitude, Location.FORMAT_SECONDS)
+        get() = if (latitude < 0) "S${convertPositionToString(latitude)}"
+                else "N${convertPositionToString(latitude)}"
 
     val longitudeInSecondFormat: String
-        get() = Location.convert(this.longitude, Location.FORMAT_SECONDS)
+        get() = if (longitude < 0) "W${convertPositionToString(longitude)}"
+                else "E${convertPositionToString(longitude)}"
 
+
+    private fun convertPositionToString(position: Double): String {
+        val position = Math.abs(position)
+        val degreesValue = position.toInt()
+        val minutesValue = (60 * (position - degreesValue)).toInt()
+        val secondsValue = (3600 * (position - degreesValue) - 60 * minutesValue).toInt()
+        return "$degreesValue°$minutesValue'$secondsValue\""
+    }
 
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
