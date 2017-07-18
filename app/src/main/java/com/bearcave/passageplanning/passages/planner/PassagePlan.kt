@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passages
 
 import android.content.Context
 import android.os.Parcel
@@ -7,10 +7,17 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.waypoints.database.Waypoint
+import com.itextpdf.text.Document
+import com.itextpdf.text.html.simpleparser.HTMLWorker
+import com.itextpdf.text.pdf.PdfWriter
 import j2html.TagCreator.*
 import j2html.tags.ContainerTag
+import java.io.File
+import java.io.FileOutputStream
+import java.io.StringReader
 
 
 /**
@@ -59,8 +66,15 @@ class PassagePlan(
 
     /**
      * @param i index of waypoint
+     * @return sum of ukc and predicted tide height if success, -1 otherwise.
      */
-    fun actualDepth(i: Int) = waypoints[i].ukc + predictedTideHeight(i)
+    fun actualDepth(i: Int): Float {
+        try {
+            return waypoints[i].ukc + predictedTideHeight(i)
+        } catch (e: TideNotInDatabaseException){
+            return -1f
+        }
+    }
 
 
     /**
@@ -142,7 +156,7 @@ class PassagePlan(
                                         td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${it.value.ukc}"),
-                                        td("${actualDepth(it.index)}")
+                                        td("${actualDepth(it.index)}".replace("-1.0", "tide height not available"))
                                         )
                                 }
                                 .fold(
@@ -163,11 +177,28 @@ class PassagePlan(
                  i("Created by the best son in the world")
             )
         )
-    )
+    )!!
 
 
-    fun toPDF() {
+    /**
+     * Saves passage plan to pdf file in cache directory.
+     * @return pdf file saved in cache.
+     */
+    fun toPDF(context: Context, html: String = toHTML(context)): File {
+        val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
+        val pdfFileWriter = FileOutputStream(tmpFile)
 
+        val document = Document()
+        PdfWriter.getInstance(document, pdfFileWriter)
+        document.open()
+
+        val htmlWorker = HTMLWorker(document)
+        htmlWorker.parse(StringReader(html))
+
+        document.close()
+        pdfFileWriter.close()
+
+        return tmpFile
     }
 
 

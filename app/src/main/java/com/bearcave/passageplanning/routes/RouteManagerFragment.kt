@@ -28,8 +28,8 @@ class RouteManagerFragment : BaseManagerFragment<Route, Int>(), RouteCRUD, ReadW
         waypointsHolder = context as ReadWaypoints
     }
 
-    override val title: Int
-        get() = R.string.routes_menu
+    override val title: String
+        get() = getString(R.string.routes_menu)
 
 
     override val editorClass: Class<out BaseEditorActivity<Route>>

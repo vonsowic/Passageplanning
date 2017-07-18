@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
 import butterknife.ButterKnife
@@ -33,14 +35,26 @@ abstract class BaseEditorActivity<DAO : Parcelable> : AppCompatActivity() {
         val content_placeholder = findViewById(R.id.content_placeholder) as FrameLayout
         content_placeholder.addView(layoutInflater.inflate(contentLayoutId, null))
 
-        findViewById(R.id.save_button).setOnClickListener { onSaveButtonClicked() }
-
         findViews()
 
         if (updateMode) {
             setViewsContent(tmp as DAO)
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_editor, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        super.onOptionsItemSelected(item)
+        if(item?.itemId == R.id.save_button){
+            onSaveButtonClicked()
+        }
+        return true
     }
 
     protected open fun getParcelableExtra(intent: Intent) {

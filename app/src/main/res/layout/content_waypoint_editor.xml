@@ -8,72 +8,6 @@
 
 
     <android.support.design.widget.TextInputLayout
-            android:id="@+id/longitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ukc">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/longitude_text"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Longitude"
-                android:inputType="numberDecimal|numberSigned"
-                android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/latitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/longitude">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/latitude_text"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="Latitude"
-                android:inputType="numberDecimal|numberSigned"
-                android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/characteristic"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/latitude">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/characteristic_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Characteristic"
-                android:imeOptions="actionNext"
-                />
-        </android.support.design.widget.TextInputLayout>
-
-
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -85,7 +19,9 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp">
 
-            <android.support.design.widget.TextInputEditText
+
+
+        <android.support.design.widget.TextInputEditText
                 android:id="@+id/name_text"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -96,16 +32,97 @@
         </android.support.design.widget.TextInputLayout>
 
 
+    <fragment
+        android:id="@+id/latitude"
+        android:name="com.bearcave.passageplanning.waypoints.position_view.LatitudeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        app:layout_constraintTop_toBottomOf="@+id/note"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <fragment
+        android:id="@+id/longitude"
+        android:name="com.bearcave.passageplanning.waypoints.position_view.LongitudeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        app:layout_constraintTop_toBottomOf="@+id/latitude"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/gauge_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@+id/gauge_chooser"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toBottomOf="@+id/longitude" />
+
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/ukc"
+        android:id="@+id/note"
+        android:layout_width="359dp"
+        android:layout_height="51dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/ukc"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.466">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/note_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Note"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/characteristic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toTopOf="@+id/latitude"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/note">
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintVertical_bias="0.0">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/characteristic_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Characteristic"
+            android:imeOptions="actionNext" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/ukc"
+        android:layout_width="356dp"
+        android:layout_height="49dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/characteristic">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/ukc_text"
@@ -118,50 +135,16 @@
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/note"
-        android:layout_width="0dp"
+    <ImageView
+        android:id="@+id/gauge_chooser"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/note_text"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Note"
-            android:imeOptions="actionNext"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
-
-    <TextView
-        android:id="@+id/gauge_name"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:text="TextView"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_marginTop="8dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/characteristic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.036"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        android:padding="@dimen/button_size"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/longitude"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

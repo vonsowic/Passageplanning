@@ -13,6 +13,7 @@ import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
+import com.bearcave.passageplanning.tasks.BackgroundTask
 import java.util.*
 
 /**
@@ -28,10 +29,11 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     /**
      * This container has all DAOs shown in ExpandableListView.
      */
-    protected val container: ArrayList<Dao>
+    protected var container = ArrayList<Dao>()
 
 
     protected val inflater: LayoutInflater
+        get() = LayoutInflater.from(context)
 
     @Suppress("UNCHECKED_CAST")
     protected val database: CRUDWithCustomKey<Dao, T> = parent as CRUDWithCustomKey<Dao, T>
@@ -39,8 +41,9 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
 
 
     init {
-        container = database.readAll() as ArrayList<Dao>
-        inflater = LayoutInflater.from(context)
+        AdapterTask().execute({
+            container = database.readAll() as ArrayList<Dao>
+        })
     }
 
     /**
@@ -64,29 +67,17 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         }
     }
 
-    override fun getGroupCount(): Int {
-        return container.size
-    }
+    override fun getGroupCount() = container.size
 
-    override fun getGroup(groupPosition: Int): Any {
-        return container[groupPosition]
-    }
+    override fun getGroup(groupPosition: Int): Any = container[groupPosition]
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any? {
-        return null
-    }
+    override fun getChild(groupPosition: Int, childPosition: Int): Any? = null
 
-    override fun hasStableIds(): Boolean {
-        return false
-    }
+    override fun hasStableIds() = false
 
-    override fun getGroupId(groupPosition: Int): Long {
-        return 0
-    }
+    override fun getGroupId(groupPosition: Int): Long = 0
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long {
-        return 0
-    }
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = 0
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: inflater.inflate(R.layout.manager_group_item, parent, false)
@@ -100,9 +91,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
         return view
     }
 
-    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return false
-    }
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int) = false
 
     private fun showPopupMenu(anchor: View, selected: Dao) {
         val menu = PopupMenu(context, anchor)
@@ -127,4 +116,11 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
 
 
     private inner class Command(val i: Int, val name: String, val command: (Dao)->Unit)
+
+    private inner class AdapterTask : BackgroundTask(context) {
+        override fun onPostExecute(result: Int) {
+            super.onPostExecute(result)
+            notifyDataSetChanged()
+        }
+    }
 }

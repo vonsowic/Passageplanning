@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/filter_step"
+        android:title="Filter minute step"
+        android:icon="@drawable/ic_watch_later_white_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_date"
+        android:title="Filter date"
+        android:icon="@drawable/ic_find_in_page_white_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_tides"
+        android:title="Reload"
+        android:icon="@drawable/ic_import_export_white_24dp"
+        app:showAsAction="always" />
+
+</menu>

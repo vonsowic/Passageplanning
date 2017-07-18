@@ -20,6 +20,6 @@ class WaypointsManagerFragment : BaseManagerFragment<Waypoint, Int>(), WaypointC
         return WaypointsManagerAdapter(this, context)
     }
 
-    override val title: Int
-        get() = R.string.waypoints_menu
+    override val title: String
+        get() = getString(R.string.waypoints_menu)
 }

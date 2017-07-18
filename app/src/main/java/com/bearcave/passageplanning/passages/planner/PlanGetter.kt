@@ -1,4 +1,6 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passages
+
+import com.bearcave.passageplanning.passages.planner.PassagePlan
 
 /**
  *

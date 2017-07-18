@@ -11,14 +11,16 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.waypoints.database.Waypoint
+import com.bearcave.passageplanning.waypoints.position_view.LatitudeFragment
+import com.bearcave.passageplanning.waypoints.position_view.LongitudeFragment
 
 class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
 
     private var name: TextInputEditText? = null
     private var note: TextInputEditText? = null
     private var ukc: TextInputEditText? = null
-    private var longitude: TextInputEditText? = null
-    private var latitude: TextInputEditText? = null
+    private var longitude: LongitudeFragment? = null
+    private var latitude: LatitudeFragment? = null
     private var characteristic: TextInputEditText? = null
     private var gauge: TextView? = null
 
@@ -30,24 +32,26 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         note = ButterKnife.findById<TextInputEditText>(this, R.id.note_text)
         characteristic = ButterKnife.findById<TextInputEditText>(this, R.id.characteristic_text)
         ukc = ButterKnife.findById<TextInputEditText>(this, R.id.ukc_text)
-        latitude = ButterKnife.findById<TextInputEditText>(this, R.id.latitude_text)
-        longitude = ButterKnife.findById<TextInputEditText>(this, R.id.longitude_text)
         gauge = ButterKnife.findById<TextView>(this, R.id.gauge_name)
         gauge!!.text = Gauge.MARGATE.humanCode
 
-        registerForContextMenu(gauge)
-        gauge!!.setOnClickListener({ this.openContextMenu(it) })
+        latitude = supportFragmentManager.findFragmentById(R.id.latitude) as LatitudeFragment?
+        longitude = supportFragmentManager.findFragmentById(R.id.longitude) as LongitudeFragment?
+
+        val gaugeMenuOpener = ButterKnife.findById<View>(this, R.id.gauge_chooser)
+        gaugeMenuOpener.setOnClickListener { this.openContextMenu(it)  }
+        registerForContextMenu(gaugeMenuOpener)
     }
 
-    override fun setViewsContent(waypoint: Waypoint) {
-        id = waypoint.id
-        name!!.setText(waypoint.name)
-        note!!.setText(waypoint.note)
-        characteristic!!.setText(waypoint.characteristic)
-        ukc!!.setText(waypoint.ukc.toString())
-        latitude!!.setText(waypoint.latitudeInSecondFormat)
-        longitude!!.setText(waypoint.longitudeInSecondFormat)
-        gauge!!.text = waypoint.gauge.humanCode
+    override fun setViewsContent(`object`: Waypoint) {
+        id = `object`.id
+        name!!.setText(`object`.name)
+        note!!.setText(`object`.note)
+        characteristic!!.setText(`object`.characteristic)
+        ukc!!.setText(`object`.ukc.toString())
+        latitude!!.position = `object`.latitude
+        longitude!!.position = `object`.longitude
+        gauge!!.text = `object`.gauge.humanCode
     }
 
     override val contentLayoutId: Int
@@ -57,9 +61,7 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
     override val isAllFilled: Boolean
         get() {
             return !(name!!.text.isEmpty()
-                    || ukc!!.text.isEmpty()
-                    || latitude!!.text.isEmpty()
-                    || longitude!!.text.isEmpty())
+                    || ukc!!.text.isEmpty())
         }
 
     override val filledDAO: Waypoint
@@ -68,13 +70,13 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
                 name!!.text.toString(),
                 note!!.text.toString(),
                 characteristic!!.text.toString(),
-                java.lang.Float.valueOf(ukc!!.text.toString())!!,
-                latitude!!.text.toString(),
-                longitude!!.text.toString(),
+                ukc!!.text.toString().toFloat(),
+                latitude!!.position,
+                longitude!!.position,
                 Gauge.getByName(gauge!!.text.toString())
         )
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
 
         menu.setHeaderTitle(R.string.editor_gauge_chooser_title)

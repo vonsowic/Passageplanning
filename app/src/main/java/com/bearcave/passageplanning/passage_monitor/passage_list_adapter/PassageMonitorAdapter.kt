@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.passage_monitor
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.Menu
@@ -12,6 +13,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.passages.planner.PassagePlan
+import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.waypoints.database.Waypoint
@@ -42,11 +45,11 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
         ButterKnife.findById<TextView>(view, R.id.ukc)
                 .text = wpt.ukc.toString()
 
+        ButterKnife.findById<TextView>(view, R.id.actual)
+                .text = waypoints.actualDepth(position).toString()
+
         ButterKnife.findById<TextView>(view, R.id.togo)
                  .text = (waypoints.toGo(position) / Settings.NAUTICAL_MILE).toString()
-
-        ButterKnife.findById<TextView>(view, R.id.togo_unit)
-                .text = "Mm"//TODO: Settings.lengthUnit(context)
 
         ButterKnife.findById<TextView>(view, R.id.bearing)
                 .text = waypoints.course(position).toString()
@@ -54,11 +57,19 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
         ButterKnife.findById<TextView>(view, R.id.dist)
                 .text = (waypoints.dist(position) / Settings.NAUTICAL_MILE).toString()
 
-        ButterKnife.findById<TextView>(view, R.id.dist_unit)
-                .text = "Mm"
-
         ButterKnife.findById<ImageView>(view, R.id.options_button)
                 .setOnClickListener { showPopupMenu(it, wpt) }
+
+        view.setOnClickListener {
+            waypoints.selected = position
+            notifyDataSetChanged()
+        }
+
+        if (position == waypoints.selected)
+            view.setBackgroundColor(Color.LTGRAY)
+        else
+            view.setBackgroundColor(Color.WHITE)
+
 
         return view
     }

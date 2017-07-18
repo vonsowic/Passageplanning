@@ -22,7 +22,7 @@ class Settings {
                 gauge,
                 DateTime.now(),
                 NumberOfDays.WEEK,
-                MinuteStep.TEN
+                MinuteStep.ONE
         )
 
         val LENGTH_KEY = "pref_length_unit_type"

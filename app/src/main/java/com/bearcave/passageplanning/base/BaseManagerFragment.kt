@@ -51,9 +51,8 @@ abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() w
         // for possible override
     }
 
-    override fun layoutId(): Int {
-        return R.layout.fragment_base_manager
-    }
+    override fun layoutId() = R.layout.fragment_base_manager
+
 
     /**
      * @param requestCode
