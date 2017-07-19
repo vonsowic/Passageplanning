@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.tides.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
+import android.database.sqlite.SQLiteDatabase
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.settings.Settings
@@ -33,21 +34,21 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         return values
     }
 
-    override fun loadFrom(cursor: Cursor): TideItem {
-        return TideItem(
+    override fun loadFrom(cursor: Cursor) = TideItem(
                 DateTime.parse(cursor.getString(0)),
                 cursor.getFloat(1)
         )
-    }
+
 
     override fun insertAll(tides: Collection<TideItem>) {
         val database = writableDatabase
 
-        for (item in tides) {
-            database.insert(
+        tides.forEach {
+            database.insertWithOnConflict(
                     tableName,
                     null,
-                    getContentValue(item)
+                    getContentValue(it),
+                    SQLiteDatabase.CONFLICT_REPLACE
             )
         }
     }

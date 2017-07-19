@@ -10,6 +10,8 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passage_monitor.pdf_viewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
+import com.bearcave.passageplanning.passages.planner.PassagePlan
+import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
@@ -19,7 +21,7 @@ import com.bearcave.passageplanning.waypoints.database.WaypointsTable
 
 class PassageActivity : AppCompatActivity(),
         ReadWaypoints,
-        PlanGetter{
+        PlanGetter {
 
     var passage: Passage? = null
         private set
@@ -43,6 +45,7 @@ class PassageActivity : AppCompatActivity(),
     }
 
     override fun readAllWaypoints() = waypointsTable.readAll()
+
     override fun readWith(ids: List<Int>): List<Waypoint> =  waypointsTable.readWith(ids)
 
     override fun onCreate(savedInstanceState: Bundle?) {

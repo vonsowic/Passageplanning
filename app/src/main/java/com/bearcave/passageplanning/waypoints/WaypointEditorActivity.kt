@@ -24,7 +24,7 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
     private var characteristic: TextInputEditText? = null
     private var gauge: TextView? = null
 
-    private var id: Int? = -2
+    private var id: Int = -2
 
     override fun findViews() {
         super.findViews()
@@ -59,14 +59,13 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
 
 
     override val isAllFilled: Boolean
-        get() {
-            return !(name!!.text.isEmpty()
+        get() = !(name!!.text.isEmpty()
                     || ukc!!.text.isEmpty())
-        }
+
 
     override val filledDAO: Waypoint
         get() = Waypoint(
-                id!!,
+                id,
                 name!!.text.toString(),
                 note!!.text.toString(),
                 characteristic!!.text.toString(),

@@ -1,8 +1,9 @@
-package com.bearcave.passageplanning.passages
+package com.bearcave.passageplanning.passages.planner
 
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.SparseArray
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
@@ -15,6 +16,7 @@ import com.itextpdf.text.html.simpleparser.HTMLWorker
 import com.itextpdf.text.pdf.PdfWriter
 import j2html.TagCreator.*
 import j2html.tags.ContainerTag
+import org.joda.time.DateTime
 import java.io.File
 import java.io.FileOutputStream
 import java.io.StringReader
@@ -33,7 +35,14 @@ class PassagePlan(
     val lastWaypoint
         get() = waypoints.last()
 
+
     operator fun get(position: Int) = waypoints[position]
+
+
+    /**
+     * Contains ETA's that were send by user.
+     */
+    val realEtas = SparseArray<DateTime>()
 
 
     /**

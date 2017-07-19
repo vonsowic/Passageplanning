@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="@dimen/activity_horizontal_margin"
@@ -53,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Waypoint"
+        android:textStyle="bold"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -142,7 +142,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
-        android:text="m"
+        android:text="@string/depth_unit"
         app:layout_constraintBaseline_toBaselineOf="@+id/ukc_text"
         app:layout_constraintLeft_toRightOf="@+id/ukc" />
 
@@ -151,7 +151,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
-        android:text="m"
+        android:text="@string/depth_unit"
         app:layout_constraintBaseline_toBaselineOf="@+id/actual_text"
         app:layout_constraintLeft_toRightOf="@+id/actual" />
 
@@ -165,7 +165,7 @@
         app:layout_constraintLeft_toRightOf="@+id/bearing" />
 
     <TextView
-        android:id="@+id/togo_unit"
+        android:text="@string/length_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
@@ -173,11 +173,30 @@
         app:layout_constraintLeft_toRightOf="@+id/togo" />
 
     <TextView
-        android:id="@+id/dist_unit"
+        android:text="@string/length_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dist_text"
         app:layout_constraintLeft_toRightOf="@+id/dist" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="ETA: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dist_text"
+        android:id="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/eta_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
+        app:layout_constraintLeft_toRightOf="@+id/textView5" />
 
 </android.support.constraint.ConstraintLayout>

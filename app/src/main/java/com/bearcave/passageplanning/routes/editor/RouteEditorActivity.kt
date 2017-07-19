@@ -18,7 +18,7 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
     private var chosenWaypoints = HashSet<Int>()
     private var waypoints = ArrayList<Waypoint>()
 
-    private var routeId: Int? = -2
+    private var routeId: Int = -2
 
     override fun getParcelableExtra(intent: Intent) {
         waypoints = intent.getParcelableArrayListExtra<Waypoint>(WAYPOINTS_KEY) ?: waypoints
@@ -31,10 +31,10 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
         waypointChooser!!.adapter = RouteEditorAdapter(this, waypoints)
     }
 
-    override fun setViewsContent(passage: Route) {
-        routeId = passage.id
-        name!!.setText(passage.name)
-        chosenWaypoints = HashSet(passage.waypointsIds)
+    override fun setViewsContent(`object`: Route) {
+        routeId = `object`.id
+        name!!.setText(`object`.name)
+        chosenWaypoints = HashSet(`object`.waypointsIds)
     }
 
     override val contentLayoutId: Int
@@ -45,7 +45,7 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
 
     override val filledDAO: Route
         get() = Route(
-                routeId!!,
+                routeId,
                 name!!.text.toString(),
                 ArrayList(chosenWaypoints)
         )

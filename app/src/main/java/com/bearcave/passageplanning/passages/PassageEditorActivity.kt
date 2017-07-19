@@ -5,7 +5,6 @@ import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import butterknife.ButterKnife
@@ -30,6 +29,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     var date: TextView? = null
     var routeName: TextView? = null
     var speedSlide: SeekBar? = null
+    var speedValueView: TextView? = null
 
     var chosenRoute: Int = 0
     var routes: ArrayList<Route> = ArrayList()
@@ -42,6 +42,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
 
     override fun setViewsContent(`object`: Passage) {
+        id = `object`.id
         routeName!!.text = `object`.route.name
 
         calendar.set(
@@ -51,6 +52,9 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                 `object`.dateTime.hourOfDay,
                 `object`.dateTime.minuteOfHour
         )
+
+        speedSlide!!.progress = (`object`.speed * 10).toInt()
+        speedValueView!!.text = "${`object`.speed}"
 
         updateTimeView()
     }
@@ -63,11 +67,12 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     override fun findViews() {
         super.findViews()
         routeName = ButterKnife.findById(this, R.id.route)
-        if ( routes.size != 0)
+        if ( routes.size != 0) {
             routeName!!.text = routes[chosenRoute].name
-
+        }
         registerForContextMenu(routeName)
         routeName!!.setOnClickListener(this::openContextMenu)
+
 
         date = ButterKnife.findById(this, R.id.date)
         date!!.text = dateFormat.format(calendar.time)
@@ -91,12 +96,24 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
         }
 
         speedSlide = ButterKnife.findById<SeekBar>(this, R.id.speed)
+        speedSlide!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                speedValueView?.text = "${seekBar!!.progress.toFloat() / 10}"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        speedValueView = ButterKnife.findById<TextView>(this, R.id.speed_value)
+        speedValueView!!.text = 0f.toString()
     }
 
 
     override val filledDAO: Passage
-        get() {
-            return Passage(
+        get() = Passage(
                     id,
                     routes[chosenRoute],
                     DateTime(
@@ -106,9 +123,9 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                             calendar.get(Calendar.HOUR),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    speedSlide!!.progress.toFloat()
-            )
-        }
+                    speedSlide!!.progress.toFloat() / 10
+                )
+
 
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -144,11 +161,10 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
     companion object {
         val ROUTE_KEY = "key_for_routes_to_be_received"
+        private val TIME_PATTERN = "HH:mm"
     }
 
-    val TIME_PATTERN = "HH:mm"
-
-    private var calendar: Calendar = Calendar.getInstance()
-    private var dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-    private var timeFormat: SimpleDateFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
+    private val calendar: Calendar = Calendar.getInstance()
+    private val dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
+    private val timeFormat: SimpleDateFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
 }

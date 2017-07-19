@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.tides.view
 
 import android.content.Context
+import android.os.AsyncTask
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.PopupMenu
 import android.view.Menu
@@ -127,8 +128,14 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
     }
 
 
+    private var updater: UpdateTideTablesTask? = null
     fun updateTidesDatabase(){
-        UpdateTideTablesTask(this).execute(*Gauge.values())
+        if(updater?.status != AsyncTask.Status.RUNNING) {
+            updater = UpdateTideTablesTask(this)
+            updater!!.execute(*Gauge.values())
+        } else {
+            updater!!.show()
+        }
     }
 
     override fun insert(element: TideItem) = tidesTables[selectedGauge]!!.insert(element)

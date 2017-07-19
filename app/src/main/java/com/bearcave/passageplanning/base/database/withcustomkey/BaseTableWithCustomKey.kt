@@ -73,13 +73,13 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Key>, K
 
     override fun getReadableDatabase(): SQLiteDatabase = manager.readableDatabase
 
-    override fun insert(element: DAO): Long {
-        return writableDatabase
+    override fun insert(element: DAO): Long = writableDatabase
                 .insert(
-                        tableName, null,
+                        tableName,
+                        null,
                         getContentValue(element)
                 )
-    }
+
 
     private fun readableCursor(id :Key) = readableDatabase.query(
             tableName,
@@ -114,22 +114,19 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Key>, K
     fun readWith(ids: List<Key>) = ids.map { read(it) }
 
 
-    override fun update(element: DAO): Int {
-        return writableDatabase.update(
+    override fun update(element: DAO): Int = writableDatabase.update(
                 tableName,
                 getContentValue(element),
                 idKey + ANY,
                 arrayOf(element.id.toString())
         )
-    }
 
-    override fun delete(element: DAO): Int {
-        return writableDatabase.delete(
+    override fun delete(element: DAO): Int = writableDatabase.delete(
                 tableName,
                 idKey + ANY,
                 arrayOf(element.id.toString())
         )
-    }
+
 
     companion object {
 

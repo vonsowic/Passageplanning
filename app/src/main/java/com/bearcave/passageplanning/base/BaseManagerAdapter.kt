@@ -24,7 +24,9 @@ import java.util.*
  * @version 1.0
  * @since 20.05.17
  */
-abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(parent: BasePoorManagerFragment<*, *>, protected val context: Context) : BaseExpandableListAdapter() {
+abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>
+    (parent: BasePoorManagerFragment<*, *>, protected val context: Context)
+    : BaseExpandableListAdapter() {
 
     /**
      * This container has all DAOs shown in ExpandableListView.
@@ -60,7 +62,7 @@ abstract class BaseManagerAdapter<Dao : DatabaseElementWithCustomKey<T>, T>(pare
     fun update(toBeUpdated: Dao) {
         for ((i, element) in container.withIndex()) {
             if (element.id == toBeUpdated.id) {
-                container[ i ] = element
+                container[ i ] = toBeUpdated
                 notifyDataSetChanged()
                 return
             }

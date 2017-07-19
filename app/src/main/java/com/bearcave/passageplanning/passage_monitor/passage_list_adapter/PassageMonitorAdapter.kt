@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passage_monitor.passage_list_adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -13,9 +13,10 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.passage_monitor.PassageMonitorFragment
+import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
-import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 
@@ -25,15 +26,22 @@ import com.bearcave.passageplanning.waypoints.database.Waypoint
  * @since 17.06.17
  * @version 1.0
  */
-class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAdapter(){
+class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Passage) : BaseAdapter(){
 
     private val inflater
         get() = LayoutInflater.from(context)
 
-    val waypoints: PassagePlan
-    init {
-        waypoints = (context as PlanGetter).getPlan()
-    }
+    private val context: Context
+        get() = parent.context
+
+    private val listener = parent as PassageMonitorListener
+
+
+    val waypoints: PassagePlan = (context as PlanGetter).getPlan()
+
+    var selected = 0
+        private set
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(R.layout.passage_item, parent, false)
@@ -49,10 +57,13 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
                 .text = waypoints.actualDepth(position).toString()
 
         ButterKnife.findById<TextView>(view, R.id.togo)
-                 .text = (waypoints.toGo(position) / Settings.NAUTICAL_MILE).toString()
+                 .text = if (position >= selected) (waypoints.toGo(position) / Settings.NAUTICAL_MILE).toString() else "--"
 
         ButterKnife.findById<TextView>(view, R.id.bearing)
-                .text = waypoints.course(position).toString()
+                .text = if (position >= selected) waypoints.course(position).toString() else "--"
+
+        ButterKnife.findById<TextView>(view, R.id.eta_text)
+                .text = if (position >= selected) waypoints.eta(position).toString("HH:mm") else "--"
 
         ButterKnife.findById<TextView>(view, R.id.dist)
                 .text = (waypoints.dist(position) / Settings.NAUTICAL_MILE).toString()
@@ -61,11 +72,12 @@ class PassageMonitorAdapter(val context: Context, val passage: Passage) : BaseAd
                 .setOnClickListener { showPopupMenu(it, wpt) }
 
         view.setOnClickListener {
-            waypoints.selected = position
+            selected = position
+            listener.onWaypointSelected(position)
             notifyDataSetChanged()
         }
 
-        if (position == waypoints.selected)
+        if (position == selected)
             view.setBackgroundColor(Color.LTGRAY)
         else
             view.setBackgroundColor(Color.WHITE)

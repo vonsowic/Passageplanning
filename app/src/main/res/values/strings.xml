@@ -42,4 +42,8 @@
     <string name="generate_web_page">Show in webbrowser</string>
     <string name="degree_circle">°</string>
     <string name="seconds_symbol">"</string>
+
+    <string name="speed_unit">[kts]</string>
+    <string name="length_unit">[Mm]</string>
+    <string name="depth_unit">[m]</string>
 </resources>

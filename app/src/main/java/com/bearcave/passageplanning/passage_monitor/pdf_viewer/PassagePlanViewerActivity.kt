@@ -10,7 +10,7 @@ import android.webkit.WebView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.BuildConfig
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.passage_monitor.PassagePlan
+import com.bearcave.passageplanning.passages.planner.PassagePlan
 
 
 class PassagePlanViewerActivity : AppCompatActivity() {
