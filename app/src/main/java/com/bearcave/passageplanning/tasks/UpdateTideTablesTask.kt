@@ -96,7 +96,7 @@ class UpdateTideTablesTask(val parent: Fragment) : AsyncTask<Gauge, Void, Int>()
 
         alertDialog.setButton(
                 AlertDialog.BUTTON_NEUTRAL,
-                "Continue in background",
+                "Continue in background (experimental)",
                 { dialog, _ ->
                     run {
                         progressDialog.dismiss()
