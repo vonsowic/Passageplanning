@@ -64,9 +64,8 @@ data class Waypoint(
     private fun convertPositionToString(position: Double): String {
         val position = Math.abs(position)
         val degreesValue = position.toInt()
-        val minutesValue = (60 * (position - degreesValue)).toInt()
-        val secondsValue = (3600 * (position - degreesValue) - 60 * minutesValue).toInt()
-        return "$degreesValue°$minutesValue'$secondsValue\""
+        val minutesValue = (60 * (position - degreesValue))
+        return "$degreesValue°$minutesValue'"
     }
 
     constructor(parcel: Parcel) : this(

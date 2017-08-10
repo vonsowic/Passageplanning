@@ -1,8 +1,10 @@
 package com.bearcave.passageplanning.tides.view
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.support.design.widget.FloatingActionButton
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuInflater
@@ -32,14 +34,25 @@ import org.joda.time.DateTime
  */
 class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
+    private val progressDialog = ProgressDialog(context)
+
     private var selectedGauge = Gauge.MARGATE
+
     private var adapter: TideManagerAdapter? = null
 
     private val tidesTables = HashMap<Gauge, TidesTable>(Gauge.values().size)
 
-
     override fun layoutId() = R.layout.fragment_tides_manager
 
+    init {
+        progressDialog.isIndeterminate = false
+        progressDialog.setMessage(context.getString(R.string.fetching_data))
+        progressDialog.setCancelable(true)
+        progressDialog.setOnCancelListener {
+            onCancelClicked()
+        }
+        progressDialog.show()
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -129,12 +142,13 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
 
     private var updater: UpdateTideTablesTask? = null
+
     fun updateTidesDatabase(){
         if(updater?.status != AsyncTask.Status.RUNNING) {
             updater = UpdateTideTablesTask(this)
             updater!!.execute(*Gauge.values())
         } else {
-            updater!!.show()
+            //updater!!.show()
         }
     }
 
@@ -162,5 +176,46 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
     override fun onDetach() {
         super.onDetach()
         adapter = null
+    }
+
+
+    private fun onCancelClicked() {
+        val alertDialog = AlertDialog.Builder(context).create()
+        alertDialog.setTitle("Abort?")
+        alertDialog.setButton(
+                AlertDialog.BUTTON_POSITIVE,
+                "Yes",
+                { dialog, _ ->
+                    run {
+                        dialog.dismiss()
+                    }
+                }
+        )
+
+        alertDialog.setButton(
+                AlertDialog.BUTTON_NEUTRAL,
+                "Continue in background (experimental)",
+                { dialog, _ ->
+                    run {
+                        progressDialog.dismiss()
+                        dialog.dismiss()
+                    }
+                }
+        )
+
+        alertDialog.setButton(
+                AlertDialog.BUTTON_NEGATIVE,
+                "Cancel",
+                { dialog, _ -> run{
+                    progressDialog.show()
+                    dialog.dismiss()
+                } }
+        )
+
+        alertDialog.show()
+    }
+
+    fun show() {
+        progressDialog.show()
     }
 }

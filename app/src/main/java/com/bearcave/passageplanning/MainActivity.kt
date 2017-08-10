@@ -26,7 +26,6 @@ import com.bearcave.passageplanning.routes.RouteManagerFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
-import com.bearcave.passageplanning.tasks.TideManagerService
 import com.bearcave.passageplanning.tides.view.TidesManagerFragment
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
