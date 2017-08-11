@@ -40,13 +40,9 @@ class MainActivity
         NavigationView.OnNavigationItemSelectedListener,
         OnDatabaseRequestedListener,
         ReadWaypoints,
-        ReadRoutes,
-        TideManagerService.TideManagerListener
+        ReadRoutes
 {
 
-    override fun onNoInternetConnection() {
-        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
-    }
 
     var database: DatabaseManager? = null
         private set

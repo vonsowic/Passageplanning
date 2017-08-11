@@ -2,7 +2,7 @@ package com.bearcave.passageplanning.tides.view
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.os.AsyncTask
+import android.content.Intent
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.PopupMenu
@@ -17,7 +17,7 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseFragment
 import com.bearcave.passageplanning.data.database.OnDatabaseRequestedListener
 import com.bearcave.passageplanning.tasks.TaskUpdaterListener
-import com.bearcave.passageplanning.tasks.UpdateTideTablesTask
+import com.bearcave.passageplanning.tasks.TideManagerService
 import com.bearcave.passageplanning.tides.database.DateFilter
 import com.bearcave.passageplanning.tides.database.TideCRUD
 import com.bearcave.passageplanning.tides.database.TideItem
@@ -34,7 +34,9 @@ import org.joda.time.DateTime
  */
 class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
-    private val progressDialog = ProgressDialog(context)
+    private var progressDialog: ProgressDialog? = null
+
+    private var downloader: Intent? = null
 
     private var selectedGauge = Gauge.MARGATE
 
@@ -44,22 +46,22 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
 
     override fun layoutId() = R.layout.fragment_tides_manager
 
-    init {
-        progressDialog.isIndeterminate = false
-        progressDialog.setMessage(context.getString(R.string.fetching_data))
-        progressDialog.setCancelable(true)
-        progressDialog.setOnCancelListener {
-            onCancelClicked()
-        }
-        progressDialog.show()
-    }
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val databaseHolder: OnDatabaseRequestedListener = context as OnDatabaseRequestedListener
         for (gauge in Gauge.values()){
             tidesTables[gauge] = databaseHolder.onGetTableListener(gauge.id) as TidesTable
         }
+
+        progressDialog = ProgressDialog(context)
+        progressDialog!!.isIndeterminate = false
+        progressDialog!!.setCancelable(true)
+        progressDialog!!.setOnCancelListener {
+            onCancelClicked()
+        }
+        onTaskUpdated(0)
+
+        downloader = Intent(context, TideManagerService::class.java)
     }
 
     override val title: String
@@ -141,15 +143,11 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
     }
 
 
-    private var updater: UpdateTideTablesTask? = null
 
-    fun updateTidesDatabase(){
-        if(updater?.status != AsyncTask.Status.RUNNING) {
-            updater = UpdateTideTablesTask(this)
-            updater!!.execute(*Gauge.values())
-        } else {
-            //updater!!.show()
-        }
+    // run downloading service
+    fun updateTidesDatabase() {
+        context.startService(downloader)
+        show()
     }
 
     override fun insert(element: TideItem) = tidesTables[selectedGauge]!!.insert(element)
@@ -172,6 +170,9 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         adapter!!.reload()
     }
 
+    override fun onTaskUpdated(progress: Int) {
+        progressDialog?.setMessage("${context.getString(R.string.fetching_data)}\nProgress: $progress/${Gauge.values().size}")
+    }
 
     override fun onDetach() {
         super.onDetach()
@@ -185,9 +186,9 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         alertDialog.setButton(
                 AlertDialog.BUTTON_POSITIVE,
                 "Yes",
-                { dialog, _ ->
+                {
+                    dialog, _ ->
                     run {
-                        dialog.dismiss()
                     }
                 }
         )
@@ -197,8 +198,7 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
                 "Continue in background (experimental)",
                 { dialog, _ ->
                     run {
-                        progressDialog.dismiss()
-                        dialog.dismiss()
+                        progressDialog?.dismiss()
                     }
                 }
         )
@@ -206,16 +206,18 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         alertDialog.setButton(
                 AlertDialog.BUTTON_NEGATIVE,
                 "Cancel",
-                { dialog, _ -> run{
-                    progressDialog.show()
+                {
+                    dialog, _ -> run{
+                    progressDialog?.show()
                     dialog.dismiss()
-                } }
+                    }
+                }
         )
 
         alertDialog.show()
     }
 
     fun show() {
-        progressDialog.show()
+        progressDialog?.show()
     }
 }
