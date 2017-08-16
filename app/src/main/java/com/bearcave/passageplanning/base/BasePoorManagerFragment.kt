@@ -4,7 +4,6 @@ package com.bearcave.passageplanning.base
 import android.content.Context
 import android.view.View
 import android.widget.ExpandableListView
-import android.widget.Toast
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.database.withcustomkey.CRUDWithCustomKey
@@ -23,11 +22,11 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
         CRUDWithCustomKey<DAO, T> {
 
     protected var adapter: BaseManagerAdapter<DAO, T>? = null
-    protected var listView: ExpandableListView? = null
+    private var listView: ExpandableListView? = null
 
     protected abstract val databaseKey: Int
 
-    protected var database: CRUDWithCustomKey<DAO, T>? = null
+    private var database: CRUDWithCustomKey<DAO, T>? = null
 
     @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context?) {
@@ -47,7 +46,7 @@ abstract class BasePoorManagerFragment<DAO : DatabaseElementWithCustomKey<T>, T>
 
     override fun findViews(parent: View) {
         super.findViews(parent)
-        listView = ButterKnife.findById<ExpandableListView>(parent, R.id.list_view)
+        listView = ButterKnife.findById(parent, R.id.list_view)
         adapter = createAdapter()
         listView!!.setAdapter(adapter)
     }

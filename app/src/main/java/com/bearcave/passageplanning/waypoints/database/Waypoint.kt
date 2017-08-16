@@ -6,6 +6,8 @@ import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.DatabaseElement
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import java.io.Serializable
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 
 /**
@@ -65,7 +67,7 @@ data class Waypoint(
         val position = Math.abs(position)
         val degreesValue = position.toInt()
         val minutesValue = (60 * (position - degreesValue))
-        return "$degreesValue°$minutesValue'"
+        return "$degreesValue°${round(minutesValue, 2)}'"
     }
 
     constructor(parcel: Parcel) : this(
@@ -103,6 +105,14 @@ data class Waypoint(
             override fun newArray(size: Int): Array<Waypoint?> {
                 return arrayOfNulls(size)
             }
+        }
+
+        private fun round(value: Double, places: Int): Double {
+            if (places < 0) throw IllegalArgumentException()
+
+            var bd = BigDecimal(value)
+            bd = bd.setScale(places, RoundingMode.HALF_UP)
+            return bd.toDouble()
         }
     }
 }

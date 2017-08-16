@@ -40,7 +40,7 @@ class PassageActivity : AppCompatActivity(),
         // FIXME: maybe it could be better
         val database = DatabaseManager.DATABASE_MANAGER
 
-        waypointsTable = database?.getTable(WaypointCRUD.ID) as WaypointsTable
+        waypointsTable = database.getTable(WaypointCRUD.ID) as WaypointsTable
         for (gauge in Gauge.values()) tideTables.put(gauge.id, database.getTable(gauge.id) as TidesTable)
     }
 

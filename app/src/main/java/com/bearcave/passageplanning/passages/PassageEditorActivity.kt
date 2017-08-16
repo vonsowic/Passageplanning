@@ -23,16 +23,20 @@ import java.util.*
 class PassageEditorActivity : BaseEditorActivity<Passage>(),
                                 DatePickerDialog.OnDateSetListener,
                                 TimePickerDialog.OnTimeSetListener {
-    var id = -2
+    private var id = -2
 
-    var time: TextView? = null
-    var date: TextView? = null
-    var routeName: TextView? = null
-    var speedSlide: SeekBar? = null
-    var speedValueView: TextView? = null
+    private var time: TextView? = null
+    private var date: TextView? = null
+    private var routeName: TextView? = null
 
-    var chosenRoute: Int = 0
-    var routes: ArrayList<Route> = ArrayList()
+    private var speedSlide: SeekBar? = null
+    private var speedValueView: TextView? = null
+
+    private var draughtSlide: SeekBar? = null
+    private var draughtValueView: TextView? = null
+
+    private var chosenRoute: Int = 0
+    private var routes: ArrayList<Route> = ArrayList()
 
     override val isAllFilled: Boolean
         get() = !routes.isEmpty()
@@ -55,6 +59,9 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
         speedSlide!!.progress = (`object`.speed * 10).toInt()
         speedValueView!!.text = "${`object`.speed}"
+
+        draughtSlide!!.progress = (`object`.draught * 10).toInt()
+        draughtValueView!!.text = "${`object`.draught}"
 
         updateTimeView()
     }
@@ -95,11 +102,20 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
             ).show(fragmentManager, "timePicker")
         }
 
-        speedSlide = ButterKnife.findById<SeekBar>(this, R.id.speed)
-        speedSlide!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        speedSlide = ButterKnife.findById(this, R.id.speed)
+        speedValueView = ButterKnife.findById(this, R.id.speed_value)
+        initializeSlide(speedSlide!!, speedValueView!!)
+
+        draughtSlide = ButterKnife.findById(this, R.id.draught)
+        draughtValueView = ButterKnife.findById(this, R.id.draught_value)
+        initializeSlide(draughtSlide!!, draughtValueView!!)
+    }
+
+    private fun initializeSlide(view: SeekBar, label: TextView){
+        view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                speedValueView?.text = "${seekBar!!.progress.toFloat() / 10}"
+                label.text = "${seekBar!!.progress.toFloat() / 10}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -107,8 +123,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        speedValueView = ButterKnife.findById<TextView>(this, R.id.speed_value)
-        speedValueView!!.text = 0f.toString()
+        label.text = 0f.toString()
     }
 
 
@@ -120,10 +135,11 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                             calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH) + 1,
                             calendar.get(Calendar.DAY_OF_MONTH),
-                            calendar.get(Calendar.HOUR),
+                            calendar.get(Calendar.HOUR_OF_DAY),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    speedSlide!!.progress.toFloat() / 10
+                    speedSlide!!.progress.toFloat() / 10,
+                    draughtSlide!!.progress.toFloat() / 10
                 )
 
 
@@ -154,7 +170,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
         updateTimeView()
     }
 
-    fun updateTimeView() {
+    private fun updateTimeView() {
         time!!.text = timeFormat.format(calendar.time)
         date!!.text = dateFormat.format(calendar.time)
     }

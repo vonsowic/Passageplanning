@@ -65,6 +65,12 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         }
     }
 
+    fun removeExpired() {
+        writableDatabase.execSQL(
+                "DELETE FROM $tableName WHERE $KEY_TIME <= date('now','-1 day')"
+        )
+    }
+
 
     override val idKey: String
         get() = KEY_TIME

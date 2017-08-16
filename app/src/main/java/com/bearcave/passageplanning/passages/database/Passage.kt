@@ -5,24 +5,31 @@ import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.DatabaseElement
 import com.bearcave.passageplanning.routes.database.Route
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatterBuilder
 
 /**
  *
  * @author Michał Wąsowicz
  * @since 27.05.17
- * @version 1.0
+ * @version 1.1
  */
-data class Passage(override val id: Int, val route: Route, val dateTime: DateTime, val speed: Float) :
+data class Passage(
+        override val id: Int,
+        val route: Route,
+        val dateTime: DateTime,
+        val speed: Float,
+        val draught: Float) :
         DatabaseElement,
         Parcelable {
 
     override val name: String
-        get() = "${route.name}\n$dateTime\nSpeed: $speed".replace("T", "\n")
+        get() = "Route: ${route.name}\n${dateTime.toString(timeFormatter)}"
 
     constructor(parcel: Parcel): this(
             parcel.readInt(),
             parcel.readParcelable(Route::class.java.classLoader),
             parcel.readSerializable() as DateTime,
+            parcel.readFloat(),
             parcel.readFloat()
             )
 
@@ -31,19 +38,18 @@ data class Passage(override val id: Int, val route: Route, val dateTime: DateTim
         dest?.writeParcelable(route, flags)
         dest?.writeSerializable(dateTime)
         dest?.writeFloat(speed)
+        dest?.writeFloat(draught)
     }
 
     override fun describeContents(): Int = 0
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Passage> = object : Parcelable.Creator<Passage> {
-            override fun createFromParcel(source: Parcel): Passage {
-                return Passage(source)
-            }
+            override fun createFromParcel(source: Parcel): Passage = Passage(source)
 
-            override fun newArray(size: Int): Array<Passage?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<Passage?> = arrayOfNulls(size)
         }
+
+        private val timeFormatter = DateTimeFormatterBuilder().appendPattern("YY-MM-dd, HH:mm:ss").toFormatter()
     }
 }

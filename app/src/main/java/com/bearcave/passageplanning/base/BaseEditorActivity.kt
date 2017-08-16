@@ -32,7 +32,7 @@ abstract class BaseEditorActivity<DAO : Parcelable> : AppCompatActivity() {
 
         getParcelableExtra(mail)
 
-        val content_placeholder = findViewById(R.id.content_placeholder) as FrameLayout
+        val content_placeholder = ButterKnife.findById<FrameLayout>(this, R.id.content_placeholder)
         content_placeholder.addView(layoutInflater.inflate(contentLayoutId, null))
 
         findViews()

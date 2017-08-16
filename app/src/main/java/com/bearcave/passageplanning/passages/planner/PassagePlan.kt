@@ -24,8 +24,8 @@ import java.io.StringReader
 
 /**
  * @author Michał Wąsowicz
- * @since 02.07.17
- * @version 1.0
+ * @since 16.08.17
+ * @version 1.1
  */
 class PassagePlan(
         val passage: Passage,
@@ -77,13 +77,12 @@ class PassagePlan(
      * @param i index of waypoint
      * @return sum of ukc and predicted tide height if success, -1 otherwise.
      */
-    fun actualDepth(i: Int): Float {
-        try {
-            return waypoints[i].ukc + predictedTideHeight(i)
+    fun actualDepth(i: Int) = try {
+            waypoints[i].ukc + predictedTideHeight(i) - passage.draught
         } catch (e: TideNotInDatabaseException){
-            return -1f
+            -1f
         }
-    }
+
 
 
     /**

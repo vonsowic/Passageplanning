@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.passages
 
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -24,6 +25,41 @@ class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : 
 
         addOption(context.getString(R.string.action_edit), { dao ->
             parent.openEditor(dao)
+        })
+
+        addOption(context.getString(R.string.show_more), { dao ->
+            val alertDialog = AlertDialog.Builder(context).create()
+            alertDialog.setMessage("""
+                |Draught: ${dao.draught}${context.getString(R.string.depth_unit)}
+                |Speed: ${dao.speed}${context.getString(R.string.speed_unit)}
+            """.trimMargin())
+            alertDialog.show()
+        })
+
+        addOption(context.getString(R.string.action_delete), { dao ->
+            val alertDialog = AlertDialog.Builder(context).create()
+            alertDialog.setTitle("Are you sure you want to delete this?")
+            alertDialog.setButton(
+                    AlertDialog.BUTTON_POSITIVE,
+                    "Yes",
+                    {
+                        _, _ ->
+                        run {
+                            parent.delete(dao)
+                            container.remove(dao)
+                            notifyDataSetChanged()
+                        }
+                    }
+            )
+
+
+            alertDialog.setButton(
+                    AlertDialog.BUTTON_NEGATIVE,
+                    "No",
+                    { _, _ ->  }
+            )
+
+            alertDialog.show()
         })
     }
 

@@ -66,7 +66,6 @@ public class DatabaseContext extends ContextWrapper {
         if (Log.isLoggable(DEBUG_CONTEXT, Log.WARN)){
             Log.w(DEBUG_CONTEXT, "openOrCreateDatabase(" + name + ",,) = " + result.getPath());
         }
-        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
         return result;
     }

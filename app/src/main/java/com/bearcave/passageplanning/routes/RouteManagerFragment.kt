@@ -47,8 +47,15 @@ class RouteManagerFragment : BaseManagerFragment<Route, Int>(), RouteCRUD, ReadW
 
     override fun createAdapter(): BaseManagerAdapter<Route, Int> = RouteManagerAdapter(this, context)
 
-
     override fun readAllWaypoints() = waypointsHolder!!.readAllWaypoints()
 
     override fun readWith(ids: List<Int>) = waypointsHolder!!.readWith(ids)
+
+    override fun onDataCreated(result: Route){
+        adapter!!.add(
+                read(
+                        insert(result).toInt()
+                )
+        )
+    }
 }

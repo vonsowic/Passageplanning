@@ -21,6 +21,12 @@
             android:id="@+id/nav_tides_menu"
             android:title="@string/tides_menu" />
 
+        <!--
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/about" />
+            -->
+
         <!--    TODO: problem with reading values: "no virtual method"
         <item
             android:id="@+id/nav_settings"

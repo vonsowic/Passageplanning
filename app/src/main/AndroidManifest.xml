@@ -46,7 +46,7 @@
         </provider>
 
         <service
-            android:name=".tasks.TideManagerService"
+            android:name=".tides.web.TideManagerService"
             android:exported="false"></service>
     </application>
 
