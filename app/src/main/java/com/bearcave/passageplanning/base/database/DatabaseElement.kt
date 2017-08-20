@@ -1,5 +1,6 @@
 package com.bearcave.passageplanning.base.database
 
+import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementWithCustomKey
 
 /**
@@ -8,4 +9,4 @@ import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementW
  * @since 19.05.17.
  */
 
-interface DatabaseElement : DatabaseElementWithCustomKey<Int>
+interface DatabaseElement : DatabaseElementWithCustomKey<Int>, Parcelable

@@ -18,7 +18,7 @@ open class BackgroundTask(val context: Context) : AsyncTask<() -> Unit, Void, In
     init {
         progress.isIndeterminate = false
         progress.setMessage(context.getString(R.string.fetching_data))
-        progress.setCancelable(false)
+        progress.setCancelable(true)
     }
 
     override fun onPreExecute() {
@@ -27,9 +27,7 @@ open class BackgroundTask(val context: Context) : AsyncTask<() -> Unit, Void, In
     }
 
     override fun doInBackground(vararg params: () -> Unit): Int {
-        for (task in params){
-            task()
-        }
+        params.forEach { it() }
         return 0
     }
 

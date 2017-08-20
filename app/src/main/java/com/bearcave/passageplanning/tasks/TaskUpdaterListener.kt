@@ -1,5 +1,6 @@
 package com.bearcave.passageplanning.tasks
 
+
 /**
  *
  * @author Michał Wąsowicz
@@ -8,5 +9,6 @@ package com.bearcave.passageplanning.tasks
  */
 interface TaskUpdaterListener {
     fun onNoInternetConnection()
+    fun onTaskUpdated(progress: Int)
     fun onTaskFinished()
 }

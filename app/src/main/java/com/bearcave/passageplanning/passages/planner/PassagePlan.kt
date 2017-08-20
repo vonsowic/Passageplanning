@@ -1,8 +1,9 @@
-package com.bearcave.passageplanning.passages
+package com.bearcave.passageplanning.passages.planner
 
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.SparseArray
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
@@ -15,6 +16,7 @@ import com.itextpdf.text.html.simpleparser.HTMLWorker
 import com.itextpdf.text.pdf.PdfWriter
 import j2html.TagCreator.*
 import j2html.tags.ContainerTag
+import org.joda.time.DateTime
 import java.io.File
 import java.io.FileOutputStream
 import java.io.StringReader
@@ -22,8 +24,8 @@ import java.io.StringReader
 
 /**
  * @author Michał Wąsowicz
- * @since 02.07.17
- * @version 1.0
+ * @since 16.08.17
+ * @version 1.1
  */
 class PassagePlan(
         val passage: Passage,
@@ -33,7 +35,14 @@ class PassagePlan(
     val lastWaypoint
         get() = waypoints.last()
 
+
     operator fun get(position: Int) = waypoints[position]
+
+
+    /**
+     * Contains ETA's that were send by user.
+     */
+    val realEtas = SparseArray<DateTime>()
 
 
     /**
@@ -66,15 +75,14 @@ class PassagePlan(
 
     /**
      * @param i index of waypoint
-     * @return sum of ukc and predicted tide height if success, -1 otherwise.
+     * @return ukc, -1 otherwise.
      */
-    fun actualDepth(i: Int): Float {
-        try {
-            return waypoints[i].ukc + predictedTideHeight(i)
+    fun ukc(i: Int) = try {
+            waypoints[i].ukc + predictedTideHeight(i) - passage.draught
         } catch (e: TideNotInDatabaseException){
-            return -1f
+            -1f
         }
-    }
+
 
 
     /**
@@ -98,7 +106,7 @@ class PassagePlan(
      */
     private fun timesBetween() = waypoints
             .withIndex()
-            .map { dist(it.index) / passage.speed }
+            .map { dist(it.index) / passage.speed  }
 
 
 
@@ -156,7 +164,7 @@ class PassagePlan(
                                         td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${it.value.ukc}"),
-                                        td("${actualDepth(it.index)}".replace("-1.0", "tide height not available"))
+                                        td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
                                         )
                                 }
                                 .fold(
@@ -169,7 +177,7 @@ class PassagePlan(
                                                 th("DIST [Mm]"),
                                                 th("TO GO [Mm]"),
                                                 th("UKC [m]"),
-                                                th("ACTUAL [m]")
+                                                th("UKC [m]")
                                         ),
                                         ContainerTag::with
                                 )

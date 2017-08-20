@@ -24,14 +24,14 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
     private var characteristic: TextInputEditText? = null
     private var gauge: TextView? = null
 
-    private var id: Int? = -2
+    private var id: Int = -2
 
     override fun findViews() {
         super.findViews()
         name = ButterKnife.findById<TextInputEditText>(this, R.id.name_text)
         note = ButterKnife.findById<TextInputEditText>(this, R.id.note_text)
         characteristic = ButterKnife.findById<TextInputEditText>(this, R.id.characteristic_text)
-        ukc = ButterKnife.findById<TextInputEditText>(this, R.id.ukc_text)
+        ukc = ButterKnife.findById<TextInputEditText>(this, R.id.cd_text)
         gauge = ButterKnife.findById<TextView>(this, R.id.gauge_name)
         gauge!!.text = Gauge.MARGATE.humanCode
 
@@ -59,14 +59,13 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
 
 
     override val isAllFilled: Boolean
-        get() {
-            return !(name!!.text.isEmpty()
+        get() = !(name!!.text.isEmpty()
                     || ukc!!.text.isEmpty())
-        }
+
 
     override val filledDAO: Waypoint
         get() = Waypoint(
-                id!!,
+                id,
                 name!!.text.toString(),
                 note!!.text.toString(),
                 characteristic!!.text.toString(),

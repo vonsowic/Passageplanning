@@ -29,7 +29,7 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
 
         // note
         ButterKnife.findById<TextView>(view!!, R.id.note)
-            .text = "Note ${wpt.note}"
+            .text = "Note: ${wpt.note}"
 
         // characteristic
         ButterKnife.findById<TextView>(view, R.id.characteristic)
@@ -40,8 +40,8 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
             .text = "Gauge: ${wpt.gauge.humanCode}"
 
         // ukc
-        ButterKnife.findById<TextView>(view, R.id.ukc)
-            .text = "${context.getString(R.string.ukc)} ${wpt.ukc}"
+        ButterKnife.findById<TextView>(view, R.id.cd)
+            .text = "${context.getString(R.string.ukc)}: ${wpt.ukc}[m]"
 
         // latitude
         ButterKnife.findById<TextView>(view, R.id.latitude)

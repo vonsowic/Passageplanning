@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -32,26 +33,22 @@
         <activity
             android:name=".passages.PassageEditorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <service
-            android:name=".tasks.TideManagerService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity android:name=".passage_monitor.PassageActivity" />
-        <activity android:name=".passage_monitor.pdf_viewer.PassagePlanViewerActivity"></activity>
-
+        <activity android:name=".passage_monitor.pdf_viewer.PassagePlanViewerActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:grantUriPermissions="true"
+            android:authorities="${applicationId}"
             android:exported="false"
-            android:authorities="${applicationId}">
-
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_provider_paths"/>
-
+                android:resource="@xml/file_provider_paths" />
         </provider>
+
+        <service
+            android:name=".tides.web.TideManagerService"
+            android:exported="false"></service>
     </application>
+
 </manifest>

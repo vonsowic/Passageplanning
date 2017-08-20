@@ -9,7 +9,6 @@ import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseManagerAdapterWithWaypoints
 import com.bearcave.passageplanning.routes.database.Route
-import com.bearcave.passageplanning.waypoints.database.Waypoint
 
 
 class RouteManagerAdapter(parent: RouteManagerFragment, context: Context) : BaseManagerAdapterWithWaypoints<Route, Int>(parent, context) {
@@ -22,26 +21,17 @@ class RouteManagerAdapter(parent: RouteManagerFragment, context: Context) : Base
     }
 
 
-    private fun getWaypointFromList(group: Int, child: Int): Waypoint {
-        return getWaypointById(
-                container[group]
-                        .waypointsIds[child]
+    private fun getWaypointFromList(group: Int, child: Int) = getWaypointById(
+            container[group]
+                    .waypointsIds[child]
         )
-    }
 
+    override fun getChildrenCount(groupPosition: Int) = container[groupPosition].waypointsIds.size
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        return container[groupPosition].waypointsIds.size
-    }
-
-    override fun getChild(groupPosition: Int, childPosition: Int): Any? {
-        return getWaypointFromList(groupPosition, childPosition)
-    }
-
+    override fun getChild(groupPosition: Int, childPosition: Int) = getWaypointFromList(groupPosition, childPosition)
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(R.layout.passage_manager_child_item, parent, false)
-
 
         val (_, name) = getWaypointFromList(groupPosition, childPosition)
 

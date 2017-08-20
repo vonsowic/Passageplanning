@@ -18,7 +18,6 @@ import com.bearcave.passageplanning.base.database.withcustomkey.DatabaseElementW
 abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() where DAO : Parcelable, DAO : DatabaseElementWithCustomKey<T>{
 
 
-    //@OnClick(R.id.open_editor)
     fun openEditor()  {
         openEditor(null)
     }
@@ -73,14 +72,13 @@ abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() w
         }
     }
 
-    fun onDataCreated(result: DAO) {
+    open protected fun onDataCreated(result: DAO) {
         insert(result)
         adapter!!.add(result)
     }
 
-    fun onDataUpdated(result: DAO) {
-        database!!.update(result)
+    open protected fun onDataUpdated(result: DAO) {
+        update(result)
         adapter!!.update(result)
     }
-
 }

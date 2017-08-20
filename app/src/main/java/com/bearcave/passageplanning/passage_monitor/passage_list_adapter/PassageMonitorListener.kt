@@ -7,4 +7,5 @@ package com.bearcave.passageplanning.passage_monitor.passage_list_adapter
  * @version 1.0
  */
 interface PassageMonitorListener {
+    fun onWaypointSelected(position: Int)
 }

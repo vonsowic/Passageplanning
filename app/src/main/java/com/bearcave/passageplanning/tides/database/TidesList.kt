@@ -10,11 +10,11 @@ import org.joda.time.DateTime
  */
 
 
-inline fun List<TideItem>.filterByStep(step: Int) = this.filter { it.id.minuteOfHour % step == 0 }
+fun List<TideItem>.filterByStep(step: Int) = this.filter { it.id.minuteOfHour % step == 0 }
 
 inline fun List<TideItem>.filterByDate(dateFilter: (TideItem) -> Boolean) = this.filter(dateFilter)
 
-inline fun List<TideItem>.filterOnlyTides(): List<TideItem> {
+fun List<TideItem>.filterOnlyTides(): List<TideItem> {
     if (size == 0) return this
     val demandedIndexes = HashSet<Int>()
 
@@ -25,7 +25,7 @@ inline fun List<TideItem>.filterOnlyTides(): List<TideItem> {
 
     val initialPoint = heights.find { it.value != first().predictedTideHeight }
     var first = 0
-    var last = initialPoint!!.index
+    val last = initialPoint!!.index
 
     var isLastSmallerThanFirst = initialPoint.value < first().predictedTideHeight
     var isLastBiggerThanFirst  = initialPoint.value > first().predictedTideHeight

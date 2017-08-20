@@ -5,7 +5,6 @@ import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import butterknife.ButterKnife
@@ -16,6 +15,7 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.routes.database.Route
+import com.bearcave.passageplanning.settings.Settings
 import org.joda.time.DateTime
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -24,15 +24,20 @@ import java.util.*
 class PassageEditorActivity : BaseEditorActivity<Passage>(),
                                 DatePickerDialog.OnDateSetListener,
                                 TimePickerDialog.OnTimeSetListener {
-    var id = -2
+    private var id = -2
 
-    var time: TextView? = null
-    var date: TextView? = null
-    var routeName: TextView? = null
-    var speedSlide: SeekBar? = null
+    private var time: TextView? = null
+    private var date: TextView? = null
+    private var routeName: TextView? = null
 
-    var chosenRoute: Int = 0
-    var routes: ArrayList<Route> = ArrayList()
+    private var speedSlide: SeekBar? = null
+    private var speedValueView: TextView? = null
+
+    private var draughtSlide: SeekBar? = null
+    private var draughtValueView: TextView? = null
+
+    private var chosenRoute: Int = 0
+    private var routes: ArrayList<Route> = ArrayList()
 
     override val isAllFilled: Boolean
         get() = !routes.isEmpty()
@@ -42,6 +47,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
 
     override fun setViewsContent(`object`: Passage) {
+        id = `object`.id
         routeName!!.text = `object`.route.name
 
         calendar.set(
@@ -51,6 +57,12 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                 `object`.dateTime.hourOfDay,
                 `object`.dateTime.minuteOfHour
         )
+
+        speedSlide!!.progress = (`object`.speed * 10 / Settings.KTS).toInt()
+        speedValueView!!.text = "${`object`.speed}"
+
+        draughtSlide!!.progress = (`object`.draught * 10 / Settings.KTS).toInt()
+        draughtValueView!!.text = "${`object`.draught}"
 
         updateTimeView()
     }
@@ -63,11 +75,12 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     override fun findViews() {
         super.findViews()
         routeName = ButterKnife.findById(this, R.id.route)
-        if ( routes.size != 0)
+        if ( routes.size != 0) {
             routeName!!.text = routes[chosenRoute].name
-
+        }
         registerForContextMenu(routeName)
         routeName!!.setOnClickListener(this::openContextMenu)
+
 
         date = ButterKnife.findById(this, R.id.date)
         date!!.text = dateFormat.format(calendar.time)
@@ -90,25 +103,46 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
             ).show(fragmentManager, "timePicker")
         }
 
-        speedSlide = ButterKnife.findById<SeekBar>(this, R.id.speed)
+        speedSlide = ButterKnife.findById(this, R.id.speed)
+        speedValueView = ButterKnife.findById(this, R.id.speed_value)
+        initializeSlide(speedSlide!!, speedValueView!!)
+
+        draughtSlide = ButterKnife.findById(this, R.id.draught)
+        draughtValueView = ButterKnife.findById(this, R.id.draught_value)
+        initializeSlide(draughtSlide!!, draughtValueView!!)
+    }
+
+    private fun initializeSlide(view: SeekBar, label: TextView){
+        view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                label.text = "${seekBar!!.progress.toFloat() / 10}"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        label.text = 0f.toString()
     }
 
 
     override val filledDAO: Passage
-        get() {
-            return Passage(
+        get() = Passage(
                     id,
                     routes[chosenRoute],
                     DateTime(
                             calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH) + 1,
                             calendar.get(Calendar.DAY_OF_MONTH),
-                            calendar.get(Calendar.HOUR),
+                            calendar.get(Calendar.HOUR_OF_DAY),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    speedSlide!!.progress.toFloat()
-            )
-        }
+                    speedSlide!!.progress.toFloat() * Settings.KTS / 10,
+                    draughtSlide!!.progress.toFloat() / 10
+                )
+
 
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -137,18 +171,17 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
         updateTimeView()
     }
 
-    fun updateTimeView() {
+    private fun updateTimeView() {
         time!!.text = timeFormat.format(calendar.time)
         date!!.text = dateFormat.format(calendar.time)
     }
 
     companion object {
         val ROUTE_KEY = "key_for_routes_to_be_received"
+        private val TIME_PATTERN = "HH:mm"
     }
 
-    val TIME_PATTERN = "HH:mm"
-
-    private var calendar: Calendar = Calendar.getInstance()
-    private var dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
-    private var timeFormat: SimpleDateFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
+    private val calendar: Calendar = Calendar.getInstance()
+    private val dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault())
+    private val timeFormat: SimpleDateFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
 }

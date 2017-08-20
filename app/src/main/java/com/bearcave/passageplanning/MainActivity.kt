@@ -26,7 +26,6 @@ import com.bearcave.passageplanning.routes.RouteManagerFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.database.RouteTable
-import com.bearcave.passageplanning.tasks.TideManagerService
 import com.bearcave.passageplanning.tides.view.TidesManagerFragment
 import com.bearcave.passageplanning.waypoints.WaypointsManagerFragment
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
@@ -40,21 +39,12 @@ class MainActivity
         NavigationView.OnNavigationItemSelectedListener,
         OnDatabaseRequestedListener,
         ReadWaypoints,
-        ReadRoutes,
-        TideManagerService.TideManagerListener
+        ReadRoutes
 {
-
-    override fun onNoInternetConnection() {
-        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show()
-    }
-
     var database: DatabaseManager? = null
         private set
 
-    private var files: FilesManager? = null
-
     private val fragmentHolder = SparseArray<Lazy<Fragment>>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +64,7 @@ class MainActivity
         fragmentHolder.put(R.id.nav_waypoints_menu, lazy { WaypointsManagerFragment() })
         fragmentHolder.put(R.id.nav_passages_menu, lazy { PassageManagerFragment() })
         fragmentHolder.put(R.id.nav_tides_menu, lazy { TidesManagerFragment() })
+
         //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission(
@@ -81,11 +72,11 @@ class MainActivity
                 PASSAGE_PERMISSIONS_REQUEST_FILE,
                 { afterFilePermissionIsChecked() }
         )
+
     }
 
     private fun afterFilePermissionIsChecked() {
-        files = FilesManager(this)
-        database = files!!.createDatabase()
+        database = FilesManager(this).createDatabase()
         showFragment(R.id.nav_passages_menu)
     }
 
@@ -107,7 +98,7 @@ class MainActivity
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         showFragment(item.itemId)
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = ButterKnife.findById<DrawerLayout>(this, R.id.drawer_layout)
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
@@ -156,5 +147,9 @@ class MainActivity
 
     companion object {
         val PASSAGE_PERMISSIONS_REQUEST_FILE = 1
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        // do not call super.onSa(...) - it is a bug from support package
     }
 }

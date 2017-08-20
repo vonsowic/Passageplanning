@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.routes.editor
 import android.content.Intent
 import android.widget.EditText
 import android.widget.ListView
+import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.routes.database.Route
@@ -15,10 +16,10 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
     private var name: EditText? = null
     private var waypointChooser: ListView? = null
 
-    private var chosenWaypoints = HashSet<Int>()
+    private var chosenWaypoints = ArrayList<Int>()
     private var waypoints = ArrayList<Waypoint>()
 
-    private var routeId: Int? = -2
+    private var routeId: Int = -2
 
     override fun getParcelableExtra(intent: Intent) {
         waypoints = intent.getParcelableArrayListExtra<Waypoint>(WAYPOINTS_KEY) ?: waypoints
@@ -26,15 +27,15 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
 
     override fun findViews() {
         super.findViews()
-        name = findViewById(R.id.name_text) as EditText
-        waypointChooser = findViewById(R.id.waypoints_list) as ListView
+        name = ButterKnife.findById(this, R.id.name_text)
+        waypointChooser = ButterKnife.findById(this, R.id.waypoints_list)
         waypointChooser!!.adapter = RouteEditorAdapter(this, waypoints)
     }
 
-    override fun setViewsContent(passage: Route) {
-        routeId = passage.id
-        name!!.setText(passage.name)
-        chosenWaypoints = HashSet(passage.waypointsIds)
+    override fun setViewsContent(`object`: Route) {
+        routeId = `object`.id
+        name!!.setText(`object`.name)
+        chosenWaypoints = `object`.waypointsIds
     }
 
     override val contentLayoutId: Int
@@ -45,14 +46,12 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
 
     override val filledDAO: Route
         get() = Route(
-                routeId!!,
+                routeId,
                 name!!.text.toString(),
-                ArrayList(chosenWaypoints)
+                chosenWaypoints
         )
 
-    override fun isItemCheckedListener(id: Int): Boolean {
-        return chosenWaypoints.contains(id)
-    }
+    override fun isItemCheckedListener(id: Int): Boolean = chosenWaypoints.contains(id)
 
     override fun onItemCheckListener(id: Int) {
         if (chosenWaypoints.contains(id)) {
