@@ -249,7 +249,7 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
     }
 
     override fun onTaskUpdated(progress: Int) {
-        progressDialog?.setMessage("${context.getString(R.string.fetching_data)}\nProgress: $progress/${Gauge.values().size}")
+        progressDialog?.setMessage("${context.getString(R.string.downloading_data)}\nProgress: $progress/${Gauge.values().size}")
     }
 
     override fun onDetach() {
@@ -269,7 +269,7 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
                 AlertDialog.BUTTON_POSITIVE,
                 "Yes",
                 {
-                    dialog, _ ->
+                    _, _ ->
                     run {
                         LocalBroadcastManager
                                 .getInstance(context)
@@ -283,7 +283,7 @@ class TidesManagerFragment : BaseFragment(), TideCRUD, TaskUpdaterListener {
         alertDialog.setButton(
                 AlertDialog.BUTTON_NEUTRAL,
                 "Continue in background",
-                { dialog, _ ->
+                { _, _ ->
                     run {
                         hideProgressDialog()
                         unregisterOnProgressUpdatedReceiver()

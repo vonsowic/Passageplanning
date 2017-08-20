@@ -41,16 +41,10 @@ class MainActivity
         ReadWaypoints,
         ReadRoutes
 {
-
-
     var database: DatabaseManager? = null
         private set
 
-    private var files: FilesManager? = null
-
     private val fragmentHolder = SparseArray<Lazy<Fragment>>()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +64,7 @@ class MainActivity
         fragmentHolder.put(R.id.nav_waypoints_menu, lazy { WaypointsManagerFragment() })
         fragmentHolder.put(R.id.nav_passages_menu, lazy { PassageManagerFragment() })
         fragmentHolder.put(R.id.nav_tides_menu, lazy { TidesManagerFragment() })
+
         //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
         askForPermission(
@@ -77,11 +72,11 @@ class MainActivity
                 PASSAGE_PERMISSIONS_REQUEST_FILE,
                 { afterFilePermissionIsChecked() }
         )
+
     }
 
     private fun afterFilePermissionIsChecked() {
-        files = FilesManager(this)
-        database = files!!.createDatabase()
+        database = FilesManager(this).createDatabase()
         showFragment(R.id.nav_passages_menu)
     }
 
@@ -152,5 +147,9 @@ class MainActivity
 
     companion object {
         val PASSAGE_PERMISSIONS_REQUEST_FILE = 1
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        // do not call super.onSa(...) - it is a bug from support package
     }
 }

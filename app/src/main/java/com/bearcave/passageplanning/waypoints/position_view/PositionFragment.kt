@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.utils.round
 
 /**
  *
@@ -26,6 +27,8 @@ abstract class PositionFragment : Fragment() {
     var degrees: EditText? = null
     var minutes: EditText? = null
 
+    var switcher: TextView? = null
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -34,10 +37,10 @@ abstract class PositionFragment : Fragment() {
         degrees = ButterKnife.findById<EditText>(view, R.id.degree)
         minutes = ButterKnife.findById<EditText>(view, R.id.minutes)
 
-        val switcher = ButterKnife.findById<TextView>(view, R.id.hemisphere_chooser)
-        setHemisphereSymbol(switcher)
-        switcher.setOnClickListener {
-            setHemisphereSymbol(switcher)
+        switcher = ButterKnife.findById<TextView>(view, R.id.hemisphere_chooser)
+        setHemisphereSymbol()
+        switcher!!.setOnClickListener {
+            switchHemisphereSymbol()
         }
 
         return view
@@ -46,8 +49,17 @@ abstract class PositionFragment : Fragment() {
 
     var position: Double
         get() {
-            val degreesValue = degrees?.text.toString().toDouble()
-            val minutesValue = minutes?.text.toString().toDouble() / 60
+            var degreesValue = 0.0
+            try {
+                degreesValue = degrees?.text.toString().toDouble()
+            } catch (_: NumberFormatException){ }
+
+            var minutesValue = 0.0
+            try {
+                minutesValue = minutes?.text.toString().toDouble() / 60
+            } catch (_: NumberFormatException){ }
+
+
             var result = degreesValue + minutesValue
             if (signedSet){
                 result *= -1
@@ -62,17 +74,21 @@ abstract class PositionFragment : Fragment() {
             val minutesValue = (60 * (value - degreesValue))
 
             degrees?.setText(degreesValue.toString(), TextView.BufferType.EDITABLE)
-            minutes?.setText(minutesValue.toString(), TextView.BufferType.EDITABLE)
+            minutes?.setText(round(minutesValue).toString(), TextView.BufferType.EDITABLE)
+            setHemisphereSymbol()
         }
 
 
-    private fun setHemisphereSymbol(switcher: TextView) {
+    private fun setHemisphereSymbol() {
         if (signedSet) {
-            signedSet = false
-            switcher.setText(unsigned)
+            switcher?.text = signed
         } else {
-            signedSet = true
-            switcher.setText(signed)
+            switcher?.text = unsigned
         }
+    }
+
+    private fun switchHemisphereSymbol() {
+        signedSet = !signedSet
+        setHemisphereSymbol()
     }
 }

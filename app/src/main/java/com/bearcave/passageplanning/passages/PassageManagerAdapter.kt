@@ -23,10 +23,6 @@ class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : 
             parent.startPassage(dao)
         })
 
-        addOption(context.getString(R.string.action_edit), { dao ->
-            parent.openEditor(dao)
-        })
-
         addOption(context.getString(R.string.show_more), { dao ->
             val alertDialog = AlertDialog.Builder(context).create()
             alertDialog.setMessage("""
@@ -34,6 +30,10 @@ class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : 
                 |Speed: ${dao.speed}${context.getString(R.string.speed_unit)}
             """.trimMargin())
             alertDialog.show()
+        })
+
+        addOption(context.getString(R.string.action_edit), { dao ->
+            parent.openEditor(dao)
         })
 
         addOption(context.getString(R.string.action_delete), { dao ->

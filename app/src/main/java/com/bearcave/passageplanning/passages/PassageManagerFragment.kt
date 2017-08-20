@@ -7,7 +7,7 @@ import android.os.Parcelable
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.base.BaseManagerAdapter
-import com.bearcave.passageplanning.base.BaseManagerFragment
+import com.bearcave.passageplanning.base.BaseManagerWithIntKeyFragment
 import com.bearcave.passageplanning.passage_monitor.PassageActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.database.PassageCRUD
@@ -20,7 +20,7 @@ import java.util.*
  * @since 27.05.17
  * @version 1.0
  */
-class PassageManagerFragment : BaseManagerFragment<Passage, Int>() {
+class PassageManagerFragment : BaseManagerWithIntKeyFragment<Passage>() {
 
 
     override val databaseKey: Int

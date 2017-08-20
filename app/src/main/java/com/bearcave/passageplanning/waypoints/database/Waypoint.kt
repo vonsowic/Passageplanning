@@ -5,9 +5,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.DatabaseElement
 import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.utils.round
 import java.io.Serializable
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 
 /**
@@ -92,28 +91,15 @@ data class Waypoint(
         dest.writeInt(gauge.id)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Waypoint> = object : Parcelable.Creator<Waypoint> {
-            override fun createFromParcel(source: Parcel): Waypoint {
-                return Waypoint(source)
-            }
+            override fun createFromParcel(source: Parcel): Waypoint = Waypoint(source)
 
-            override fun newArray(size: Int): Array<Waypoint?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<Waypoint?> = arrayOfNulls(size)
         }
 
-        private fun round(value: Double, places: Int): Double {
-            if (places < 0) throw IllegalArgumentException()
-
-            var bd = BigDecimal(value)
-            bd = bd.setScale(places, RoundingMode.HALF_UP)
-            return bd.toDouble()
-        }
     }
 }
 

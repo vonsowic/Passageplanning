@@ -15,6 +15,7 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.routes.database.Route
+import com.bearcave.passageplanning.settings.Settings
 import org.joda.time.DateTime
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -57,10 +58,10 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                 `object`.dateTime.minuteOfHour
         )
 
-        speedSlide!!.progress = (`object`.speed * 10).toInt()
+        speedSlide!!.progress = (`object`.speed * 10 / Settings.KTS).toInt()
         speedValueView!!.text = "${`object`.speed}"
 
-        draughtSlide!!.progress = (`object`.draught * 10).toInt()
+        draughtSlide!!.progress = (`object`.draught * 10 / Settings.KTS).toInt()
         draughtValueView!!.text = "${`object`.draught}"
 
         updateTimeView()
@@ -138,7 +139,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                             calendar.get(Calendar.HOUR_OF_DAY),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    speedSlide!!.progress.toFloat() / 10,
+                    speedSlide!!.progress.toFloat() * Settings.KTS / 10,
                     draughtSlide!!.progress.toFloat() / 10
                 )
 

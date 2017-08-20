@@ -26,10 +26,11 @@ class TideDownloaderNotificator(context: Context) {
 
     private val onProgressUpdatedReceiver: BroadcastReceiver
     private val onTaskFinishedReceiver: BroadcastReceiver
+    private val onCancelledReceiver: BroadcastReceiver
 
     init {
         mBuilder = NotificationCompat.Builder(context)
-        mBuilder.setContentTitle("Updating tides database")
+        mBuilder.setContentTitle(context.getString(R.string.downloading_data))
                 .setContentText("It may take a few minutes…")
                 .setSmallIcon(R.drawable.ic_file_download_black_24dp)
 
@@ -55,12 +56,24 @@ class TideDownloaderNotificator(context: Context) {
             }
         }
 
+        onCancelledReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                mBuilder.setContentText("Download cancelled")
+                        .setProgress(0,0,false)
+
+                mNotifyManager.notify(id, mBuilder.build())
+                dismiss()
+            }
+        }
+
+
         register()
     }
 
     private fun register(){
         broadcastManager.registerReceiver(onProgressUpdatedReceiver, IntentFilter(TideManagerService.UPDATED))
         broadcastManager.registerReceiver(onTaskFinishedReceiver, IntentFilter(TideManagerService.FINISHED))
+        broadcastManager.registerReceiver(onCancelledReceiver, IntentFilter(TideManagerService.CANCELED))
     }
 
     fun show(){

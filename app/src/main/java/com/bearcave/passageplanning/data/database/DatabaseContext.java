@@ -6,7 +6,6 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 
@@ -38,10 +37,8 @@ public class DatabaseContext extends ContextWrapper {
         File result = new File(dbFile);
         if (!result.getParentFile().exists()) {
             if(result.getParentFile().mkdirs()){
-                Toast.makeText(getBaseContext(), result.getParentFile() + " has been created", Toast.LENGTH_LONG).show();
                 Log.e(DEBUG_CONTEXT, result.getParentFile() + " has been created");
             } else {
-                Toast.makeText(getBaseContext(), result.getParentFile() + " has not been created", Toast.LENGTH_LONG).show();
                 Log.e(DEBUG_CONTEXT, result.getParentFile() + " has not been created");
 
             }

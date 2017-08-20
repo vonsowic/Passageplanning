@@ -77,7 +77,7 @@ abstract class BaseManagerFragment<DAO, T> : BasePoorManagerFragment<DAO, T>() w
         adapter!!.add(result)
     }
 
-    private fun onDataUpdated(result: DAO) {
+    open protected fun onDataUpdated(result: DAO) {
         update(result)
         adapter!!.update(result)
     }

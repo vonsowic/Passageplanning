@@ -6,7 +6,7 @@ import android.content.Intent
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.base.BaseManagerAdapter
-import com.bearcave.passageplanning.base.BaseManagerFragment
+import com.bearcave.passageplanning.base.BaseManagerWithIntKeyFragment
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.routes.database.RouteCRUD
 import com.bearcave.passageplanning.routes.editor.RouteEditorActivity
@@ -15,7 +15,7 @@ import com.bearcave.passageplanning.waypoints.database.Waypoint
 import java.util.*
 
 
-class RouteManagerFragment : BaseManagerFragment<Route, Int>(), RouteCRUD, ReadWaypoints {
+class RouteManagerFragment : BaseManagerWithIntKeyFragment<Route>(), RouteCRUD, ReadWaypoints {
 
 
     override val databaseKey: Int
@@ -50,12 +50,4 @@ class RouteManagerFragment : BaseManagerFragment<Route, Int>(), RouteCRUD, ReadW
     override fun readAllWaypoints() = waypointsHolder!!.readAllWaypoints()
 
     override fun readWith(ids: List<Int>) = waypointsHolder!!.readWith(ids)
-
-    override fun onDataCreated(result: Route){
-        adapter!!.add(
-                read(
-                        insert(result).toInt()
-                )
-        )
-    }
 }

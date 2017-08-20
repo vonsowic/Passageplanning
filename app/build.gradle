@@ -37,12 +37,6 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    sourceSets {
-        main {
-            assets.srcDirs = ['src/main/assets']
-        }
-    }
-
 }
 
 

@@ -18,6 +18,7 @@ import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.utils.round
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 
 /**
@@ -50,23 +51,23 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Pas
         ButterKnife.findById<TextView>(view, R.id.waypoint)
                 .text = wpt.name
 
-        ButterKnife.findById<TextView>(view, R.id.ukc)
-                .text = wpt.ukc.toString()
+        ButterKnife.findById<TextView>(view, R.id.cd)
+                .text = round(wpt.ukc).toString()
 
-        ButterKnife.findById<TextView>(view, R.id.actual)
-                .text = waypoints.actualDepth(position).toString()
+        ButterKnife.findById<TextView>(view, R.id.ukc)
+                .text = round(waypoints.ukc(position)).toString()
 
         ButterKnife.findById<TextView>(view, R.id.togo)
-                 .text = if (position >= selected) (waypoints.toGo(position) / Settings.NAUTICAL_MILE).toString() else "--"
+                 .text = if (position >= selected) (round(waypoints.toGo(position) / Settings.NAUTICAL_MILE, 1)).toString() else "--"
 
         ButterKnife.findById<TextView>(view, R.id.bearing)
-                .text = if (position >= selected) waypoints.course(position).toString() else "--"
+                .text = if (position >= selected) waypoints.course(position).toInt().toString() else "--"
 
         ButterKnife.findById<TextView>(view, R.id.eta_text)
                 .text = if (position >= selected) waypoints.eta(position).toString("HH:mm") else "--"
 
         ButterKnife.findById<TextView>(view, R.id.dist)
-                .text = (waypoints.dist(position) / Settings.NAUTICAL_MILE).toString()
+                .text = (round(waypoints.dist(position) / Settings.NAUTICAL_MILE, 1)).toString()
 
         ButterKnife.findById<ImageView>(view, R.id.options_button)
                 .setOnClickListener { showPopupMenu(it, wpt) }
@@ -94,7 +95,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Pas
 
     private fun showNotes(waypoint: Waypoint) {
         val alertDialog = AlertDialog.Builder(context).create()
-        alertDialog.setMessage("Characteristic: ${waypoint.characteristic}\n\nNotes: ${waypoint.note}")
+        alertDialog.setMessage("Characteristic: ${waypoint.characteristic}\nNotes: ${waypoint.note}")
         alertDialog.show()
     }
 

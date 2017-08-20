@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.PowerManager
 import android.support.v4.content.LocalBroadcastManager
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.settings.Settings
@@ -22,42 +23,50 @@ class TideManagerService : IntentService("TideManagerService"), TaskUpdaterListe
     val isRunning
         get() = status != -1
 
+
+    private var wakeLock: PowerManager.WakeLock? = null
+
     private var database: DatabaseManager? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         instance = this
+        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TidesDownloadingLock")
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onHandleIntent(intent: Intent?) {
+        if(wakeLock?.isHeld == false)
+            wakeLock?.acquire()
+
         registerOnCancelledReceiver()
         TideDownloaderNotificator(this).show()
         status = 0
         try {
             for ((index, gauge) in Gauge.values().withIndex()) {
-                if(!isRunning) break
                 status = index
                 val database = getDatabase(gauge.id) as TidesTable
 
                 onTaskUpdated(0)
-                if(!isRunning) break
 
                 val result = TideProvider()
                         .load(Settings.getDownloadingConfiguration(gauge))
-                if(!isRunning) break
 
                 database.insertAll(result)
             }
+
+            onTaskFinished()
         } catch (e: IOException){
             onNoInternetConnection()
+        } finally {
+            status = -1
         }
-
-        status = -1
-        onTaskFinished()
 
         Gauge.values()
                 .map { getDatabase(it.id) as TidesTable }
                 .forEach { it.removeExpired() }
+
+        onTaskFinished()
     }
 
     private fun getDatabase(tableId: Int) = database?.getTable(tableId) ?: {
@@ -91,8 +100,15 @@ class TideManagerService : IntentService("TideManagerService"), TaskUpdaterListe
     private val onCancelledReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             status = -1
+            this@TideManagerService.stopSelf()
         }
 
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        if (!isRunning && wakeLock?.isHeld == false)
+            wakeLock?.release()
+        return super.onUnbind(intent)
     }
 
     private fun register(receiver: BroadcastReceiver, filter: String) {
@@ -115,16 +131,17 @@ class TideManagerService : IntentService("TideManagerService"), TaskUpdaterListe
         unregister(onCancelledReceiver)
     }
 
+    override fun onDestroy() {
+        broadcast(FINISHED)
+        unregisterOnCancelledReceiver()
+        super.onDestroy()
+    }
+
     companion object {
         @JvmField val UPDATED = "tides_updated"
         @JvmField val FINISHED = "tides_downloaded"
         @JvmField val NO_INTERNET_CONNECTION= "no_internet_connection"
         @JvmField val CANCELED = "downloading_tides_canceled"
-
-        @JvmField val STATUS_REQUEST = "check tides"
-        @JvmField val STATUS_REQUEST_RESPONSE = "response_to_checking_tides"
-        @JvmField val STATUS_RUNNING = "downloadingtidesrunnign"
-        @JvmField val STATUS_NOT_RUNNING = "downloadingtidesnotrunnign"
 
         @JvmField var instance: TideManagerService? = null
 

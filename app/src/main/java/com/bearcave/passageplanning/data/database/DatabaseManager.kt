@@ -36,7 +36,9 @@ class DatabaseManager(context: Context, databaseName: String) : SQLiteOpenHelper
     override fun onCreate(db: SQLiteDatabase) {
         (0 until tables.size())
                 .map { tables.keyAt(it) }
-                .forEach { db.execSQL(tables.get(it).value.tableCreator()) }
+                .forEach {
+                    db.execSQL(tables.get(it).value.tableCreator())
+                }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

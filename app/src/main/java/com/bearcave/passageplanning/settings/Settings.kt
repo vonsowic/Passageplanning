@@ -51,6 +51,7 @@ class Settings {
         private fun getManager(context: Context) = PreferenceManager
                 .getDefaultSharedPreferences(context)
 
-        val  NAUTICAL_MILE = 1852
+        val  NAUTICAL_MILE = 1852 // [m]
+        val  KTS = 0.5144444444444445f   // [m/s]
     }
 }

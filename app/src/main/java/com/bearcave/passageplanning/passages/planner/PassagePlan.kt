@@ -75,9 +75,9 @@ class PassagePlan(
 
     /**
      * @param i index of waypoint
-     * @return sum of ukc and predicted tide height if success, -1 otherwise.
+     * @return ukc, -1 otherwise.
      */
-    fun actualDepth(i: Int) = try {
+    fun ukc(i: Int) = try {
             waypoints[i].ukc + predictedTideHeight(i) - passage.draught
         } catch (e: TideNotInDatabaseException){
             -1f
@@ -106,7 +106,7 @@ class PassagePlan(
      */
     private fun timesBetween() = waypoints
             .withIndex()
-            .map { dist(it.index) / passage.speed }
+            .map { dist(it.index) / passage.speed  }
 
 
 
@@ -164,7 +164,7 @@ class PassagePlan(
                                         td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
                                         td("${it.value.ukc}"),
-                                        td("${actualDepth(it.index)}".replace("-1.0", "tide height not available"))
+                                        td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
                                         )
                                 }
                                 .fold(
@@ -177,7 +177,7 @@ class PassagePlan(
                                                 th("DIST [Mm]"),
                                                 th("TO GO [Mm]"),
                                                 th("UKC [m]"),
-                                                th("ACTUAL [m]")
+                                                th("UKC [m]")
                                         ),
                                         ContainerTag::with
                                 )
