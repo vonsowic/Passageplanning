@@ -32,7 +32,7 @@ class TideDownloaderNotificator(context: Context) {
         mBuilder = NotificationCompat.Builder(context)
         mBuilder.setContentTitle(context.getString(R.string.downloading_data))
                 .setContentText("It may take a few minutes…")
-                .setSmallIcon(R.drawable.ic_file_download_black_24dp)
+                .setSmallIcon(R.mipmap.ic_launcher)
 
         onProgressUpdatedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {

@@ -50,6 +50,7 @@ class PassageMonitorFragment : Fragment(), PassageMonitorListener {
     override fun onWaypointSelected(position: Int) {
         foot.setToGo(passagePlan.toGo(position))
         foot.setCourse(passagePlan.course(position))
+        foot.setEta(passagePlan.etaAtEnd())
     }
 
     companion object {

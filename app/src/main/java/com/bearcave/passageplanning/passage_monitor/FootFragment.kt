@@ -12,12 +12,14 @@ import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.waypoints.database.Waypoint
+import org.joda.time.DateTime
 
 
 class FootFragment : Fragment() {
 
     private var toGoView: TextView? = null
     private var courseView: TextView? = null
+    private var etaView: TextView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,15 +32,20 @@ class FootFragment : Fragment() {
         toGoView = ButterKnife.findById(view, R.id.to_go)
         courseView = ButterKnife.findById(view, R.id.course)
 
+        etaView = ButterKnife.findById(view, R.id.eta)
         return view
     }
 
     fun setToGo(toGo: Float) {
-        toGoView!!.text = "${toGo / Settings.NAUTICAL_MILE}"
+        toGoView?.text = "${toGo / Settings.NAUTICAL_MILE}"
     }
 
     fun setCourse(course: Float) {
-        courseView!!.text = "$course"
+        courseView?.text = "$course"
+    }
+
+    fun setEta(eta: DateTime){
+        etaView?.text = eta.toString("HH:mm")
     }
 
     companion object {
