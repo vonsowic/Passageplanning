@@ -24,8 +24,8 @@ import com.bearcave.passageplanning.tides.database.DateFilter
 import com.bearcave.passageplanning.tides.database.TideCRUD
 import com.bearcave.passageplanning.tides.database.TideItem
 import com.bearcave.passageplanning.tides.database.TidesTable
+import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.tides.web.TideManagerService
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep
 import org.joda.time.DateTime
 

@@ -8,7 +8,7 @@ import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.NotificationCompat
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.utils.Gauge
 
 /**
  *

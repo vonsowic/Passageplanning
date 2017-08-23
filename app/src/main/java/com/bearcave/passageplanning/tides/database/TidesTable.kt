@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.settings.Settings
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.utils.Gauge
 import org.joda.time.DateTime
 import java.util.*
 

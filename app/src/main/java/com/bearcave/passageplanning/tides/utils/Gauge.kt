@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.tides.web.configurationitems
+package com.bearcave.passageplanning.tides.utils
 
 
 import com.bearcave.passageplanning.tides.web.configurationitems.exceptions.GaugeNotFoundException

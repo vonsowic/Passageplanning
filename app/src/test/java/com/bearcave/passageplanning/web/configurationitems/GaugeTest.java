@@ -1,6 +1,6 @@
 package com.bearcave.passageplanning.web.configurationitems;
 
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
+import com.bearcave.passageplanning.tides.utils.Gauge;
 import com.bearcave.passageplanning.tides.web.configurationitems.exceptions.GaugeNotFoundException;
 
 import org.junit.Assert;

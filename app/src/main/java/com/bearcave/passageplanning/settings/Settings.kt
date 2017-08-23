@@ -2,8 +2,8 @@ package com.bearcave.passageplanning.settings
 
 import android.content.Context
 import android.support.v7.preference.PreferenceManager
+import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.DownloadingConfiguration
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep
 import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays
 import org.joda.time.DateTime

@@ -44,7 +44,7 @@ class MainActivity
     var database: DatabaseManager? = null
         private set
 
-    private val fragmentHolder = SparseArray<Lazy<Fragment>>()
+    private val fragmentHolder = SparseArray<()->Fragment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +60,10 @@ class MainActivity
             .setNavigationItemSelectedListener(this)
 
 
-        fragmentHolder.put(R.id.nav_routes_menu, lazy { RouteManagerFragment() })
-        fragmentHolder.put(R.id.nav_waypoints_menu, lazy { WaypointsManagerFragment() })
-        fragmentHolder.put(R.id.nav_passages_menu, lazy { PassageManagerFragment() })
-        fragmentHolder.put(R.id.nav_tides_menu, lazy { TidesManagerFragment() })
+        fragmentHolder.put(R.id.nav_routes_menu,  { RouteManagerFragment() })
+        fragmentHolder.put(R.id.nav_waypoints_menu,  { WaypointsManagerFragment() })
+        fragmentHolder.put(R.id.nav_passages_menu, { PassageManagerFragment() })
+        fragmentHolder.put(R.id.nav_tides_menu,  { TidesManagerFragment() })
 
         //fragmentHolder.put(R.id.nav_settings, SettingsFragment())
 
@@ -91,7 +91,7 @@ class MainActivity
 
     private fun showFragment(id: Int) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_placeholder, fragmentHolder.get(id).value)
+        ft.replace(R.id.fragment_placeholder, fragmentHolder.get(id)())
         ft.commit()
     }
 

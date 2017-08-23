@@ -1,8 +1,8 @@
 package com.bearcave.passageplanning.web;
 
 import com.bearcave.passageplanning.tides.database.TideItem;
+import com.bearcave.passageplanning.tides.utils.Gauge;
 import com.bearcave.passageplanning.tides.web.TideProvider;
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge;
 import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep;
 import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays;
 

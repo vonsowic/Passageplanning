@@ -9,7 +9,7 @@ import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.position_view.LatitudeFragment
 import com.bearcave.passageplanning.waypoints.position_view.LongitudeFragment

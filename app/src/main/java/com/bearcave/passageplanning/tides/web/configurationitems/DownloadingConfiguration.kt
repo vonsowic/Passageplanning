@@ -1,5 +1,6 @@
 package com.bearcave.passageplanning.tides.web.configurationitems
 
+import com.bearcave.passageplanning.tides.utils.Gauge
 import org.joda.time.DateTime
 
 /**

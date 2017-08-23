@@ -11,7 +11,7 @@ import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tasks.TaskUpdaterListener
 import com.bearcave.passageplanning.tides.database.TidesTable
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.utils.Gauge
 import java.io.IOException
 
 

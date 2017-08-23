@@ -13,7 +13,7 @@ import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.tides.database.TidesTable
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
+import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD

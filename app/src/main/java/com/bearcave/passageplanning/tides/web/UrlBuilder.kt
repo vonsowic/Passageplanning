@@ -1,10 +1,9 @@
 package com.bearcave.passageplanning.tides.web
 
+import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.FileType
-import com.bearcave.passageplanning.tides.web.configurationitems.Gauge
 import com.bearcave.passageplanning.tides.web.configurationitems.MinuteStep
 import com.bearcave.passageplanning.tides.web.configurationitems.NumberOfDays
-
 import org.joda.time.DateTime
 
 
