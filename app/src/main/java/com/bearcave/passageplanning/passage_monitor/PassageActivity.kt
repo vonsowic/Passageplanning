@@ -2,12 +2,14 @@ package com.bearcave.passageplanning.passage_monitor
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
+import com.bearcave.passageplanning.passage_monitor.passage_list_adapter.PassageMonitorAdapter
 import com.bearcave.passageplanning.passage_monitor.pdf_viewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
@@ -18,10 +20,13 @@ import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
+import org.joda.time.DateTime
 
 class PassageActivity : AppCompatActivity(),
         ReadWaypoints,
-        PlanGetter {
+        PlanGetter,
+        PassageMonitorAdapter.PassageMonitor,
+        FootFragment.FootListener{
 
     var passage: Passage? = null
         private set
@@ -34,6 +39,8 @@ class PassageActivity : AppCompatActivity(),
     val passageFragment: PassageMonitorFragment = PassageMonitorFragment()
     val waypointsTable: WaypointsTable
     val tideTables = SparseArray<TidesTable>(Gauge.values().size)
+
+    val foot = FootFragment()
 
 
     init {
@@ -61,12 +68,17 @@ class PassageActivity : AppCompatActivity(),
                 readWith(passage!!.route.waypointsIds) as ArrayList<Waypoint>
         )
 
+        val manager = supportFragmentManager
         // add fragment with content to view
-        val ftransaction = supportFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putParcelable(PassageMonitorFragment.PASSAGE_KEY, passage)
-        passageFragment.arguments = bundle
+        var ftransaction = manager.beginTransaction()
         ftransaction.replace(R.id.container, passageFragment)
+        ftransaction.commit()
+
+        ftransaction = manager.beginTransaction()
+        val footBundle = Bundle()
+        footBundle.putString(FootFragment.WAYPOINT_KEY, passagePlan?.lastWaypoint?.name ?: "")
+        foot.arguments = footBundle
+        ftransaction.replace(R.id.last_waypoint, foot)
         ftransaction.commit()
     }
 
@@ -86,5 +98,41 @@ class PassageActivity : AppCompatActivity(),
 
     companion object {
         val PASSAGE_KEY = "passage key"
+    }
+
+    override fun setToGo(toGo: Float) {
+        foot.setToGo(toGo)
+    }
+
+    override fun setCourse(course: Float) {
+        foot.setCourse(course)
+    }
+
+    override fun setEta(eta: DateTime) {
+        foot.setEta(eta)
+    }
+
+    override fun onSpeedChangedLister(speed: Float) {
+        //passageFragmenthtop
+    }
+
+    override fun onBackPressed() {
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle("Are you sure you want to leave?")
+        alertDialog.setButton(
+                AlertDialog.BUTTON_POSITIVE,
+                "Yes",
+                { _, _ -> run {
+                    super.onBackPressed()
+                }}
+        )
+
+        alertDialog.setButton(
+                AlertDialog.BUTTON_NEGATIVE,
+                "No",
+                { _, _ -> run{}}
+        )
+
+        alertDialog.show()
     }
 }

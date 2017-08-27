@@ -33,6 +33,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".passages.PassageEditorActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".passage_monitor.PassageActivity" />
         <activity android:name=".passage_monitor.pdf_viewer.PassagePlanViewerActivity" />

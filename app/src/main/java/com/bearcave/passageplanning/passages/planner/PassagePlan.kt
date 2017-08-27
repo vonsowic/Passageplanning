@@ -38,6 +38,8 @@ class PassagePlan(
 
     operator fun get(position: Int) = waypoints[position]
 
+    private var startCountingTime = passage.dateTime
+
 
     /**
      * Contains ETA's that were send by user.

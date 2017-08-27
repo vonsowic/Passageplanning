@@ -26,7 +26,7 @@ class TideCurrent{
          */
         fun names(): ArrayList<String> {
             val names = ArrayList<String>(size)
-
+            names.add("")
             return names
         }
 
@@ -36,11 +36,7 @@ class TideCurrent{
         fun getValuesOf(id: Int, type: TideType? = null): SparseArray<Float> {
             val values = SparseArray<Float>(13)
 
-            when (type) {
-                TideType.NEAP -> 0
-                TideType.SPRING -> 0
-                null -> 0
-            }
+
 
             return values
         }

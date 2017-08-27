@@ -13,16 +13,16 @@
         android:id="@+id/cd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cd_text"
-        android:layout_alignBottom="@+id/cd_text"
+        android:layout_alignBaseline="@+id/cd_placeholder"
+        android:layout_alignBottom="@+id/cd_placeholder"
         android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/cd_text"
-        android:layout_toRightOf="@+id/cd_text"
-        app:layout_constraintBaseline_toBaselineOf="@+id/cd_text"
-        app:layout_constraintLeft_toRightOf="@+id/cd_text" />
+        android:layout_toEndOf="@+id/cd_placeholder"
+        android:layout_toRightOf="@+id/cd_placeholder"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cd_placeholder"
+        app:layout_constraintLeft_toRightOf="@+id/cd_placeholder" />
 
     <TextView
-        android:id="@+id/cd_text"
+        android:id="@+id/cd_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -45,7 +45,7 @@
         android:layout_toRightOf="@+id/waypoint"
         android:text="UKC: "
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cd_text" />
+        app:layout_constraintTop_toBottomOf="@+id/cd" />
 
     <TextView
         android:id="@+id/waypoint"
@@ -143,7 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:text="@string/depth_unit"
-        app:layout_constraintBaseline_toBaselineOf="@+id/cd_text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cd"
         app:layout_constraintLeft_toRightOf="@+id/cd" />
 
     <TextView

@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.passage_monitor
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,14 +12,20 @@ import butterknife.ButterKnife
 
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passage_monitor.passage_list_adapter.PassageMonitorAdapter
-import com.bearcave.passageplanning.passage_monitor.passage_list_adapter.PassageMonitorListener
+import com.bearcave.passageplanning.passages.planner.PassagePlan
+import com.bearcave.passageplanning.passages.planner.PlanGetter
 
 
-class PassageMonitorFragment : Fragment(), PassageMonitorListener {
+class PassageMonitorFragment : Fragment() {
 
 
     var adapter: PassageMonitorAdapter? = null
-    val foot = FootFragment()
+    var plan: PassagePlan? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        plan = (context as PlanGetter).getPlan()
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -26,34 +33,22 @@ class PassageMonitorFragment : Fragment(), PassageMonitorListener {
         val view = inflater!!.inflate(R.layout.fragment_passage_monitor, container, false)
 
         val waypointsView = ButterKnife.findById<ListView>(view, R.id.list)
-        adapter = PassageMonitorAdapter(this, arguments.getParcelable(PASSAGE_KEY))
+        adapter = PassageMonitorAdapter(this, plan!!)
         waypointsView.adapter = adapter
-
-        val ftransaction = activity.supportFragmentManager.beginTransaction()
-        val footBundle = Bundle()
-        footBundle.putParcelable(FootFragment.WAYPOINT_KEY, adapter!!.waypoints.lastWaypoint)
-        foot.arguments = footBundle
-        ftransaction.replace(R.id.last_waypoint, foot)
-        ftransaction.commit()
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        onWaypointSelected(adapter!!.selected)
+        adapter?.selectWaypoint()
     }
 
     val passagePlan
         get() = adapter!!.waypoints
 
-    override fun onWaypointSelected(position: Int) {
-        foot.setToGo(passagePlan.toGo(position))
-        foot.setCourse(passagePlan.course(position))
-        foot.setEta(passagePlan.etaAtEnd())
-    }
-
-    companion object {
-        val PASSAGE_KEY = "passage key"
+    override fun onDetach() {
+        super.onDetach()
+        adapter = null
     }
 }

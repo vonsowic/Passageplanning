@@ -1,38 +1,60 @@
 package com.bearcave.passageplanning.passage_monitor
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.TextView
 import butterknife.ButterKnife
-
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.settings.Settings
-import com.bearcave.passageplanning.waypoints.database.Waypoint
 import org.joda.time.DateTime
 
 
 class FootFragment : Fragment() {
 
+    private val plan
+        get() = (context as PlanGetter).getPlan()
+
+    private var listener: FootListener? = null
+
     private var toGoView: TextView? = null
     private var courseView: TextView? = null
     private var etaView: TextView? = null
+
+    private var speedSlide: SeekBar? = null
+    private var speedValueView: TextView? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        listener = context as FootListener
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_foot, container, false)
 
-        val waypoint = arguments.getParcelable<Waypoint>(WAYPOINT_KEY)
         ButterKnife.findById<TextView>(view, R.id.last_waypoint)
-                .text = waypoint.name
+                .text = arguments.getString(WAYPOINT_KEY)
 
         toGoView = ButterKnife.findById(view, R.id.to_go)
         courseView = ButterKnife.findById(view, R.id.course)
-
         etaView = ButterKnife.findById(view, R.id.eta)
+
+
+
+        speedSlide = ButterKnife.findById<SeekBar>(view, R.id.speed)
+        speedValueView = ButterKnife.findById<TextView>(view, R.id.speed_value)
+        initializeSlide(speedSlide!!, speedValueView!!)
+
+        speedSlide!!.progress = (plan.passage.speed * 10 / Settings.KTS).toInt()
+        speedValueView!!.text = "${plan.passage.speed}"
+
         return view
     }
 
@@ -47,6 +69,29 @@ class FootFragment : Fragment() {
     fun setEta(eta: DateTime){
         etaView?.text = eta.toString("HH:mm")
     }
+
+    private fun initializeSlide(view: SeekBar, label: TextView){
+        view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                label.text = "${seekBar!!.progress.toFloat() / 10}"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                listener?.onSpeedChangedLister(seekBar!!.progress * Settings.KTS / 10 )
+            }
+        })
+
+        label.text = 0f.toString()
+    }
+
+
+    interface FootListener {
+        fun onSpeedChangedLister(speed: Float)
+    }
+
 
     companion object {
         val WAYPOINT_KEY = "last_waypoint"

@@ -28,11 +28,11 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
         val wpt = container[groupPosition]
 
         // note
-        ButterKnife.findById<TextView>(view!!, R.id.note)
+        ButterKnife.findById<TextView>(view!!, R.id.note_placeholder)
             .text = "Note: ${wpt.note}"
 
         // characteristic
-        ButterKnife.findById<TextView>(view, R.id.characteristic)
+        ButterKnife.findById<TextView>(view, R.id.characteristic_placeholder)
             .text = "Characteristic: ${wpt.characteristic}"
 
         // gauge

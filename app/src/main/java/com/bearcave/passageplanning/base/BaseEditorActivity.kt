@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.FrameLayout
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
+import kotlinx.android.synthetic.main.content_base_editor.*
 
 abstract class BaseEditorActivity<DAO : Parcelable> : AppCompatActivity() {
 
@@ -32,8 +32,7 @@ abstract class BaseEditorActivity<DAO : Parcelable> : AppCompatActivity() {
 
         getParcelableExtra(mail)
 
-        val content_placeholder = ButterKnife.findById<FrameLayout>(this, R.id.content_placeholder)
-        content_placeholder.addView(layoutInflater.inflate(contentLayoutId, null))
+        contentPlaceholder.addView(layoutInflater.inflate(contentLayoutId, null))
 
         findViews()
 

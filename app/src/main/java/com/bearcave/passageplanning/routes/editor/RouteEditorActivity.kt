@@ -1,20 +1,16 @@
 package com.bearcave.passageplanning.routes.editor
 
 import android.content.Intent
-import android.widget.EditText
-import android.widget.ListView
-import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.routes.database.Route
 import com.bearcave.passageplanning.waypoints.database.Waypoint
+import kotlinx.android.synthetic.main.content_route_editor.*
 import java.util.*
 
 
 class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnItemClickedListener {
 
-    private var name: EditText? = null
-    private var waypointChooser: ListView? = null
 
     private var chosenWaypoints = ArrayList<Int>()
     private var waypoints = ArrayList<Waypoint>()
@@ -27,9 +23,7 @@ class RouteEditorActivity : BaseEditorActivity<Route>(), RouteEditorAdapter.OnIt
 
     override fun findViews() {
         super.findViews()
-        name = ButterKnife.findById(this, R.id.name_text)
-        waypointChooser = ButterKnife.findById(this, R.id.waypoints_list)
-        waypointChooser!!.adapter = RouteEditorAdapter(this, waypoints)
+        waypointsChooser.adapter = RouteEditorAdapter(this, waypoints)
     }
 
     override fun setViewsContent(`object`: Route) {

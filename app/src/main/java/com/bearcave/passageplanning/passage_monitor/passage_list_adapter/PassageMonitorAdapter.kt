@@ -16,10 +16,10 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passage_monitor.PassageMonitorFragment
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
-import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.utils.round
 import com.bearcave.passageplanning.waypoints.database.Waypoint
+import org.joda.time.DateTime
 
 /**
  *
@@ -27,7 +27,7 @@ import com.bearcave.passageplanning.waypoints.database.Waypoint
  * @since 17.06.17
  * @version 1.0
  */
-class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Passage) : BaseAdapter(){
+class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: PassagePlan) : BaseAdapter(){
 
     private val inflater
         get() = LayoutInflater.from(context)
@@ -35,10 +35,11 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Pas
     private val context: Context
         get() = parent.context
 
-    private val listener = parent as PassageMonitorListener
+    private val listener = context as PassageMonitor
 
+    private val passage: Passage
+        get() = waypoints.passage
 
-    val waypoints: PassagePlan = (context as PlanGetter).getPlan()
 
     var selected = 0
         private set
@@ -74,7 +75,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Pas
 
         view.setOnClickListener {
             selected = position
-            listener.onWaypointSelected(position)
+            selectWaypoint()
             notifyDataSetChanged()
         }
 
@@ -112,5 +113,17 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val passage: Pas
         }
 
         menu.show()
+    }
+
+    interface PassageMonitor {
+        fun setToGo(toGo: Float)
+        fun setCourse(course: Float)
+        fun setEta(eta: DateTime)
+    }
+
+    fun selectWaypoint() {
+        listener.setToGo(waypoints.toGo(selected))
+        listener.setCourse(waypoints.course(selected))
+        listener.setEta(waypoints.etaAtEnd())
     }
 }

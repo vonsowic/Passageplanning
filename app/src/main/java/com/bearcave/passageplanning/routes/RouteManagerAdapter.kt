@@ -35,7 +35,7 @@ class RouteManagerAdapter(parent: RouteManagerFragment, context: Context) : Base
 
         val (_, name) = getWaypointFromList(groupPosition, childPosition)
 
-        val title = ButterKnife.findById<TextView>(view!!, R.id.name)
+        val title = ButterKnife.findById<TextView>(view!!, R.id.name_placeholder)
         title.text = name
 
         val up = ButterKnife.findById<ImageView>(view, R.id.up)
