@@ -32,6 +32,7 @@ class PassagePlan(
         private val waypoints: List<Waypoint>
 ) : Parcelable {
 
+
     val lastWaypoint
         get() = waypoints.last()
 
@@ -157,7 +158,8 @@ class PassagePlan(
                  table(
                         waypoints
                                 .withIndex()
-                                .map { tr(
+                                .map {
+                                    tr(
                                         td("${it.index}"),
                                         td(it.value.name),
                                         td(it.value.characteristic),

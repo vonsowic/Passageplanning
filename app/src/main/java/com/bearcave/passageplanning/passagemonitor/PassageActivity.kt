@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passagemonitor
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.view.Menu
 import android.view.MenuItem
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
-import com.bearcave.passageplanning.passage_monitor.passage_list_adapter.PassageMonitorAdapter
-import com.bearcave.passageplanning.passage_monitor.pdf_viewer.PassagePlanViewerActivity
+import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.PassageMonitorAdapter
+import com.bearcave.passageplanning.passagemonitor.pdfviewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
@@ -36,11 +36,11 @@ class PassageActivity : AppCompatActivity(),
     override fun getPlan() = passagePlan!!
 
 
-    val passageFragment: PassageMonitorFragment = PassageMonitorFragment()
-    val waypointsTable: WaypointsTable
-    val tideTables = SparseArray<TidesTable>(Gauge.values().size)
+    private val passageFragment: PassageMonitorFragment = PassageMonitorFragment()
+    private val waypointsTable: WaypointsTable
+    private val tideTables = SparseArray<TidesTable>(Gauge.values().size)
 
-    val foot = FootFragment()
+    private val foot = FootFragment()
 
 
     init {
@@ -113,7 +113,7 @@ class PassageActivity : AppCompatActivity(),
     }
 
     override fun onSpeedChangedLister(speed: Float) {
-        //passageFragmenthtop
+        passageFragment.onSpeedChangedLister(speed)
     }
 
     override fun onBackPressed() {

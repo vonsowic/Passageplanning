@@ -6,6 +6,7 @@ import android.database.Cursor
 import com.bearcave.passageplanning.base.database.BaseTable
 import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.tides.utils.Gauge
+import com.bearcave.passageplanning.tides.utils.TideCurrent
 import java.util.*
 
 
@@ -25,6 +26,8 @@ class WaypointsTable(manager: ManagerListener) : BaseTable<Waypoint>(manager) {
         typeHolder.put(KEY_LATITUDE, DOUBLE + NOT_NULL)
         typeHolder.put(KEY_LONGITUDE, DOUBLE + NOT_NULL)
         typeHolder.put(KEY_GAUGE, INTEGER + NOT_NULL)
+        typeHolder.put(KEY_OPTIONAL_GAUGE, INTEGER )
+        typeHolder.put(KEY_TIDE_CURRENT_STATION, INTEGER + NOT_NULL)
 
         return typeHolder
     }
@@ -52,7 +55,9 @@ class WaypointsTable(manager: ManagerListener) : BaseTable<Waypoint>(manager) {
                 cursor.getFloat(i++), // ukc
                 cursor.getDouble(i++), // latitude
                 cursor.getDouble(i++), // longitude
-                Gauge.getById(cursor.getInt(i))   // gauge
+                Gauge.getById(cursor.getInt(i++)),   // gauge
+                Gauge.getById(cursor.getInt(i++)),   // optional gauge
+                TideCurrent.getById(cursor.getInt(i))   // tide current station
         )
     }
 
@@ -66,5 +71,7 @@ class WaypointsTable(manager: ManagerListener) : BaseTable<Waypoint>(manager) {
         val KEY_LONGITUDE = "longitude"
         val KEY_LATITUDE = "latitude"
         val KEY_GAUGE = "gauge_id"
+        val KEY_OPTIONAL_GAUGE = "optional_gauge_id"
+        val KEY_TIDE_CURRENT_STATION= "tide_current"
     }
 }

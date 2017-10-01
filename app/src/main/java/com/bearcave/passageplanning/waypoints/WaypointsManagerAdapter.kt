@@ -40,7 +40,7 @@ class WaypointsManagerAdapter(parent: WaypointsManagerFragment, context: Context
             .text = "Gauge: ${wpt.gauge.humanCode}"
 
         // ukc
-        ButterKnife.findById<TextView>(view, R.id.cd)
+        ButterKnife.findById<TextView>(view, R.id.ukc)
             .text = "${context.getString(R.string.ukc)}: ${wpt.ukc}[m]"
 
         // latitude

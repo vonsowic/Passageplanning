@@ -1,18 +1,17 @@
 package com.bearcave.passageplanning.waypoints
 
-import android.view.ContextMenu
+import android.support.v7.widget.PopupMenu
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import butterknife.ButterKnife
+import android.widget.TextView
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.tides.utils.Gauge
+import com.bearcave.passageplanning.tides.utils.TideCurrent
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.position_view.LatitudeFragment
 import com.bearcave.passageplanning.waypoints.position_view.LongitudeFragment
 import kotlinx.android.synthetic.main.content_waypoint_editor.*
-import kotlinx.android.synthetic.main.passage_item.*
 
 class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
 
@@ -23,12 +22,18 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
 
     override fun findViews() {
         super.findViews()
-        gauge.text = Gauge.MARGATE.humanCode
+        gauge.text = Gauge.SOUTHEND.humanCode
+        optionalGauge.text = Gauge.SOUTHEND.humanCode
+        tideCurrent.text = TideCurrent.GRAVESEND_REACH.tideCurrentStation
 
-        val gaugeMenuOpener = ButterKnife.findById<View>(this, R.id.gaugeMenuOpener)
-        gaugeMenuOpener.setOnClickListener { this.openContextMenu(it)  }
-        registerForContextMenu(gaugeMenuOpener)
+        latitude = supportFragmentManager.findFragmentById(R.id.latitude) as LatitudeFragment?
+        longitude = supportFragmentManager.findFragmentById(R.id.longitude) as LongitudeFragment?
+
+        gaugeMenuOpener.setOnClickListener { this.showGaugeMenu(it as TextView)  }
+        optionalGaugeMenuOpener.setOnClickListener { if(optionalGaugeChecker.isChecked) this.showGaugeMenu(it as TextView)  }
+        tideCurrentMenuOpener.setOnClickListener { this.showTideCurrentMenu(it)  }
     }
+
 
     override fun setViewsContent(`object`: Waypoint) {
         id = `object`.id
@@ -38,7 +43,9 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         ukc.setText(`object`.ukc.toString())
         latitude?.position = `object`.latitude
         longitude?.position = `object`.longitude
-        gauge!!.text = `object`.gauge.humanCode
+        gauge.text = `object`.gauge.humanCode
+        optionalGauge.text = `object`.optionalGauge.humanCode
+        optionalGaugeChecker.isChecked = `object`.gauge.id != `object`.optionalGauge.id
     }
 
     override val contentLayoutId: Int
@@ -59,21 +66,38 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
                 ukc.text.toString().toFloat(),
                 latitude!!.position,
                 longitude!!.position,
-                Gauge.getByName(gauge!!.text.toString())
+                Gauge.getByName(gauge!!.text.toString()),
+                if(optionalGaugeChecker.isChecked)  Gauge.getByName(optionalGauge!!.text.toString())
+                else                                Gauge.getByName(gauge!!.text.toString()),
+                TideCurrent.getByName(tideCurrent!!.text.toString())
         )
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        menu.setHeaderTitle(R.string.editor_gauge_chooser_title)
+    private fun showGaugeMenu(anchor: TextView) {
+        val menu = PopupMenu(this, anchor)
 
         for (gauge in Gauge.values()) {
-            menu.add(Menu.NONE, gauge.id, Menu.NONE, gauge.humanCode)
+            menu.menu.add(Menu.NONE, gauge.id, Menu.NONE, gauge.humanCode)
         }
+
+        menu.setOnMenuItemClickListener { item ->
+            anchor.text = Gauge.getById(item.itemId).humanCode
+            true
+        }
+
+        menu.show()
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        gauge!!.text = Gauge.getById(item.itemId).humanCode
-        return super.onContextItemSelected(item)
+    private fun showTideCurrentMenu(anchor: View){
+        val menu = PopupMenu(this, anchor)
+        for (tide in TideCurrent.values()) {
+            menu.menu.add(Menu.NONE, tide.id, Menu.NONE, tide.tideCurrentStation)
+        }
+
+        menu.setOnMenuItemClickListener { item ->
+            tideCurrent.text = TideCurrent.getById(item.itemId).tideCurrentStation
+            true
+        }
+
+        menu.show()
     }
 }

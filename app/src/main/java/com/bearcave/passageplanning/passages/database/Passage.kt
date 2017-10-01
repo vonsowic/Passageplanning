@@ -17,7 +17,7 @@ data class Passage(
         override val id: Int,
         val route: Route,
         val dateTime: DateTime,
-        val speed: Float,
+        var speed: Float,
         val draught: Float) :
         DatabaseElement,
         Parcelable {

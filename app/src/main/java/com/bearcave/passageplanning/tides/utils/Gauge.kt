@@ -1,7 +1,7 @@
 package com.bearcave.passageplanning.tides.utils
 
 
-import com.bearcave.passageplanning.tides.web.configurationitems.exceptions.GaugeNotFoundException
+import com.bearcave.passageplanning.tides.utils.exceptions.GaugeNotFoundException
 
 enum class Gauge constructor(val id: Int, val humanCode: String, val code: String) {
     MARGATE(            1,      "Margate",               "0103"      ),

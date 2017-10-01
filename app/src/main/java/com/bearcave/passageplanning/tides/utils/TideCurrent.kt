@@ -1,62 +1,140 @@
 package com.bearcave.passageplanning.tides.utils
 
-import android.util.SparseArray
-import com.bearcave.passageplanning.App
-import com.bearcave.passageplanning.R
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
 
-/**
- *
- * @author Michał Wąsowicz
- * @since 22.08.17
- * @version 1.0
- */
-class TideCurrent{
-    companion object {
+import com.bearcave.passageplanning.tides.utils.exceptions.TideStationNotFound
 
-        /**
-         * @return number of tides gauges
-         */
-        val size: Int
-            get() = 8
-
-        /**
-         * @return names of tides gauges
-         */
-        fun names(): ArrayList<String> {
-            val names = ArrayList<String>(size)
-            names.add("")
-            return names
-        }
-
-        /**
-         * @param type if null, then take a mean
-         */
-        fun getValuesOf(id: Int, type: TideType? = null): SparseArray<Float> {
-            val values = SparseArray<Float>(13)
+enum class TideCurrent(val id: Int, val gaugeId: Int, val tideCurrentStation: String, val spring: FloatArray, val neap: FloatArray) {
 
 
+    GRAVESEND_REACH(
+            0,
+            6,
+            "Gravesend Reach",
+            floatArrayOf(
+                    0.7f, 2.3f, 2.4f, 1.9f, 1.7f, 1.1f, 0.8f, 2.7f, 2.7f, 2.4f, 1.8f, 0.7f, 0.1f
+                    ),
+            floatArrayOf(
+                    0.4f, 1.6f, 1.6f, 1.3f, 1.1f, 0.7f, 0.6f, 1.9f, 1.9f, 1.7f, 1.3f, 0.5f, 0.1f
+                    )
+    ),
 
-            return values
-        }
 
-        private fun getParser(): XmlPullParser {
-            val stream = App.context.resources.openRawResource(R.xml.tide_currents)
-            val parser = XmlPullParserFactory.newInstance().newPullParser()
-            parser.setInput(stream, null)
-            return parser
-        }
+    SEA_REACH(
+            1,
+            2,
+            "Sea Reach",
+            floatArrayOf(
+                    0f, 0.2f, 1.6f, 1.8f, 1.6f, 1.2f, 0.8f, 0.6f, 1.9f, 2.5f, 1.8f, 0.8f, 0.2f
+                    ),
+            floatArrayOf(
+                    0f, 0.2f, 1.1f, 1.2f, 1.1f, 0.8f, 0.6f, 0.4f, 1.3f, 1.7f, 1.2f, 0.6f, 0.2f
+            )
+    ),
 
-        private fun getTideType(highWaterHeight: Float, lowWaterHeight: Float): TideType? {
-            val diff = highWaterHeight - lowWaterHeight
-            if (diff < 4.0f) {
-                return TideType.NEAP
-            } else if (diff > 5.0f) {
-                return TideType.SPRING
-            } else {
-                return null
+
+    WARPS(
+            2,
+            2,
+            "Warps",
+            floatArrayOf(
+                    0.4f, 0.8f, 1.7f, 1.7f, 1.4f, 1.2f, 0.3f, 1.2f, 2.3f, 2.4f, 1.8f, 1.2f, 0.8f
+                    ),
+            floatArrayOf(
+                    0.2f, 0.5f, 1.1f, 1.1f, 0.8f, 0.7f, 0.1f, 0.7f, 1.4f, 1.5f, 1.1f, 0.7f, 0.5f
+            )
+    ),
+
+
+    N_RED_SAND(
+            3,
+            2,
+            "N Red Sand",
+            floatArrayOf(
+                    0.2f, 1f, 1.7f, 1.7f, 1.6f, 1.3f, 0.5f, 0.6f, 2.1f, 2.4f, 1.9f, 1f, 0.2f
+                    ),
+            floatArrayOf(
+                    0.1f, 0.7f, 1.1f, 1.1f, 1.1f, 0.9f, 0.3f, 0.4f, 1.4f, 1.6f, 1.2f, 0.7f, 0.2f
+            )
+    ),
+
+
+    PRINCES_IN(
+            4,
+            2,
+            "Princes In",
+            floatArrayOf(
+                    0.3f, 1.2f, 1.5f, 1.5f, 1.6f, 0.9f, 0.5f, 1.7f, 2.2f, 2f, 1.3f, 0.8f, 0.4f
+            ),
+            floatArrayOf(
+                    0.1f, 0.5f, 0.9f, 0.9f, 1f, 0.6f, 0.3f, 1f, 1.4f, 1.2f, 1f, 0.6f, 0.4f
+            )
+    ),
+
+    PRINCES_NO3(
+            5,
+            2,
+            "Princes no3",
+            floatArrayOf(
+                    0.5f, 0.6f, 1.8f, 2f, 2.5f, 1.9f, 0.6f, 1.5f, 2.5f, 2.4f, 2.1f, 1.7f, 0.8f
+            ),
+            floatArrayOf(
+                0.2f, 0.2f, 0.9f, 1.4f, 1.6f, 1.3f, 0.4f, 0.8f, 1.4f, 1.5f, 1.2f, 0.9f, 0.5f
+            )
+    ),
+
+    PRINCES_OUT(
+            6,
+            2,
+            "Princes Out",
+            floatArrayOf(
+                    0.2f, 1.1f, 1.3f, 1.5f, 1.6f, 1.3f, 0.5f, 0.6f, 1.7f, 2.1f, 1.6f, 1.1f, 0.2f
+                    ),
+            floatArrayOf(
+                    0.1f, 0.7f, 0.8f, 1.1f, 1f, 0.8f, 0.3f, 0.4f, 1.1f, 1.4f, 1f, 0.7f, 0.1f
+            )
+    ),
+
+    NE_SPIT(
+            7,
+            2,
+            "NE Spit",
+            floatArrayOf(
+                    1.2f, 1.3f, 1.3f, 1.2f, 1.7f, 1.9f, 1.6f, 1.3f, 1.4f, 1.5f, 1.3f, 1.1f, 1.2f
+                    ),
+            floatArrayOf(
+                    0.7f, 0.8f, 0.7f, 0.7f, 1f, 1.1f, 0.9f, 0.8f, 0.8f, 0.8f, 0.7f, 0.6f, 0.7f
+            )
+    );
+
+    fun getValue(id: Int, type: TideType?) =
+            when(type){
+                TideType.SPRING -> getSpringValue(id)
+                TideType.NEAP   -> getNeapValue(id)
+                null            -> (getSpringValue(id) + getNeapValue(id)) / 2
             }
+
+    fun getSpringValue(id: Int) = spring[id+6]
+
+    fun getNeapValue(id: Int) = neap[id+6]
+
+    fun names() = values().map { it.tideCurrentStation }
+
+    companion object {
+        fun getById(id: Int): TideCurrent {
+            for(value in values()){
+                if (value.id == id) return value
+            }
+
+            throw TideStationNotFound()
+        }
+
+        fun getByName(name: String): TideCurrent {
+            for(value in values()){
+                if (value.tideCurrentStation == name) return value
+            }
+
+            throw TideStationNotFound()
         }
     }
+
 }

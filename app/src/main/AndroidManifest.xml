@@ -36,8 +36,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
 
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".passage_monitor.PassageActivity" />
-        <activity android:name=".passage_monitor.pdf_viewer.PassagePlanViewerActivity" />
+        <activity android:name=".passagemonitor.PassageActivity" />
+        <activity android:name=".passagemonitor.pdfviewer.PassagePlanViewerActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

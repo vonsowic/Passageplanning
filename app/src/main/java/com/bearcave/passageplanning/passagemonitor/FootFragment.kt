@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passagemonitor
 
 
 import android.content.Context
@@ -48,8 +48,8 @@ class FootFragment : Fragment() {
 
 
 
-        speedSlide = ButterKnife.findById<SeekBar>(view, R.id.speed)
-        speedValueView = ButterKnife.findById<TextView>(view, R.id.speed_value)
+        speedSlide = ButterKnife.findById(view, R.id.speed)
+        speedValueView = ButterKnife.findById(view, R.id.speed_value)
         initializeSlide(speedSlide!!, speedValueView!!)
 
         speedSlide!!.progress = (plan.passage.speed * 10 / Settings.KTS).toInt()

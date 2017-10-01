@@ -27,7 +27,6 @@ class PassageManagerAdapter(parent: PassageManagerFragment, context: Context) : 
             val alertDialog = AlertDialog.Builder(context).create()
             alertDialog.setMessage("""
                 |Draught: ${dao.draught}${context.getString(R.string.depth_unit)}
-                |Speed: ${dao.speed}${context.getString(R.string.speed_unit)}
             """.trimMargin())
             alertDialog.show()
         })

@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor.pdf_viewer
+package com.bearcave.passageplanning.passagemonitor.pdfviewer
 
 import android.content.Intent
 import android.os.Bundle

@@ -3,6 +3,7 @@ package com.bearcave.passageplanning.data.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import android.util.SparseArray
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.passages.database.AccessToRouteTable
@@ -42,9 +43,11 @@ class DatabaseManager(context: Context, databaseName: String) : SQLiteOpenHelper
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if(oldVersion == 24){
-            val table = tables[PassageCRUD.ID].value
-            db.execSQL("ALTER TABLE ${table.tableName} ADD COLUMN ${PassageTable.KEY_DRAUGHT} ${BaseTableWithCustomKey.FLOAT} DEFAULT 0.0;")
+        if(oldVersion == 26){
+            Log.e("### DATABASE ###:\n", "creating new version of database")
+            val table = tables[WaypointCRUD.ID].value
+            db.execSQL("ALTER TABLE ${table.tableName} ADD COLUMN ${WaypointsTable.KEY_OPTIONAL_GAUGE} ${BaseTableWithCustomKey.INTEGER} DEFAULT 2;")
+            db.execSQL("ALTER TABLE ${table.tableName} ADD COLUMN ${WaypointsTable.KEY_TIDE_CURRENT_STATION} ${BaseTableWithCustomKey.INTEGER} DEFAULT 0;")
         } else {
             onCreate(db)
         }
@@ -55,8 +58,7 @@ class DatabaseManager(context: Context, databaseName: String) : SQLiteOpenHelper
     override fun readRoute(id: Int): Route = (tables.get(RouteCRUD.ID).value as RouteTable).read(id)
 
     companion object {
-        private val VERSION = 26
-        //private val VERSION = 24
+        private val VERSION = 27
 
 
         private var DATABASE_MANAGER_HANDLER: DatabaseManager? = null

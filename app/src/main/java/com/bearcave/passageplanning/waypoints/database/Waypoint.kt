@@ -5,7 +5,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.bearcave.passageplanning.base.database.DatabaseElement
 import com.bearcave.passageplanning.tides.utils.Gauge
+import com.bearcave.passageplanning.tides.utils.TideCurrent
 import com.bearcave.passageplanning.utils.round
+import org.joda.time.DateTime
 import java.io.Serializable
 
 
@@ -23,24 +25,33 @@ data class Waypoint(
         val ukc: Float,
         val latitude: Double,
         val longitude: Double,
-        val gauge: Gauge) : Parcelable, Serializable, DatabaseElement {
+        val gauge: Gauge,
+        val optionalGauge: Gauge,
+        val tideCurrentStation: TideCurrent) : Parcelable, Serializable, DatabaseElement {
 
 
-    constructor(id:Int, name: String, note: String, characteristic: String, ukc: Float, latitude: String, longitude: String, gauge: Gauge):
-            this(id, name, note, characteristic, ukc, Location.convert(latitude), Location.convert(longitude), gauge)
+    constructor(id:Int, name: String, note: String, characteristic: String, ukc: Float, latitude: String, longitude: String, gauge: Gauge, optionalGauge: Gauge, tideCurrentStation: TideCurrent):
+            this(id, name, note, characteristic, ukc, Location.convert(latitude), Location.convert(longitude), gauge, optionalGauge, tideCurrentStation)
+
+
+    fun getCD(at: DateTime) {
+
+    }
 
 
     /**
-     * @return the approximate initial bearing in degrees East of true North when traveling along the shortest path between this location and the given location.
-     */
-    fun bearingTo(waypoint: Waypoint): Float {
-        var angle = Math.toDegrees(Math.atan2(waypoint.longitude - this.longitude, waypoint.latitude - this.latitude)).toFloat()
+    * @return the approximate initial bearing in degrees East of true North when traveling along the shortest path between this location and the given location.
+    */
+    fun bearingTo(waypoint: Waypoint): Float{
+        val from = Location("dummyprovider")
+        from.latitude = latitude
+        from.longitude = longitude
 
-        if (angle < 0) {
-            angle += 360f
-        }
+        val to = Location("dummyprovider")
+        to.latitude = latitude
+        to.longitude = longitude
 
-        return angle
+        return from.bearingTo(to)
     }
 
     /**
@@ -54,12 +65,12 @@ data class Waypoint(
     }
 
     val latitudeInSecondFormat: String
-        get() = if (latitude < 0) "S${convertPositionToString(latitude)}"
-                else "N${convertPositionToString(latitude)}"
+        get() = if (latitude < 0)   "S${convertPositionToString(latitude)}"
+                else                "N${convertPositionToString(latitude)}"
 
     val longitudeInSecondFormat: String
-        get() = if (longitude < 0) "W${convertPositionToString(longitude)}"
-                else "E${convertPositionToString(longitude)}"
+        get() = if (longitude < 0)  "W${convertPositionToString(longitude)}"
+                else                "E${convertPositionToString(longitude)}"
 
 
     private fun convertPositionToString(position: Double): String {
@@ -77,7 +88,9 @@ data class Waypoint(
             parcel.readFloat(),
             parcel.readDouble(),
             parcel.readDouble(),
-            Gauge.getById(parcel.readInt())
+            Gauge.getById(parcel.readInt()),
+            Gauge.getById(parcel.readInt()),
+            TideCurrent.getById(parcel.readInt())
     )
 
     override fun writeToParcel(dest: Parcel, flag: Int) {
@@ -89,6 +102,8 @@ data class Waypoint(
         dest.writeDouble(latitude)
         dest.writeDouble(longitude)
         dest.writeInt(gauge.id)
+        dest.writeInt(optionalGauge.id )
+        dest.writeInt(tideCurrentStation.id)
     }
 
     override fun describeContents(): Int = 0

@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor
+package com.bearcave.passageplanning.passagemonitor
 
 
 import android.content.Context
@@ -11,13 +11,12 @@ import android.widget.ListView
 import butterknife.ButterKnife
 
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.passage_monitor.passage_list_adapter.PassageMonitorAdapter
+import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.PassageMonitorAdapter
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
 
 
-class PassageMonitorFragment : Fragment() {
-
+class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
 
     var adapter: PassageMonitorAdapter? = null
     var plan: PassagePlan? = null
@@ -37,6 +36,11 @@ class PassageMonitorFragment : Fragment() {
         waypointsView.adapter = adapter
 
         return view
+    }
+
+    override fun onSpeedChangedLister(speed: Float) {
+        plan?.passage?.speed = speed
+        adapter?.notifyDataSetChanged()
     }
 
     override fun onResume() {

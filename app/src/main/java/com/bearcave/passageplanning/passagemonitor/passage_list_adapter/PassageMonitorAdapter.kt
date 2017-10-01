@@ -1,4 +1,4 @@
-package com.bearcave.passageplanning.passage_monitor.passage_list_adapter
+package com.bearcave.passageplanning.passagemonitor.passage_list_adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -13,7 +13,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
-import com.bearcave.passageplanning.passage_monitor.PassageMonitorFragment
+import com.bearcave.passageplanning.passagemonitor.PassageMonitorFragment
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.settings.Settings
@@ -52,7 +52,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         ButterKnife.findById<TextView>(view, R.id.waypoint)
                 .text = wpt.name
 
-        ButterKnife.findById<TextView>(view, R.id.cd)
+        ButterKnife.findById<TextView>(view, R.id.ukc)
                 .text = round(wpt.ukc).toString()
 
         ButterKnife.findById<TextView>(view, R.id.ukc)

@@ -28,24 +28,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/waypoint"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:text="CD: "
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waypoint" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/ukc_text"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/ukc_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/waypoint"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/waypoint"
         android:layout_toRightOf="@+id/waypoint"
         android:text="UKC: "
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cd" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/waypoint"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/waypoint"
@@ -71,10 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bearing: "
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/ukc_text" />
+        app:layout_constraintTop_toBottomOf="@+id/cd_placeholder"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/bearing"
@@ -141,19 +141,19 @@
         android:id="@+id/ukc_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
         android:text="@string/depth_unit"
-        app:layout_constraintBaseline_toBaselineOf="@+id/cd"
-        app:layout_constraintLeft_toRightOf="@+id/cd" />
+        app:layout_constraintLeft_toRightOf="@+id/ukc"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ukc_text" />
 
     <TextView
         android:id="@+id/actual_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
         android:text="@string/depth_unit"
-        app:layout_constraintBaseline_toBaselineOf="@+id/ukc_text"
-        app:layout_constraintLeft_toRightOf="@+id/ukc" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/cd_placeholder"
+        app:layout_constraintLeft_toRightOf="@+id/ukc"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/bearing_unit"
