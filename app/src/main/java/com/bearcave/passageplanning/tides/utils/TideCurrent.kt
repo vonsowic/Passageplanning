@@ -1,6 +1,7 @@
 package com.bearcave.passageplanning.tides.utils
 
 
+import com.bearcave.passageplanning.tides.database.TideCurrentInfoHandler
 import com.bearcave.passageplanning.tides.utils.exceptions.TideStationNotFound
 
 enum class TideCurrent(val id: Int, val gaugeId: Int, val tideCurrentStation: String, val spring: FloatArray, val neap: FloatArray) {
@@ -113,6 +114,14 @@ enum class TideCurrent(val id: Int, val gaugeId: Int, val tideCurrentStation: St
                 null            -> (getSpringValue(id) + getNeapValue(id)) / 2
             }
 
+    fun getValue(id: Int, lowWater: Float, highWater: Float) = getValue(id, getType(lowWater, highWater))
+
+    fun getValue(tideCurrentInfo: TideCurrentInfoHandler) = getValue(
+            tideCurrentInfo.hoursToHighWater.toInt(),
+            tideCurrentInfo.lowWater,
+            tideCurrentInfo.highWater
+    )
+
     fun getSpringValue(id: Int) = spring[id+6]
 
     fun getNeapValue(id: Int) = neap[id+6]
@@ -121,20 +130,30 @@ enum class TideCurrent(val id: Int, val gaugeId: Int, val tideCurrentStation: St
 
     companion object {
         fun getById(id: Int): TideCurrent {
-            for(value in values()){
-                if (value.id == id) return value
-            }
+            values()
+                    .filter { it.id == id }
+                    .forEach { return it }
 
             throw TideStationNotFound()
         }
 
         fun getByName(name: String): TideCurrent {
-            for(value in values()){
-                if (value.tideCurrentStation == name) return value
-            }
+            values()
+                    .filter { it.tideCurrentStation == name }
+                    .forEach { return it }
 
             throw TideStationNotFound()
         }
+
+        fun getType(lowWater: Float, highWater: Float): TideType? {
+            val height = highWater-lowWater
+            return when {
+                height < 4f -> TideType.NEAP
+                height > 5f -> TideType.SPRING
+                else -> null
+            }
+        }
     }
+
 
 }

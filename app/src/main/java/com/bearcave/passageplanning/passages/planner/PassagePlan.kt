@@ -41,11 +41,22 @@ class PassagePlan(
 
     private var startCountingTime = passage.dateTime
 
+    var speed
+        get() = passage.speed
+        set(value) {
+            speedsHandler.clear()   // speed
+            passage.speed = value
+        }
+
 
     /**
-     * Contains ETA's that were send by user.
+     * Contains datetimes of already computed waypoints.
      */
-    val realEtas = SparseArray<DateTime>()
+    private val etasHandler = SparseArray<DateTime>()
+
+
+    private val speedsHandler = SparseArray<Float>()
+
 
 
     /**
@@ -87,6 +98,23 @@ class PassagePlan(
         }
 
 
+    fun speedAt(i: Int) = passage.speed + speedOfCurrent(i)
+
+    private fun speedOfCurrent(index: Int): Float {
+        if(speedsHandler[index] < 0) {
+            speedsHandler.put(
+                    index,
+                    this[index].tideCurrentStation.getValue(                                                                    // get value
+                            (DatabaseManager.DATABASE_MANAGER.getTable(this[index].tideCurrentStation.gaugeId) as TidesTable)   // based on database
+                                    .getTideCurrentInfo(eta(index))                                                             // computations
+                    )
+
+
+            )
+        }
+
+        return speedsHandler[index]
+    }
 
     /**
      * @param i index of waypoint for which tide table is returned.
@@ -138,96 +166,103 @@ class PassagePlan(
      * Estimated time arrival.
      * @param i index of waypoint
      */
-    fun eta(i: Int) = etas()[i]!!
+    fun eta(i: Int): DateTime {
+        if(etasHandler.indexOfKey(i) < 0)
+            etasHandler.put(i, etas()[i]!!)
 
-
-    fun etaAtEnd() = passage
-            .dateTime
-            .plusSeconds(
-                    timeToEnd(0).toInt()
-            )!!
+        return etasHandler.get(i)
+    }
 
 
 
-    fun toHTML(context: Context) = document(
-        html(
-            head(
-                title(context.getString(R.string.app_name))
-            ),
-            body(
-                 table(
-                        waypoints
-                                .withIndex()
-                                .map {
-                                    tr(
-                                        td("${it.index}"),
-                                        td(it.value.name),
-                                        td(it.value.characteristic),
-                                        td("${course(it.index)}"),
-                                        td(eta(it.index).toString("HH:mm")),
-                                        td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
-                                        td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
-                                        td("${it.value.ukc}"),
-                                        td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
-                                        )
-                                }
-                                .fold(
-                                        tr(
-                                                th("NO"),
-                                                th("WPT"),
-                                                th("CHARACTERISTIC"),
-                                                th("COURSE"),
-                                                th("ETA"),
-                                                th("DIST [Mm]"),
-                                                th("TO GO [Mm]"),
-                                                th("UKC [m]"),
-                                                th("UKC [m]")
-                                        ),
-                                        ContainerTag::with
-                                )
-                 ).attr("border", "1"),
-                 i("Created by the best son in the world")
-            )
+        fun etaAtEnd() = passage
+                .dateTime
+                .plusSeconds(
+                        timeToEnd(0).toInt()
+                )!!
+
+
+
+        fun toHTML(context: Context) = document(
+                html(
+                        head(
+                                title(context.getString(R.string.app_name))
+                        ),
+                        body(
+                                table(
+                                        waypoints
+                                                .withIndex()
+                                                .map {
+                                                    tr(
+                                                            td("${it.index}"),
+                                                            td(it.value.name),
+                                                            td(it.value.characteristic),
+                                                            td("${course(it.index)}"),
+                                                            td(eta(it.index).toString("HH:mm")),
+                                                            td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
+                                                            td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
+                                                            td("${it.value.ukc}"),
+                                                            td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
+                                                    )
+                                                }
+                                                .fold(
+                                                        tr(
+                                                                th("NO"),
+                                                                th("WPT"),
+                                                                th("CHARACTERISTIC"),
+                                                                th("COURSE"),
+                                                                th("ETA"),
+                                                                th("DIST [Mm]"),
+                                                                th("TO GO [Mm]"),
+                                                                th("UKC [m]"),
+                                                                th("UKC [m]")
+                                                        ),
+                                                        ContainerTag::with
+                                                )
+                                ).attr("border", "1"),
+                                i("Created by the best son in the world")
+                        )
+                )
+        )!!
+
+
+        /**
+         * Saves passage plan to pdf file in cache directory.
+         * @return pdf file saved in cache.
+         */
+        fun toPDF(context: Context, html: String = toHTML(context)): File {
+            val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
+            val pdfFileWriter = FileOutputStream(tmpFile)
+
+            val document = Document()
+            PdfWriter.getInstance(document, pdfFileWriter)
+            document.open()
+
+            val htmlWorker = HTMLWorker(document)
+            htmlWorker.parse(StringReader(html))
+
+            document.close()
+            pdfFileWriter.close()
+
+            return tmpFile
+        }
+
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeParcelable(passage, flags)
+            parcel.writeTypedList(waypoints)
+        }
+
+        override fun describeContents() = 0
+
+        companion object CREATOR : Parcelable.Creator<PassagePlan> {
+            override fun createFromParcel(parcel: Parcel) = PassagePlan(parcel)
+            override fun newArray(size: Int): Array<PassagePlan?> = arrayOfNulls(size)
+        }
+
+        constructor(parcel: Parcel) : this(
+        parcel.readParcelable<Passage>(Passage::class.java.classLoader),
+        parcel.createTypedArrayList(Waypoint.CREATOR)
         )
-    )!!
 
-
-    /**
-     * Saves passage plan to pdf file in cache directory.
-     * @return pdf file saved in cache.
-     */
-    fun toPDF(context: Context, html: String = toHTML(context)): File {
-        val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
-        val pdfFileWriter = FileOutputStream(tmpFile)
-
-        val document = Document()
-        PdfWriter.getInstance(document, pdfFileWriter)
-        document.open()
-
-        val htmlWorker = HTMLWorker(document)
-        htmlWorker.parse(StringReader(html))
-
-        document.close()
-        pdfFileWriter.close()
-
-        return tmpFile
-    }
-
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(passage, flags)
-        parcel.writeTypedList(waypoints)
-    }
-
-    override fun describeContents() = 0
-
-    companion object CREATOR : Parcelable.Creator<PassagePlan> {
-        override fun createFromParcel(parcel: Parcel) = PassagePlan(parcel)
-        override fun newArray(size: Int): Array<PassagePlan?> = arrayOfNulls(size)
-    }
-
-    constructor(parcel: Parcel) : this(
-            parcel.readParcelable<Passage>(Passage::class.java.classLoader),
-            parcel.createTypedArrayList(Waypoint.CREATOR)
-    )
 }

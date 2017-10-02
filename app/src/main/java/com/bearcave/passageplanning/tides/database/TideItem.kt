@@ -19,9 +19,7 @@ data class TideItem(override val id: DateTime, val predictedTideHeight: Float) :
     )
 
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeSerializable(id)
@@ -31,13 +29,9 @@ data class TideItem(override val id: DateTime, val predictedTideHeight: Float) :
     companion object {
 
         @JvmField val CREATOR: Parcelable.Creator<TideItem> = object : Parcelable.Creator<TideItem> {
-            override fun createFromParcel(`in`: Parcel): TideItem {
-                return TideItem(`in`)
-            }
+            override fun createFromParcel(`in`: Parcel) = TideItem(`in`)
 
-            override fun newArray(size: Int): Array<TideItem?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<TideItem?> = arrayOfNulls(size)
         }
     }
 }

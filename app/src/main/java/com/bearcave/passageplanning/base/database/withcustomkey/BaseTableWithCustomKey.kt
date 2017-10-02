@@ -47,13 +47,10 @@ abstract class BaseTableWithCustomKey<DAO : DatabaseElementWithCustomKey<Key>, K
     /**
      * @return ArrayList, which contains 3-dimensional arrays [key id, foreign table humanCode, foreign key id]
      */
-    protected open fun createReferences(): ArrayList<Array<String>> {
-        return ArrayList()
-    }
+    protected open fun createReferences() = ArrayList<Array<String>>()
 
-    private fun referenceTemplate(keyId: String, table: String, foreignKeyId: String): String {
-        return " $FOREIGN_KEY ($keyId) $REFERENCE $table($foreignKeyId),"
-    }
+    private fun referenceTemplate(keyId: String, table: String, foreignKeyId: String) =
+            " $FOREIGN_KEY ($keyId) $REFERENCE $table($foreignKeyId),"
 
 
     private val tableColumns: Array<String?>

@@ -71,6 +71,28 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         )
     }
 
+    fun getTideCurrentInfo(time: DateTime): TideCurrentInfoHandler {
+        val requestedList = ArrayList<TideItem>()
+        val selectQuery = "SELECT * FROM $tableName WHERE $KEY_TIME <= date('$time','-1 day')" // TODO: from range <time - 12h, time + 12h>
+
+        val cursor = readableDatabase.rawQuery(selectQuery, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                requestedList.add(loadFrom(cursor))
+            } while (cursor.moveToNext())
+        }
+
+        val closestHighWater = requestedList
+                .filterOnlyTides()
+                .first()
+
+
+        return TideCurrentInfoHandler(
+                closestHighWater.id.minusMinutes()
+        )
+    }
+
 
     override val idKey: String
         get() = KEY_TIME
