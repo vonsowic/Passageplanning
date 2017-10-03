@@ -3,12 +3,12 @@ package com.bearcave.passageplanning.passages.planner
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import android.util.SparseArray
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
-import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.itextpdf.text.Document
@@ -36,16 +36,24 @@ class PassagePlan(
     val lastWaypoint
         get() = waypoints.last()
 
+    val etaAtEnd: DateTime
+        get() = eta(size-1)
+
+    val size
+        get()=waypoints.size
+
 
     operator fun get(position: Int) = waypoints[position]
 
-    private var startCountingTime = passage.dateTime
 
     var speed
         get() = passage.speed
         set(value) {
-            speedsHandler.clear()   // speed
             passage.speed = value
+            speedsHandler.clear()
+            etasHandler.clear()
+
+            Log.e("PassagePlan", "${etasHandler.size()}")
         }
 
 
@@ -89,19 +97,40 @@ class PassagePlan(
 
     /**
      * @param i index of waypoint
-     * @return ukc, -1 otherwise.
+     * @return ukc
      */
-    fun ukc(i: Int) = try {
-            waypoints[i].ukc + predictedTideHeight(i) - passage.draught
-        } catch (e: TideNotInDatabaseException){
-            -1f
+    fun ukc(i: Int) = waypoints[i].ukc + predictedTideHeight(i) - passage.draught
+
+
+    /**
+     * Estimated time arrival.
+     * @param i index of waypoint
+     */
+    fun eta(i: Int): DateTime {
+        if(etasHandler.indexOfKey(i) < 0){
+            if( i==0 ){
+                etasHandler.put(i, passage.dateTime)
+            } else {
+                etasHandler.put(
+                        i,
+                        eta(i-1)                                            // eta at previous waypoint
+                                .plusSeconds((dist(i-1) / speedAt(i-1)).toInt()))   // plus time between this and previous waypoint
+            }
         }
 
+        return etasHandler.get(i)
+    }
 
+
+    /**
+     * @param i index of waypoint
+     * @return speed to the next waypoint
+     */
     fun speedAt(i: Int) = passage.speed + speedOfCurrent(i)
 
+
     private fun speedOfCurrent(index: Int): Float {
-        if(speedsHandler[index] < 0) {
+        if(speedsHandler.get(index) == null) {
             speedsHandler.put(
                     index,
                     this[index].tideCurrentStation.getValue(                                                                    // get value
@@ -132,137 +161,86 @@ class PassagePlan(
             .predictedTideHeight
 
 
+
+    fun toHTML(context: Context) = document(
+            html(
+                    head(
+                            title(context.getString(R.string.app_name))
+                    ),
+                    body(
+                            table(
+                                    waypoints
+                                            .withIndex()
+                                            .map {
+                                                tr(
+                                                        td("${it.index}"),
+                                                        td(it.value.name),
+                                                        td(it.value.characteristic),
+                                                        td("${course(it.index)}"),
+                                                        td(eta(it.index).toString("HH:mm")),
+                                                        td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
+                                                        td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
+                                                        td("${it.value.ukc}"),
+                                                        td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
+                                                )
+                                            }
+                                            .fold(
+                                                    tr(
+                                                            th("NO"),
+                                                            th("WPT"),
+                                                            th("CHARACTERISTIC"),
+                                                            th("COURSE"),
+                                                            th("ETA"),
+                                                            th("DIST [Mm]"),
+                                                            th("TO GO [Mm]"),
+                                                            th("UKC [m]"),
+                                                            th("UKC [m]")
+                                                    ),
+                                                    ContainerTag::with
+                                            )
+                            ).attr("border", "1"),
+                            i("Created by the best son in the world")
+                    )
+            )
+    ) ?: "Document could not be created."
+
+
     /**
-     * Estimated times between waypoints in seconds.
+     * Saves passage plan to pdf file in cache directory.
+     * @return pdf file saved in cache.
      */
-    private fun timesBetween() = waypoints
-            .withIndex()
-            .map { dist(it.index) / passage.speed  }
+    fun toPDF(context: Context, html: String = toHTML(context)): File {
+        val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
+        val pdfFileWriter = FileOutputStream(tmpFile)
 
+        val document = Document()
+        PdfWriter.getInstance(document, pdfFileWriter)
+        document.open()
 
+        val htmlWorker = HTMLWorker(document)
+        htmlWorker.parse(StringReader(html))
 
-    /**
-     * Estimated time to the last waypoint in seconds.
-     * @param i index of waypoint
-     */
-    private fun timeToEnd(i: Int) = timesBetween()
-            .subList(i, waypoints.size)
-            .sum()
+        document.close()
+        pdfFileWriter.close()
 
-
-    /**
-     * Estimated time to the last waypoint in seconds.
-     */
-    private fun timesToEnd() = (0..waypoints.lastIndex)
-            .map { timeToEnd(it) }
-
-
-
-    private fun etas() = timesToEnd()
-            .map { etaAtEnd().minusSeconds(it.toInt()) }
-
-
-    /**
-     * Estimated time arrival.
-     * @param i index of waypoint
-     */
-    fun eta(i: Int): DateTime {
-        if(etasHandler.indexOfKey(i) < 0)
-            etasHandler.put(i, etas()[i]!!)
-
-        return etasHandler.get(i)
+        return tmpFile
     }
 
 
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(passage, flags)
+        parcel.writeTypedList(waypoints)
+    }
 
-        fun etaAtEnd() = passage
-                .dateTime
-                .plusSeconds(
-                        timeToEnd(0).toInt()
-                )!!
+    override fun describeContents() = 0
 
+    companion object CREATOR : Parcelable.Creator<PassagePlan> {
+        override fun createFromParcel(parcel: Parcel) = PassagePlan(parcel)
+        override fun newArray(size: Int): Array<PassagePlan?> = arrayOfNulls(size)
+    }
 
-
-        fun toHTML(context: Context) = document(
-                html(
-                        head(
-                                title(context.getString(R.string.app_name))
-                        ),
-                        body(
-                                table(
-                                        waypoints
-                                                .withIndex()
-                                                .map {
-                                                    tr(
-                                                            td("${it.index}"),
-                                                            td(it.value.name),
-                                                            td(it.value.characteristic),
-                                                            td("${course(it.index)}"),
-                                                            td(eta(it.index).toString("HH:mm")),
-                                                            td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
-                                                            td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
-                                                            td("${it.value.ukc}"),
-                                                            td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
-                                                    )
-                                                }
-                                                .fold(
-                                                        tr(
-                                                                th("NO"),
-                                                                th("WPT"),
-                                                                th("CHARACTERISTIC"),
-                                                                th("COURSE"),
-                                                                th("ETA"),
-                                                                th("DIST [Mm]"),
-                                                                th("TO GO [Mm]"),
-                                                                th("UKC [m]"),
-                                                                th("UKC [m]")
-                                                        ),
-                                                        ContainerTag::with
-                                                )
-                                ).attr("border", "1"),
-                                i("Created by the best son in the world")
-                        )
-                )
-        )!!
-
-
-        /**
-         * Saves passage plan to pdf file in cache directory.
-         * @return pdf file saved in cache.
-         */
-        fun toPDF(context: Context, html: String = toHTML(context)): File {
-            val tmpFile = File.createTempFile(passage.name, "pdf", context.cacheDir)
-            val pdfFileWriter = FileOutputStream(tmpFile)
-
-            val document = Document()
-            PdfWriter.getInstance(document, pdfFileWriter)
-            document.open()
-
-            val htmlWorker = HTMLWorker(document)
-            htmlWorker.parse(StringReader(html))
-
-            document.close()
-            pdfFileWriter.close()
-
-            return tmpFile
-        }
-
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeParcelable(passage, flags)
-            parcel.writeTypedList(waypoints)
-        }
-
-        override fun describeContents() = 0
-
-        companion object CREATOR : Parcelable.Creator<PassagePlan> {
-            override fun createFromParcel(parcel: Parcel) = PassagePlan(parcel)
-            override fun newArray(size: Int): Array<PassagePlan?> = arrayOfNulls(size)
-        }
-
-        constructor(parcel: Parcel) : this(
-        parcel.readParcelable<Passage>(Passage::class.java.classLoader),
-        parcel.createTypedArrayList(Waypoint.CREATOR)
-        )
-
+    constructor(parcel: Parcel) : this(
+            parcel.readParcelable<Passage>(Passage::class.java.classLoader),
+            parcel.createTypedArrayList(Waypoint.CREATOR)
+    )
 }

@@ -48,8 +48,6 @@ class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
         adapter?.selectWaypoint()
     }
 
-    val passagePlan
-        get() = adapter!!.waypoints
 
     override fun onDetach() {
         super.onDetach()

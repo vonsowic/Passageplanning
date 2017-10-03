@@ -38,7 +38,9 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
 
     override fun setViewsContent(`object`: Passage) {
         id = `object`.id
+
         route.text = `object`.route.name
+
 
         calendar.set(
                 `object`.dateTime.year,
@@ -106,7 +108,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
     }
 
 
-    override val filledDAO: Passage
+    override val filledDAO
         get() = Passage(
                     id,
                     routes[chosenRoute],

@@ -90,7 +90,7 @@ class PassageActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_generate_doc) {
             val viewer = Intent(this, PassagePlanViewerActivity::class.java)
-            viewer.putExtra(PassagePlanViewerActivity.PASSAGE_PLAN_KEY, passageFragment.passagePlan)
+            viewer.putExtra(PassagePlanViewerActivity.PASSAGE_PLAN_KEY, passageFragment.plan)
             startActivity(viewer)
         }
         return super.onOptionsItemSelected(item)

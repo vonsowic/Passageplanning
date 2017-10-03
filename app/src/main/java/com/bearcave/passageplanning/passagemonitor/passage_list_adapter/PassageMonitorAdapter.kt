@@ -17,6 +17,7 @@ import com.bearcave.passageplanning.passagemonitor.PassageMonitorFragment
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.utils.round
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import org.joda.time.DateTime
@@ -55,7 +56,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         ButterKnife.findById<TextView>(view, R.id.ukc)
                 .text = round(wpt.ukc).toString()
 
-        ButterKnife.findById<TextView>(view, R.id.ukc)
+        ButterKnife.findById<TextView>(view, R.id.cd)
                 .text = round(waypoints.ukc(position)).toString()
 
         ButterKnife.findById<TextView>(view, R.id.togo)
@@ -69,6 +70,10 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
 
         ButterKnife.findById<TextView>(view, R.id.dist)
                 .text = (round(waypoints.dist(position) / Settings.NAUTICAL_MILE, 1)).toString()
+
+        ButterKnife.findById<TextView>(view, R.id.speed)
+                .text = try { (round(waypoints.speedAt(position) / Settings.KTS, 1)).toString() }
+                        catch (_: TideNotInDatabaseException){ "Tide height not available" }
 
         ButterKnife.findById<ImageView>(view, R.id.options_button)
                 .setOnClickListener { showPopupMenu(it, wpt) }
@@ -90,9 +95,9 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
 
     override fun getItem(position: Int) = waypoints[position]
 
-    override fun getItemId(position: Int): Long = passage.route.waypointsIds[position].toLong()
+    override fun getItemId(position: Int) = passage.route.waypointsIds[position].toLong()
 
-    override fun getCount(): Int = passage.route.waypointsIds.size - 1
+    override fun getCount() = waypoints.size - 1 // -1 becouse the last waypoint is in the FootFragment
 
     private fun showNotes(waypoint: Waypoint) {
         val alertDialog = AlertDialog.Builder(context).create()
@@ -124,6 +129,6 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
     fun selectWaypoint() {
         listener.setToGo(waypoints.toGo(selected))
         listener.setCourse(waypoints.course(selected))
-        listener.setEta(waypoints.etaAtEnd())
+        listener.setEta(waypoints.etaAtEnd)
     }
 }

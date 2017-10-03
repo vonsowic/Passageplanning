@@ -117,7 +117,7 @@ enum class TideCurrent(val id: Int, val gaugeId: Int, val tideCurrentStation: St
     fun getValue(id: Int, lowWater: Float, highWater: Float) = getValue(id, getType(lowWater, highWater))
 
     fun getValue(tideCurrentInfo: TideCurrentInfoHandler) = getValue(
-            tideCurrentInfo.hoursToHighWater.toInt(),
+            tideCurrentInfo.hoursToHighWater,
             tideCurrentInfo.lowWater,
             tideCurrentInfo.highWater
     )

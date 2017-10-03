@@ -9,7 +9,9 @@ import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.utils.Gauge
 import org.joda.time.DateTime
+import org.joda.time.Period
 import java.util.*
+import kotlin.Comparator
 
 
 class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKey<TideItem, DateTime>(manager), TideCRUD {
@@ -53,9 +55,8 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         }
     }
 
-    override fun read(id: DateTime): TideItem {
-        try {
-            return super.read(
+    override fun read(id: DateTime) = try {
+            super.read(
                     id
                             .minusSeconds(id.secondOfMinute)      // time in database is saved without seconds ( seconds are 0s).
                             .minusMinutes(id.minuteOfHour % Settings.getDownloadingConfiguration(Gauge.MARGATE).step.value)
@@ -63,7 +64,7 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         } catch (e: CursorIndexOutOfBoundsException){
             throw TideNotInDatabaseException()
         }
-    }
+
 
     fun removeExpired() {
         writableDatabase.execSQL(
@@ -72,24 +73,41 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
     }
 
     fun getTideCurrentInfo(time: DateTime): TideCurrentInfoHandler {
-        val requestedList = ArrayList<TideItem>()
-        val selectQuery = "SELECT * FROM $tableName WHERE $KEY_TIME <= date('$time','-1 day')" // TODO: from range <time - 12h, time + 12h>
-
+        var selectedTides = ArrayList<TideItem>()
+        val selectQuery = "SELECT * FROM $tableName WHERE $KEY_TIME BETWEEN '${time.minusHours(12)}' and '${time.plusHours(12)}'" // from range <time - 12h, time + 12h>
         val cursor = readableDatabase.rawQuery(selectQuery, null)
 
         if (cursor.moveToFirst()) {
             do {
-                requestedList.add(loadFrom(cursor))
+                selectedTides.add(loadFrom(cursor))
             } while (cursor.moveToNext())
         }
 
-        val closestHighWater = requestedList
-                .filterOnlyTides()
-                .first()
+        if (selectedTides.size < 120) throw TideNotInDatabaseException()
+
+        selectedTides = selectedTides.filterOnlyTides() as ArrayList<TideItem>
+
+
+        var meanHeight = 0f
+        selectedTides
+                .forEach { meanHeight += it.predictedTideHeight }
+        meanHeight /= selectedTides.size
+
+
+        val highWater = selectedTides
+                .filter { it.predictedTideHeight >= meanHeight }
+                .minWith(Comparator { p, _ -> p.id.compareTo(time)  })
+
+
+        val lowWater = selectedTides
+                .filter { it.predictedTideHeight < meanHeight }
+                .minWith(Comparator { p, _ -> p.id.compareTo(time)  })
 
 
         return TideCurrentInfoHandler(
-                closestHighWater.id.minusMinutes()
+                Period(time, highWater?.id).hours,
+                lowWater?.predictedTideHeight ?: 0f,
+                highWater?.predictedTideHeight ?: 0f
         )
     }
 
