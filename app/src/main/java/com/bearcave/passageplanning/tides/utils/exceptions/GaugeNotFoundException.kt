@@ -1,4 +1,4 @@
 package com.bearcave.passageplanning.tides.utils.exceptions
 
 
-class GaugeNotFoundException : RuntimeException()
+class GaugeNotFoundException(val text: String) : RuntimeException()

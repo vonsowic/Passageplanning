@@ -4,14 +4,15 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.database.ManagerListener
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.utils.Gauge
 import org.joda.time.DateTime
-import org.joda.time.Period
+import org.joda.time.Duration
+import java.lang.Math.abs
 import java.util.*
-import kotlin.Comparator
 
 
 class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKey<TideItem, DateTime>(manager), TideCRUD {
@@ -72,9 +73,10 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
         )
     }
 
-    fun getTideCurrentInfo(time: DateTime): TideCurrentInfoHandler {
-        var selectedTides = ArrayList<TideItem>()
-        val selectQuery = "SELECT * FROM $tableName WHERE $KEY_TIME BETWEEN '${time.minusHours(12)}' and '${time.plusHours(12)}'" // from range <time - 12h, time + 12h>
+    fun readByRange(time: DateTime, hoursAsRange: Int): ArrayList<TideItem>{
+        val selectedTides = ArrayList<TideItem>()
+        val selectQuery = "SELECT * FROM $tableName WHERE $KEY_TIME BETWEEN '${time.minusHours(hoursAsRange)}' and '${time.plusHours(hoursAsRange)}'" // from range <time - 12h, time + 12h>
+        //Log.e("QUERY:", selectQuery)
         val cursor = readableDatabase.rawQuery(selectQuery, null)
 
         if (cursor.moveToFirst()) {
@@ -83,31 +85,38 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
             } while (cursor.moveToNext())
         }
 
+        return selectedTides
+    }
+
+    fun getTideCurrentInfo(time: DateTime): TideCurrentInfoHandler {
+        var selectedTides = readByRange(time, 16)
         if (selectedTides.size < 120) throw TideNotInDatabaseException()
 
         selectedTides = selectedTides.filterOnlyTides() as ArrayList<TideItem>
 
-
         var meanHeight = 0f
-        selectedTides
-                .forEach { meanHeight += it.predictedTideHeight }
+        selectedTides.forEach { meanHeight += it.predictedTideHeight }
         meanHeight /= selectedTides.size
 
 
         val highWater = selectedTides
                 .filter { it.predictedTideHeight >= meanHeight }
-                .minWith(Comparator { p, _ -> p.id.compareTo(time)  })
+                .minBy{ abs(Duration(it.id, time).millis) }
 
 
         val lowWater = selectedTides
                 .filter { it.predictedTideHeight < meanHeight }
-                .minWith(Comparator { p, _ -> p.id.compareTo(time)  })
+                .minBy{ abs(Duration(it.id, time).millis) }
 
+        Log.e("Selected High water: ", "${highWater?.id} - ${highWater?.predictedTideHeight}[m]")
+        Log.e("Selected Low water: ", "${lowWater?.id} - ${lowWater?.predictedTideHeight}[m]")
 
+        val duration = Duration(highWater?.id, time).standardHours.toInt()
+        Log.e("Duration", duration.toString())
         return TideCurrentInfoHandler(
-                Period(time, highWater?.id).hours,
-                lowWater?.predictedTideHeight ?: 0f,
-                highWater?.predictedTideHeight ?: 0f
+                duration,
+                lowWater!!.predictedTideHeight,
+                highWater!!.predictedTideHeight
         )
     }
 

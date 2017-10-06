@@ -7,7 +7,6 @@ import com.bearcave.passageplanning.base.database.DatabaseElement
 import com.bearcave.passageplanning.tides.utils.Gauge
 import com.bearcave.passageplanning.tides.utils.TideCurrent
 import com.bearcave.passageplanning.utils.round
-import org.joda.time.DateTime
 import java.io.Serializable
 
 
@@ -33,10 +32,6 @@ data class Waypoint(
     constructor(id:Int, name: String, note: String, characteristic: String, ukc: Float, latitude: String, longitude: String, gauge: Gauge, optionalGauge: Gauge, tideCurrentStation: TideCurrent):
             this(id, name, note, characteristic, ukc, Location.convert(latitude), Location.convert(longitude), gauge, optionalGauge, tideCurrentStation)
 
-
-    fun getCD(at: DateTime) {
-
-    }
 
 
     /**

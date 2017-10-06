@@ -27,7 +27,7 @@
     <string name="editor_route_chooser_title">Choose route</string>
     <string name="routes_doesnt_exist">Routes doesn\'t exist</string>
 
-
+    <string name="tide_height_not_available">"Tide height not available"</string>
     <string name="night_mode_title">Night mode</string>
 
     <string name="title_activity_main_menu">MainMenuActivity</string>
@@ -35,7 +35,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_passage_editor">It is to be removed</string>
     <string name="ukc">UKC</string>
-    <string name="fetching_data">Fetching data</string>
+    <string name="fetching_data">Fetching Tidal Data</string>
     <string name="no_internet_connection">No Internet connection</string>
 
     <string name="generate_doc">Show as pdf</string>

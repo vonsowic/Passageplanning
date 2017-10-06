@@ -3,12 +3,11 @@ package com.bearcave.passageplanning.passages.planner
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
-import android.util.SparseArray
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.tides.database.TidesTable
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.itextpdf.text.Document
@@ -40,7 +39,31 @@ class PassagePlan(
         get() = eta(size-1)
 
     val size
-        get()=waypoints.size
+        get() = waypoints.size
+
+
+    /**
+     * From this waypoint etas and speeds should be computed.
+     */
+    var currentWaypoint = 0
+        set(value) {
+            field = value
+            etasHandler[value] = DateTime.now()
+            reset()
+        }
+
+    /**
+     * if true, then speedAt = speed + speedOfCurrent;
+     * otherwise speedAt = speed - speedOfCurrent
+     */
+    var isStreamHelping: Boolean = true
+        set(value) {
+            field = value
+            reset()
+        }
+
+
+    var notifier: Notifier? = null
 
 
     operator fun get(position: Int) = waypoints[position]
@@ -50,20 +73,26 @@ class PassagePlan(
         get() = passage.speed
         set(value) {
             passage.speed = value
-            speedsHandler.clear()
-            etasHandler.clear()
-
-            Log.e("PassagePlan", "${etasHandler.size()}")
+            reset()
         }
+
+
+    private fun reset(){
+        for(i in currentWaypoint+1 until size){
+            speedsHandler.remove(i)
+            etasHandler.remove(i)
+        }
+        notifier?.notifyDataHasChanged()
+    }
 
 
     /**
      * Contains datetimes of already computed waypoints.
      */
-    private val etasHandler = SparseArray<DateTime>()
+    private val etasHandler = HashMap<Int, DateTime>()
 
 
-    private val speedsHandler = SparseArray<Float>()
+    private val speedsHandler = HashMap<Int, Float>()
 
 
 
@@ -99,7 +128,9 @@ class PassagePlan(
      * @param i index of waypoint
      * @return ukc
      */
-    fun ukc(i: Int) = waypoints[i].ukc + predictedTideHeight(i) - passage.draught
+    fun ukc(i: Int) = cd(i) + predictedTideHeight(i)
+
+    fun cd(i: Int) = waypoints[i].ukc - passage.draught
 
 
     /**
@@ -107,18 +138,21 @@ class PassagePlan(
      * @param i index of waypoint
      */
     fun eta(i: Int): DateTime {
-        if(etasHandler.indexOfKey(i) < 0){
+        if(etasHandler[i] == null){
             if( i==0 ){
-                etasHandler.put(i, passage.dateTime)
+                etasHandler.put(
+                        i,
+                        passage.dateTime
+                )
             } else {
                 etasHandler.put(
                         i,
-                        eta(i-1)                                            // eta at previous waypoint
+                        eta(i-1)                                                    // eta at previous waypoint
                                 .plusSeconds((dist(i-1) / speedAt(i-1)).toInt()))   // plus time between this and previous waypoint
             }
         }
 
-        return etasHandler.get(i)
+        return etasHandler[i]!!
     }
 
 
@@ -126,40 +160,48 @@ class PassagePlan(
      * @param i index of waypoint
      * @return speed to the next waypoint
      */
-    fun speedAt(i: Int) = passage.speed + speedOfCurrent(i)
+    fun speedAt(i: Int) =
+            if(isStreamHelping) passage.speed + speedOfCurrent(i)
+            else                passage.speed - speedOfCurrent(i)
 
 
-    private fun speedOfCurrent(index: Int): Float {
-        if(speedsHandler.get(index) == null) {
+    fun speedOfCurrent(index: Int): Float {
+        if(speedsHandler[index] == null) {
             speedsHandler.put(
                     index,
-                    this[index].tideCurrentStation.getValue(                                                                    // get value
-                            (DatabaseManager.DATABASE_MANAGER.getTable(this[index].tideCurrentStation.gaugeId) as TidesTable)   // based on database
-                                    .getTideCurrentInfo(eta(index))                                                             // computations
-                    )
-
-
+                    try {
+                        this[index].tideCurrentStation.getValue(                                                                    // get value
+                                (DatabaseManager.DATABASE_MANAGER.getTable(this[index].tideCurrentStation.gaugeId) as TidesTable)   // based on database
+                                        .getTideCurrentInfo(eta(index))                                                             // computations
+                        )
+                    } catch (_: TideNotInDatabaseException){ speed }
             )
         }
 
-        return speedsHandler[index]
+        return speedsHandler[index]!!
     }
 
     /**
-     * @param i index of waypoint for which tide table is returned.
+     * @param i index of tide table.
      */
     private fun getTideTable(i: Int) = DatabaseManager
             .DATABASE_MANAGER
-            .getTable(waypoints[i].gauge.id) as TidesTable
+            .getTable(i) as TidesTable
 
 
     /**
-     * @param i index of waypoint for which tide height is returned.
+     * @param i index of tide table.
      */
-    private fun predictedTideHeight(i: Int) = getTideTable(i)
-            .read(eta(i))
-            .predictedTideHeight
-
+    private fun predictedTideHeight(i: Int): Float {
+        val eta = eta(i)
+        return (getTideTable(this[i].optionalGauge.id)
+                .read(eta)
+                .predictedTideHeight
+                +
+                getTideTable(this[i].gauge.id)
+                        .read(eta)
+                        .predictedTideHeight) / 2
+    }
 
 
     fun toHTML(context: Context) = document(
@@ -243,4 +285,8 @@ class PassagePlan(
             parcel.readParcelable<Passage>(Passage::class.java.classLoader),
             parcel.createTypedArrayList(Waypoint.CREATOR)
     )
+
+    interface Notifier{
+        fun notifyDataHasChanged()
+    }
 }

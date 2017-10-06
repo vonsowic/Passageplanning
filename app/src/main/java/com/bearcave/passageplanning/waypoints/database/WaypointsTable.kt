@@ -42,6 +42,8 @@ class WaypointsTable(manager: ManagerListener) : BaseTable<Waypoint>(manager) {
         values.put(KEY_LATITUDE, element.latitude)
         values.put(KEY_LONGITUDE, element.longitude)
         values.put(KEY_GAUGE, element.gauge.id)
+        values.put(KEY_OPTIONAL_GAUGE, element.optionalGauge.id)
+        values.put(KEY_TIDE_CURRENT_STATION, element.tideCurrentStation.id)
         return values
     }
 

@@ -28,6 +28,7 @@ class PassageActivity : AppCompatActivity(),
         PassageMonitorAdapter.PassageMonitor,
         FootFragment.FootListener{
 
+
     var passage: Passage? = null
         private set
 
@@ -108,12 +109,16 @@ class PassageActivity : AppCompatActivity(),
         foot.setCourse(course)
     }
 
-    override fun setEta(eta: DateTime) {
+    override fun setEta(eta: DateTime?) {
         foot.setEta(eta)
     }
 
     override fun onSpeedChangedLister(speed: Float) {
         passageFragment.onSpeedChangedLister(speed)
+    }
+
+    override fun setChecked(isChecked: Boolean) {
+        passageFragment.setChecked(isChecked)
     }
 
     override fun onBackPressed() {

@@ -29,8 +29,8 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
         latitude = supportFragmentManager.findFragmentById(R.id.latitude) as LatitudeFragment?
         longitude = supportFragmentManager.findFragmentById(R.id.longitude) as LongitudeFragment?
 
-        gaugeMenuOpener.setOnClickListener { this.showGaugeMenu(it as TextView)  }
-        optionalGaugeMenuOpener.setOnClickListener { if(optionalGaugeChecker.isChecked) this.showGaugeMenu(it as TextView)  }
+        gaugeMenuOpener.setOnClickListener { this.showGaugeMenu(gauge)  }
+        optionalGaugeMenuOpener.setOnClickListener { if(optionalGaugeChecker.isChecked) this.showGaugeMenu(optionalGauge)  }
         tideCurrentMenuOpener.setOnClickListener { this.showTideCurrentMenu(it)  }
     }
 
@@ -66,9 +66,9 @@ class WaypointEditorActivity : BaseEditorActivity<Waypoint>() {
                 ukc.text.toString().toFloat(),
                 latitude!!.position,
                 longitude!!.position,
-                Gauge.getByName(gauge!!.text.toString()),
-                if(optionalGaugeChecker.isChecked)  Gauge.getByName(optionalGauge!!.text.toString())
-                else                                Gauge.getByName(gauge!!.text.toString()),
+                Gauge.getByName(gauge.text.toString()),
+                if(optionalGaugeChecker.isChecked)  Gauge.getByName(optionalGauge.text.toString())
+                else                                Gauge.getByName(gauge.text.toString()),
                 TideCurrent.getByName(tideCurrent!!.text.toString())
         )
 

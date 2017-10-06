@@ -34,10 +34,10 @@ abstract class PositionFragment : Fragment() {
 
         val view = inflater!!.inflate(R.layout.fragment_position, container, false)
 
-        degrees = ButterKnife.findById<EditText>(view, R.id.degree)
-        minutes = ButterKnife.findById<EditText>(view, R.id.minutes)
+        degrees = ButterKnife.findById(view, R.id.degree)
+        minutes = ButterKnife.findById(view, R.id.minutes)
 
-        switcher = ButterKnife.findById<TextView>(view, R.id.hemisphere_chooser)
+        switcher = ButterKnife.findById(view, R.id.hemisphere_chooser)
         setHemisphereSymbol()
         switcher!!.setOnClickListener {
             switchHemisphereSymbol()

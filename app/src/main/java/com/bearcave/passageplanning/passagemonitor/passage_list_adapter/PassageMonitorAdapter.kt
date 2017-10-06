@@ -19,7 +19,6 @@ import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.utils.round
-import com.bearcave.passageplanning.waypoints.database.Waypoint
 import org.joda.time.DateTime
 
 /**
@@ -28,7 +27,11 @@ import org.joda.time.DateTime
  * @since 17.06.17
  * @version 1.0
  */
-class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: PassagePlan) : BaseAdapter(){
+class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: PassagePlan) : BaseAdapter(), PassagePlan.Notifier{
+
+    init {
+        waypoints.notifier = this
+    }
 
     private val inflater
         get() = LayoutInflater.from(context)
@@ -50,14 +53,20 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         val view = convertView ?: inflater.inflate(R.layout.passage_item, parent, false)
         val wpt = waypoints[position]
 
+
         ButterKnife.findById<TextView>(view, R.id.waypoint)
                 .text = wpt.name
 
-        ButterKnife.findById<TextView>(view, R.id.ukc)
-                .text = round(wpt.ukc).toString()
-
         ButterKnife.findById<TextView>(view, R.id.cd)
-                .text = round(waypoints.ukc(position)).toString()
+                .text = round(waypoints.cd(position)).toString()
+
+        ButterKnife.findById<TextView>(view, R.id.ukc)
+                .text = try{ round(waypoints.ukc(position)).toString() }
+                        catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available) }
+
+        ButterKnife.findById<TextView>(view, R.id.speed)
+            .text = try { (round(waypoints.speedAt(position) / Settings.KTS, 1)).toString() }
+                    catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available)}
 
         ButterKnife.findById<TextView>(view, R.id.togo)
                  .text = if (position >= selected) (round(waypoints.toGo(position) / Settings.NAUTICAL_MILE, 1)).toString() else "--"
@@ -66,17 +75,14 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
                 .text = if (position >= selected) waypoints.course(position).toInt().toString() else "--"
 
         ButterKnife.findById<TextView>(view, R.id.eta_text)
-                .text = if (position >= selected) waypoints.eta(position).toString("HH:mm") else "--"
+                .text = waypoints.eta(position).toString("HH:mm")
 
         ButterKnife.findById<TextView>(view, R.id.dist)
                 .text = (round(waypoints.dist(position) / Settings.NAUTICAL_MILE, 1)).toString()
 
-        ButterKnife.findById<TextView>(view, R.id.speed)
-                .text = try { (round(waypoints.speedAt(position) / Settings.KTS, 1)).toString() }
-                        catch (_: TideNotInDatabaseException){ "Tide height not available" }
 
         ButterKnife.findById<ImageView>(view, R.id.options_button)
-                .setOnClickListener { showPopupMenu(it, wpt) }
+                .setOnClickListener { showPopupMenu(it, position) }
 
         view.setOnClickListener {
             selected = position
@@ -99,13 +105,21 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
 
     override fun getCount() = waypoints.size - 1 // -1 becouse the last waypoint is in the FootFragment
 
-    private fun showNotes(waypoint: Waypoint) {
+    private fun showNotes(position: Int) {
         val alertDialog = AlertDialog.Builder(context).create()
-        alertDialog.setMessage("Characteristic: ${waypoint.characteristic}\nNotes: ${waypoint.note}")
+        val waypoint = waypoints[position]
+        alertDialog.setMessage("""
+            Characteristic: ${waypoint.characteristic}
+            Notes: ${waypoint.note}
+            Current speed: ${waypoints.speedOfCurrent(position)}
+            Gauge: ${waypoint.gauge.humanCode}
+            Optional gauge: ${waypoint.optionalGauge.humanCode}
+            Tide current station: ${waypoint.tideCurrentStation.tideCurrentStation}
+        """.trimIndent())
         alertDialog.show()
     }
 
-    private fun showPopupMenu(anchor: View, selected: Waypoint) {
+    private fun showPopupMenu(anchor: View, selected: Int) {
         val menu = PopupMenu(context, anchor)
 
         menu.menu.add(Menu.NONE, 0, Menu.NONE, R.string.show_notes)
@@ -123,12 +137,25 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
     interface PassageMonitor {
         fun setToGo(toGo: Float)
         fun setCourse(course: Float)
-        fun setEta(eta: DateTime)
+        fun setEta(eta: DateTime?)
     }
 
     fun selectWaypoint() {
+        waypoints.currentWaypoint = selected
+        callListener()
+    }
+
+    override fun notifyDataHasChanged() {
+        notifyDataSetChanged()
+        callListener()
+    }
+
+    private fun callListener(){
         listener.setToGo(waypoints.toGo(selected))
         listener.setCourse(waypoints.course(selected))
-        listener.setEta(waypoints.etaAtEnd)
+        listener.setEta(
+                try{ waypoints.etaAtEnd }
+                catch (_: TideNotInDatabaseException){ null }
+        )
     }
 }

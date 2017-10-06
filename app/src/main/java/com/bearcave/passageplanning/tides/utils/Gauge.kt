@@ -23,7 +23,7 @@ enum class Gauge constructor(val id: Int, val humanCode: String, val code: Strin
                     .filter { it.id == id }
                     .forEach { return it }
 
-            throw GaugeNotFoundException()
+            throw GaugeNotFoundException("Id $id does not exist.")
         }
 
         fun getByCode(code: String): Gauge {
@@ -31,7 +31,7 @@ enum class Gauge constructor(val id: Int, val humanCode: String, val code: Strin
                     .filter { it.code == code }
                     .forEach { return it }
 
-            throw GaugeNotFoundException()
+            throw GaugeNotFoundException("Gauge with code $code does not exist.")
         }
 
         fun getByName(name: String): Gauge {
@@ -39,7 +39,7 @@ enum class Gauge constructor(val id: Int, val humanCode: String, val code: Strin
                     .filter { it.humanCode == name }
                     .forEach { return it }
 
-            throw GaugeNotFoundException()
+            throw GaugeNotFoundException("Gauge $name does not exist.")
         }
     }
 }

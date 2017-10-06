@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Switch
 import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passages.planner.PlanGetter
 import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.utils.round
 import org.joda.time.DateTime
 
 
@@ -47,34 +49,38 @@ class FootFragment : Fragment() {
         etaView = ButterKnife.findById(view, R.id.eta)
 
 
-
         speedSlide = ButterKnife.findById(view, R.id.speed)
         speedValueView = ButterKnife.findById(view, R.id.speed_value)
         initializeSlide(speedSlide!!, speedValueView!!)
 
         speedSlide!!.progress = (plan.passage.speed * 10 / Settings.KTS).toInt()
-        speedValueView!!.text = "${plan.passage.speed}"
+        speedValueView!!.text = "${plan.passage.speed / Settings.KTS}"
+
+        ButterKnife.findById<Switch>(view, R.id.current_direction)
+                .setOnCheckedChangeListener { _, isChecked ->
+                    listener?.setChecked(isChecked)
+                }
 
         return view
     }
 
     fun setToGo(toGo: Float) {
-        toGoView?.text = "${toGo / Settings.NAUTICAL_MILE}"
+        toGoView?.text = "${round(toGo / Settings.NAUTICAL_MILE)}"
     }
 
     fun setCourse(course: Float) {
         courseView?.text = "$course"
     }
 
-    fun setEta(eta: DateTime){
-        etaView?.text = eta.toString("HH:mm")
+    fun setEta(eta: DateTime?){
+        etaView?.text = eta?.toString("HH:mm") ?: "Tide not available"
     }
 
     private fun initializeSlide(view: SeekBar, label: TextView){
         view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                label.text = "${seekBar!!.progress.toFloat() / 10}"
+                label.text = "${seekBar!!.progress.toFloat() * Settings.KTS / 10}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -90,6 +96,7 @@ class FootFragment : Fragment() {
 
     interface FootListener {
         fun onSpeedChangedLister(speed: Float)
+        fun setChecked(isChecked: Boolean)
     }
 
 

@@ -39,7 +39,12 @@ class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
     }
 
     override fun onSpeedChangedLister(speed: Float) {
-        plan?.passage?.speed = speed
+        plan!!.speed = speed
+        adapter?.notifyDataSetChanged()
+    }
+
+    override fun setChecked(isChecked: Boolean) {
+        plan!!.isStreamHelping = isChecked
         adapter?.notifyDataSetChanged()
     }
 
