@@ -16,8 +16,9 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passagemonitor.PassageMonitorFragment
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.passages.planner.PassagePlan
-import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
+import com.bearcave.passageplanning.utils.convertFromMToMm
+import com.bearcave.passageplanning.utils.convertFromMsToKts
 import com.bearcave.passageplanning.utils.round
 import org.joda.time.DateTime
 
@@ -65,11 +66,11 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
                         catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available) }
 
         ButterKnife.findById<TextView>(view, R.id.speed)
-            .text = try { (round(waypoints.speedAt(position) / Settings.KTS, 1)).toString() }
+            .text = try { (round(waypoints.speedAt(position).convertFromMsToKts(), 1)).toString() }
                     catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available)}
 
         ButterKnife.findById<TextView>(view, R.id.togo)
-                 .text = if (position >= selected) (round(waypoints.toGo(position) / Settings.NAUTICAL_MILE, 1)).toString() else "--"
+                 .text = if (position >= selected) (round(waypoints.toGo(position).convertFromMToMm(), 1)).toString() else "--"
 
         ButterKnife.findById<TextView>(view, R.id.bearing)
                 .text = if (position >= selected) waypoints.course(position).toInt().toString() else "--"
@@ -78,7 +79,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
                 .text = waypoints.eta(position).toString("HH:mm")
 
         ButterKnife.findById<TextView>(view, R.id.dist)
-                .text = (round(waypoints.dist(position) / Settings.NAUTICAL_MILE, 1)).toString()
+                .text = (round(waypoints.dist(position).convertFromMToMm(), 1)).toString()
 
 
         ButterKnife.findById<ImageView>(view, R.id.options_button)
@@ -111,7 +112,7 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         alertDialog.setMessage("""
             Characteristic: ${waypoint.characteristic}
             Notes: ${waypoint.note}
-            Current speed: ${waypoints.speedOfCurrent(position)}
+            Current speed: ${round(waypoints.speedOfCurrent(position).convertFromMsToKts())}[kts]
             Gauge: ${waypoint.gauge.humanCode}
             Optional gauge: ${waypoint.optionalGauge.humanCode}
             Tide current station: ${waypoint.tideCurrentStation.tideCurrentStation}

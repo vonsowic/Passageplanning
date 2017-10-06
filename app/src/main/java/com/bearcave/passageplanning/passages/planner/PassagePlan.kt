@@ -6,9 +6,9 @@ import android.os.Parcelable
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
 import com.bearcave.passageplanning.passages.database.Passage
-import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.database.TideNotInDatabaseException
 import com.bearcave.passageplanning.tides.database.TidesTable
+import com.bearcave.passageplanning.utils.convertFromMToMm
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.itextpdf.text.Document
 import com.itextpdf.text.html.simpleparser.HTMLWorker
@@ -220,10 +220,13 @@ class PassagePlan(
                                                         td(it.value.characteristic),
                                                         td("${course(it.index)}"),
                                                         td(eta(it.index).toString("HH:mm")),
-                                                        td("${dist(it.index)/Settings.NAUTICAL_MILE}"),
-                                                        td("${toGo(it.index)/Settings.NAUTICAL_MILE}"),
-                                                        td("${it.value.ukc}"),
-                                                        td("${ukc(it.index)}".replace("-1.0", "tide height not available"))
+                                                        td("${dist(it.index).convertFromMToMm()}"),
+                                                        td("${toGo(it.index).convertFromMToMm()}"),
+                                                        td("${cd(it.index)}"),
+                                                        td(
+                                                                try{ "${ukc(it.index)}"}
+                                                                catch(_: TideNotInDatabaseException){"tide height not available"}
+                                                        )
                                                 )
                                             }
                                             .fold(
@@ -235,7 +238,7 @@ class PassagePlan(
                                                             th("ETA"),
                                                             th("DIST [Mm]"),
                                                             th("TO GO [Mm]"),
-                                                            th("UKC [m]"),
+                                                            th("CD [m]"),
                                                             th("UKC [m]")
                                                     ),
                                                     ContainerTag::with

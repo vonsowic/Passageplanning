@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.bearcave.passageplanning.base.database.withcustomkey.BaseTableWithCustomKey
 import com.bearcave.passageplanning.data.database.ManagerListener
-import com.bearcave.passageplanning.settings.Settings
 import com.bearcave.passageplanning.tides.utils.Gauge
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -59,8 +58,8 @@ class TidesTable(manager: ManagerListener, gauge: Gauge) : BaseTableWithCustomKe
     override fun read(id: DateTime) = try {
             super.read(
                     id
-                            .minusSeconds(id.secondOfMinute)      // time in database is saved without seconds ( seconds are 0s).
-                            .minusMinutes(id.minuteOfHour % Settings.getDownloadingConfiguration(Gauge.MARGATE).step.value)
+                            .withSecondOfMinute(0)
+                            .withMillisOfSecond(0)
             )
         } catch (e: CursorIndexOutOfBoundsException){
             throw TideNotInDatabaseException()

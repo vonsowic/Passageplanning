@@ -13,7 +13,9 @@ import android.widget.TextView
 import butterknife.ButterKnife
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.passages.planner.PlanGetter
-import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.utils.convertFromKtsToMs
+import com.bearcave.passageplanning.utils.convertFromMToMm
+import com.bearcave.passageplanning.utils.convertFromMsToKts
 import com.bearcave.passageplanning.utils.round
 import org.joda.time.DateTime
 
@@ -53,8 +55,8 @@ class FootFragment : Fragment() {
         speedValueView = ButterKnife.findById(view, R.id.speed_value)
         initializeSlide(speedSlide!!, speedValueView!!)
 
-        speedSlide!!.progress = (plan.passage.speed * 10 / Settings.KTS).toInt()
-        speedValueView!!.text = "${plan.passage.speed / Settings.KTS}"
+        speedSlide!!.progress = (plan.passage.speed * 10).convertFromMsToKts().toInt()
+        speedValueView!!.text = "${round(plan.passage.speed.convertFromMsToKts(), 1)}"
 
         ButterKnife.findById<Switch>(view, R.id.current_direction)
                 .setOnCheckedChangeListener { _, isChecked ->
@@ -65,7 +67,7 @@ class FootFragment : Fragment() {
     }
 
     fun setToGo(toGo: Float) {
-        toGoView?.text = "${round(toGo / Settings.NAUTICAL_MILE)}"
+        toGoView?.text = "${round(toGo.convertFromMToMm())}"
     }
 
     fun setCourse(course: Float) {
@@ -80,13 +82,13 @@ class FootFragment : Fragment() {
         view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                label.text = "${seekBar!!.progress.toFloat() * Settings.KTS / 10}"
+                label.text = "${seekBar!!.progress.toFloat() / 10}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                listener?.onSpeedChangedLister(seekBar!!.progress * Settings.KTS / 10 )
+                listener?.onSpeedChangedLister((seekBar!!.progress / 10).toFloat().convertFromKtsToMs() )
             }
         })
 

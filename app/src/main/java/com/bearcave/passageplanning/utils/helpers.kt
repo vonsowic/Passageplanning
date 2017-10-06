@@ -19,3 +19,17 @@ fun round(value: Double, places: Int = 2): Double {
 
 fun round(value: Float, places: Int = 2) = round(value.toDouble(), places)
 
+/**
+ * Converts value treated as kts to m/s
+ */
+fun Float.convertFromKtsToMs() = this * 0.514444f
+
+/**
+ * Converts value treated as m/s to kts
+ */
+fun Float.convertFromMsToKts() = this * 1.943844f
+
+fun Float.convertFromMmToM() = this * 1852
+
+fun Float.convertFromMToMm() = this * 0.0005399568034557236f
+

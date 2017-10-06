@@ -14,7 +14,7 @@ import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.base.BaseEditorActivity
 import com.bearcave.passageplanning.passages.database.Passage
 import com.bearcave.passageplanning.routes.database.Route
-import com.bearcave.passageplanning.settings.Settings
+import com.bearcave.passageplanning.utils.convertFromKtsToMs
 import kotlinx.android.synthetic.main.content_passage_editor.*
 import org.joda.time.DateTime
 import java.text.DateFormat
@@ -50,7 +50,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                 `object`.dateTime.minuteOfHour
         )
 
-        draughtSlider.progress = (`object`.draught * 10 / Settings.KTS).toInt()
+        draughtSlider.progress = (`object`.draught * 10).toInt()
         draughtValue.text = "${`object`.draught}"
 
         updateTimeView()
@@ -119,7 +119,7 @@ class PassageEditorActivity : BaseEditorActivity<Passage>(),
                             calendar.get(Calendar.HOUR_OF_DAY),
                             calendar.get(Calendar.MINUTE)
                     ),
-                    5f * Settings.KTS,
+                    5f.convertFromKtsToMs(),
                     draughtSlider.progress.toFloat() / 10
                 )
 
