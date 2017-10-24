@@ -2,6 +2,7 @@ package com.bearcave.passageplanning.passagemonitor.passage_list_adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.os.AsyncTask
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.Menu
@@ -30,10 +31,6 @@ import org.joda.time.DateTime
  */
 class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: PassagePlan) : BaseAdapter(), PassagePlan.Notifier{
 
-    init {
-        waypoints.notifier = this
-    }
-
     private val inflater
         get() = LayoutInflater.from(context)
 
@@ -45,9 +42,17 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
     private val passage: Passage
         get() = waypoints.passage
 
+    private val onChangeListener = parent as OnChangeStateListener
 
     var selected = 0
         private set
+
+    init {
+        //waypoints.notifier = this
+        //callListener()
+    }
+
+
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -58,25 +63,42 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         ButterKnife.findById<TextView>(view, R.id.waypoint)
                 .text = wpt.name
 
-        ButterKnife.findById<TextView>(view, R.id.cd)
-                .text = round(waypoints.cd(position)).toString()
+        // calculate in background
+        WaypointGetterTask().execute( inner@{
+            val waypoint = WaypointDataHolder(
+                    round(waypoints.cd(position)).toString(),                                                                   // CD
+                    try{ round(waypoints.ukc(position)).toString() }                                                            // UKC
+                    catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available) },
+                    try { (round(waypoints.speedAt(position).convertFromMsToKts(), 1)).toString() }                             // speed
+                    catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available)},
+                    if (position >= position) (round(waypoints.toGo(position).convertFromMToMm(), 1)).toString() else "--",     // to go
 
-        ButterKnife.findById<TextView>(view, R.id.ukc)
-                .text = try{ round(waypoints.ukc(position)).toString() }
-                        catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available) }
-
-        ButterKnife.findById<TextView>(view, R.id.speed)
-            .text = try { (round(waypoints.speedAt(position).convertFromMsToKts(), 1)).toString() }
+                    try { waypoints.eta(position).toString("HH:mm") }
                     catch (_: TideNotInDatabaseException){ context.getString(R.string.tide_height_not_available)}
+            )
 
-        ButterKnife.findById<TextView>(view, R.id.togo)
-                 .text = if (position >= selected) (round(waypoints.toGo(position).convertFromMToMm(), 1)).toString() else "--"
+            return@inner {
+                ButterKnife.findById<TextView>(view, R.id.cd)
+                        .text = waypoint.cd
+
+                ButterKnife.findById<TextView>(view, R.id.ukc)
+                        .text = waypoint.ukc
+
+                ButterKnife.findById<TextView>(view, R.id.speed)
+                        .text = waypoint.speed
+
+                ButterKnife.findById<TextView>(view, R.id.togo)
+                        .text = waypoint.togo
+
+                ButterKnife.findById<TextView>(view, R.id.eta_text)
+                        .text = waypoint.eta
+            }
+        })
+
 
         ButterKnife.findById<TextView>(view, R.id.bearing)
                 .text = if (position >= selected) waypoints.course(position).toInt().toString() else "--"
 
-        ButterKnife.findById<TextView>(view, R.id.eta_text)
-                .text = waypoints.eta(position).toString("HH:mm")
 
         ButterKnife.findById<TextView>(view, R.id.dist)
                 .text = (round(waypoints.dist(position).convertFromMToMm(), 1)).toString()
@@ -112,7 +134,8 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
         alertDialog.setMessage("""
             Characteristic: ${waypoint.characteristic}
             Notes: ${waypoint.note}
-            Current speed: ${round(waypoints.speedOfCurrent(position).convertFromMsToKts())}[kts]
+            Current speed: ${try{ round(waypoints.speedOfCurrent(position).convertFromMsToKts())}
+                            catch (_: TideNotInDatabaseException){context.getString(R.string.tide_height_not_available)}}[kts]
             Gauge: ${waypoint.gauge.humanCode}
             Optional gauge: ${waypoint.optionalGauge.humanCode}
             Tide current station: ${waypoint.tideCurrentStation.tideCurrentStation}
@@ -152,11 +175,41 @@ class PassageMonitorAdapter(val parent: PassageMonitorFragment, val waypoints: P
     }
 
     private fun callListener(){
-        listener.setToGo(waypoints.toGo(selected))
-        listener.setCourse(waypoints.course(selected))
-        listener.setEta(
-                try{ waypoints.etaAtEnd }
-                catch (_: TideNotInDatabaseException){ null }
-        )
+        WaypointGetterTask().execute(mainThread@{
+            val toGo = waypoints.toGo(selected)
+            val course = waypoints.course(selected)
+            val eta = try{ waypoints.etaAtEnd } catch (_: TideNotInDatabaseException){ null }
+            return@mainThread {
+                listener.setToGo(toGo)
+                listener.setCourse(course)
+                listener.setEta(eta)
+            }
+        })
+
+    }
+
+
+    var numberOfCallers = 0
+    private inner class WaypointGetterTask : AsyncTask<()->()->Unit, Void, ()->Unit>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+
+            numberOfCallers++
+            if(numberOfCallers == 1){
+                //onChangeListener.onLoadingStarted()
+            }
+        }
+
+        override fun doInBackground(vararg task: (() -> () -> Unit)?): () -> Unit = task[0]!!() // :)
+
+        override fun onPostExecute(result: (() -> Unit)?) {
+            super.onPostExecute(result)
+            result?.invoke()
+
+            numberOfCallers--
+            if(numberOfCallers == 0){
+                //onChangeListener.onLoadingFinished()
+            }
+        }
     }
 }

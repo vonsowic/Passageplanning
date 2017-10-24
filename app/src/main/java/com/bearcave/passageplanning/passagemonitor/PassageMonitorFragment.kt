@@ -9,14 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import butterknife.ButterKnife
-
 import com.bearcave.passageplanning.R
+import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.OnChangeStateListener
 import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.PassageMonitorAdapter
 import com.bearcave.passageplanning.passages.planner.PassagePlan
 import com.bearcave.passageplanning.passages.planner.PlanGetter
 
 
-class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
+class PassageMonitorFragment : Fragment(), FootFragment.FootListener, OnChangeStateListener {
 
     var adapter: PassageMonitorAdapter? = null
     var plan: PassagePlan? = null
@@ -34,6 +34,7 @@ class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
         val waypointsView = ButterKnife.findById<ListView>(view, R.id.list)
         adapter = PassageMonitorAdapter(this, plan!!)
         waypointsView.adapter = adapter
+
 
         return view
     }
@@ -57,5 +58,13 @@ class PassageMonitorFragment : Fragment(), FootFragment.FootListener {
     override fun onDetach() {
         super.onDetach()
         adapter = null
+    }
+
+    override fun onLoadingFinished() {
+        (context as OnChangeStateListener).onLoadingFinished()
+    }
+
+    override fun onLoadingStarted() {
+        (context as OnChangeStateListener).onLoadingStarted()
     }
 }

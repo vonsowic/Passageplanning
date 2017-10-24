@@ -99,7 +99,7 @@ class PassagePlan(
     /**
      * @return distance to the last waypoint in meters.
      */
-    fun toGo(waypointPosition: Int) = waypoints
+    @Synchronized fun toGo(waypointPosition: Int) = waypoints
             .withIndex()
             .filter { it.index >= waypointPosition }
             .map { dist(it.index) }
@@ -128,16 +128,16 @@ class PassagePlan(
      * @param i index of waypoint
      * @return ukc
      */
-    fun ukc(i: Int) = cd(i) + predictedTideHeight(i)
+    @Synchronized fun ukc(i: Int) = cd(i) + predictedTideHeight(i)
 
-    fun cd(i: Int) = waypoints[i].ukc - passage.draught
+    @Synchronized fun cd(i: Int) = waypoints[i].ukc - passage.draught
 
 
     /**
      * Estimated time arrival.
      * @param i index of waypoint
      */
-    fun eta(i: Int): DateTime {
+    @Synchronized fun eta(i: Int): DateTime {
         if(etasHandler[i] == null){
             if( i==0 ){
                 etasHandler.put(
@@ -160,7 +160,7 @@ class PassagePlan(
      * @param i index of waypoint
      * @return speed to the next waypoint
      */
-    fun speedAt(i: Int) =
+    @Synchronized fun speedAt(i: Int) =
             if(isStreamHelping) passage.speed + speedOfCurrent(i)
             else                passage.speed - speedOfCurrent(i)
 
@@ -169,12 +169,10 @@ class PassagePlan(
         if(speedsHandler[index] == null) {
             speedsHandler.put(
                     index,
-                    try {
-                        this[index].tideCurrentStation.getValue(                                                                    // get value
+                    this[index].tideCurrentStation.getValue(                                                                        // get value
                                 (DatabaseManager.DATABASE_MANAGER.getTable(this[index].tideCurrentStation.gaugeId) as TidesTable)   // based on database
                                         .getTideCurrentInfo(eta(index))                                                             // computations
-                        )
-                    } catch (_: TideNotInDatabaseException){ speed }
+                    )
             )
         }
 
@@ -225,7 +223,7 @@ class PassagePlan(
                                                         td("${cd(it.index)}"),
                                                         td(
                                                                 try{ "${ukc(it.index)}"}
-                                                                catch(_: TideNotInDatabaseException){"tide height not available"}
+                                                                catch(_: TideNotInDatabaseException){context.getString(R.string.tide_height_not_available)}
                                                         )
                                                 )
                                             }

@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.bearcave.passageplanning.R
 import com.bearcave.passageplanning.data.database.DatabaseManager
+import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.OnChangeStateListener
 import com.bearcave.passageplanning.passagemonitor.passage_list_adapter.PassageMonitorAdapter
 import com.bearcave.passageplanning.passagemonitor.pdfviewer.PassagePlanViewerActivity
 import com.bearcave.passageplanning.passages.database.Passage
@@ -20,13 +22,15 @@ import com.bearcave.passageplanning.waypoints.database.ReadWaypoints
 import com.bearcave.passageplanning.waypoints.database.Waypoint
 import com.bearcave.passageplanning.waypoints.database.WaypointCRUD
 import com.bearcave.passageplanning.waypoints.database.WaypointsTable
+import kotlinx.android.synthetic.main.activity_passage.*
 import org.joda.time.DateTime
 
 class PassageActivity : AppCompatActivity(),
         ReadWaypoints,
         PlanGetter,
         PassageMonitorAdapter.PassageMonitor,
-        FootFragment.FootListener{
+        FootFragment.FootListener,
+        OnChangeStateListener{
 
 
     var passage: Passage? = null
@@ -61,7 +65,7 @@ class PassageActivity : AppCompatActivity(),
         setContentView(R.layout.activity_passage)
 
         // receive passage and change title
-        passage = intent.getParcelableExtra<Passage>(PASSAGE_KEY)
+        passage = intent.getParcelableExtra(PASSAGE_KEY)
         title = passage!!.route.name
 
         passagePlan = PassagePlan(
@@ -139,5 +143,13 @@ class PassageActivity : AppCompatActivity(),
         )
 
         alertDialog.show()
+    }
+
+    override fun onLoadingFinished() {
+        loadingCircle.visibility = View.GONE
+    }
+
+    override fun onLoadingStarted() {
+        loadingCircle.visibility = View.VISIBLE
     }
 }
